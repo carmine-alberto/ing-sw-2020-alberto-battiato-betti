@@ -27,7 +27,7 @@ public class App extends Application {
 
     //Network objects
     Socket clientSocket;
-    
+
 
 
     @Override
@@ -39,12 +39,12 @@ public class App extends Application {
 
         Label username = new Label("Username: ");
         usernameInput = new TextField();
-        HBox usernameBox = new HBox(username, usernameInput);
+        HBox usernameBox = new HBox(10, username, usernameInput);
         usernameBox.setAlignment(Pos.CENTER);
 
         Label serverIP = new Label("Server IP: ");
         serverIPInput = new TextField();
-        HBox serverIPBox = new HBox(serverIP, serverIPInput);
+        HBox serverIPBox = new HBox(18, serverIP, serverIPInput);
         serverIPBox.setAlignment(Pos.CENTER);
 
         Button confirmButton = new Button("Connect");
@@ -54,7 +54,7 @@ public class App extends Application {
         cliGUIChoice.getItems().addAll("CLI", "GUI");
         cliGUIChoice.setValue("GUI");
 
-        VBox userDataBox = new VBox(usernameBox, serverIPBox, cliGUIChoice, confirmButton);
+        VBox userDataBox = new VBox(10, usernameBox, serverIPBox, cliGUIChoice, confirmButton);
         userDataBox.setAlignment(Pos.CENTER);
         userDataBox.setStyle("-fx-background-color: #1cf7ff");
 
@@ -81,8 +81,6 @@ public class App extends Application {
             mainStage.close();
         }
 
-
-        return;
     }
 
     public static void main(String[] args) {
