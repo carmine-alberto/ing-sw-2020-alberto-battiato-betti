@@ -13,6 +13,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -75,6 +77,9 @@ public class App extends Application {
 
         try {
             clientSocket = new Socket(serverIP, PORT_NUMBER);
+            ObjectOutputStream clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
+            clientOutputStream.writeObject(username);
         }
         catch (IOException ex) {
             MessageBox.show("Connection closed - Restart the client and try again!", "Connection Error");
@@ -87,4 +92,6 @@ public class App extends Application {
         System.out.println( "Jacopo Gay lol" );
         launch();
     }
+
+
 }
