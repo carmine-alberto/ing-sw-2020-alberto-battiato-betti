@@ -1,5 +1,5 @@
-package it.polimi.ingsw.phases;
+package it.polimi.ingsw;
 
-public interface TurnPhase {
+public interface TurnState {
     public void runPhase();
 }
