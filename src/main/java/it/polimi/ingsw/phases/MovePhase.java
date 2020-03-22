@@ -1,6 +1,9 @@
-package it.polimi.ingsw.phases;
+package it.polimi.ingsw;
 
-public class MovePhase implements TurnPhase {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class MovePhase implements TurnState {
 
     @Override
     public void runPhase() {
