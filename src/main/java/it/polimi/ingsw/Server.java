@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-
     public static void main(String[] args){
         startServer(1200);
     }
@@ -22,7 +21,9 @@ public class Server {
             System.err.println(e.getMessage()); // Porta non disponibile
             return;
         }
+
         System.out.println("Server ready");
+
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
@@ -31,6 +32,7 @@ public class Server {
                 break; // Entrerei qui se serverSocket venisse chiuso
             }
         }
+        
         executor.shutdown();
     }
 }

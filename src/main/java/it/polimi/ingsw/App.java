@@ -30,8 +30,6 @@ public class App extends Application {
     //Network objects
     Socket clientSocket;
 
-
-
     @Override
     public void start(Stage stage) {
         mainStage = stage;
@@ -52,7 +50,7 @@ public class App extends Application {
         Button confirmButton = new Button("Connect");
         confirmButton.setOnAction(e -> sendDataToServer());
 
-        cliGUIChoice = new ChoiceBox<String>();
+        cliGUIChoice = new ChoiceBox<>();
         cliGUIChoice.getItems().addAll("CLI", "GUI");
         cliGUIChoice.setValue("GUI");
 
