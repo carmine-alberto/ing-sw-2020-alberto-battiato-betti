@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.actions.Action;
-
 import java.util.ArrayList;
 import java.util.List;
 
