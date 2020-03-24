@@ -2,9 +2,9 @@
 
 ## Gruppo AM00
 
-- ###   10600001    Filippo Betti ([@FilippoBetti98](https://github.com/carmine-alberto))<br>filippo.betti@mail.polimi.it
-- ###   10600002    Carmine Alberto ([@carmine-alberto](https://github.com/FilippoBetti98))<br>carmine.alberto@mail.polimi.it
-- ###   10600003    Jacopo Battiato ([@batjacopo](https://github.com/batjacopo))<br>jacopo.battiato@mail.polimi.it
+- ###   10603433    Filippo Betti ([@FilippoBetti98](https://github.com/carmine-alberto))<br>filippo.betti@mail.polimi.it
+- ###   10560934    Carmine Alberto ([@carmine-alberto](https://github.com/FilippoBetti98))<br>carmine.alberto@mail.polimi.it
+- ###   10556595    Jacopo Battiato ([@batjacopo](https://github.com/batjacopo))<br>jacopo.battiato@mail.polimi.it
 
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
