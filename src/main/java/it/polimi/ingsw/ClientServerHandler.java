@@ -17,9 +17,10 @@ public class ClientServerHandler implements Runnable {
             try {
                 ObjectOutputStream serverOutputStream = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream serverInputStream = new ObjectInputStream(socket.getInputStream());
+
                 String stringa = (String) serverInputStream.readObject(); // controllare stringa vuota
                 System.out.println((stringa));
-// Chiudo gli stream e il socket
+
                 serverOutputStream.close();
                 serverInputStream.close();
                 socket.close();

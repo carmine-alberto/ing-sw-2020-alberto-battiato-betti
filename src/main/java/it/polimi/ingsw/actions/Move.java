@@ -1,7 +1,7 @@
 package it.polimi.ingsw.actions;
 
-import it.polimi.ingsw.GameWorker;
-import it.polimi.ingsw.Player;
+import it.polimi.ingsw.model.GameWorker;
+import it.polimi.ingsw.model.Player;
 
 import java.util.List;
 

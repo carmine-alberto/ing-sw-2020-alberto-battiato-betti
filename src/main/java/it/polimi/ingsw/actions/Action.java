@@ -1,6 +1,6 @@
 package it.polimi.ingsw.actions;
 
-import it.polimi.ingsw.GameWorker;
+import it.polimi.ingsw.model.GameWorker;
 
 public interface Action {
     public Boolean isLegal();

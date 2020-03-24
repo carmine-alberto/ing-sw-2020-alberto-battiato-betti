@@ -1,8 +1,8 @@
 package it.polimi.ingsw.actions;
 
-import it.polimi.ingsw.FieldCell;
-import it.polimi.ingsw.Game;
-import it.polimi.ingsw.GameWorker;
+import it.polimi.ingsw.model.FieldCell;
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameWorker;
 
 public class MoveWithSwap extends Move implements Action {
     @Override
