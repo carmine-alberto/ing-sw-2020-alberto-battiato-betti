@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 public class ChallengerSelectionView extends View {
     private ToggleGroup numberOfPlayers;
+    private ToggleGroup startingPlayer;
     private FlowPane godsIcons;
 
 
@@ -42,9 +43,28 @@ public class ChallengerSelectionView extends View {
         threePlayers.setToggleGroup(numberOfPlayers);
         numberOfPlayers.selectToggle(twoPlayers);
 
-
         HBox numberOfPlayersBox = new HBox(5, numberOfPlayersLabel, twoPlayers, threePlayers);
         numberOfPlayersBox.setAlignment(Pos.CENTER);
+
+
+        startingPlayer = new ToggleGroup();
+
+        Label startingPlayerLabel = new Label("Select the starting player: ");
+
+        RadioButton firstToConnect = new RadioButton("1");
+        firstToConnect.setToggleGroup(startingPlayer);
+
+        RadioButton secondToConnect = new RadioButton(("2"));
+        secondToConnect.setToggleGroup(startingPlayer);
+
+        RadioButton thirdToConnect = new RadioButton("3");
+        thirdToConnect.setToggleGroup(startingPlayer);
+
+        startingPlayer.selectToggle(firstToConnect);
+
+        HBox startingPlayerBox = new HBox(5, startingPlayerLabel, firstToConnect, secondToConnect, thirdToConnect);
+        numberOfPlayersBox.setAlignment(Pos.CENTER);
+
 
         Label godPowersLabel = new Label("Select the God Powers to be used: ");
 
@@ -63,14 +83,11 @@ public class ChallengerSelectionView extends View {
         Button sendSelectionButton = new Button("Continue");
         sendSelectionButton.setOnAction(e -> sendDataToServer());
 
-        VBox userSelectionsBox = new VBox(50, numberOfPlayersBox, godPowersBox, sendSelectionButton);
+        VBox userSelectionsBox = new VBox(50, numberOfPlayersBox, startingPlayerBox, godPowersBox, sendSelectionButton);
         userSelectionsBox.setAlignment(Pos.CENTER);
         userSelectionsBox.setPadding(new Insets(20));
 
-        Scene scene = new Scene(userSelectionsBox);
-
-        mainStage.setScene(scene);
-        mainStage.show();
+        mainStage.getScene().rootProperty().set(userSelectionsBox);
 
     }
 
@@ -86,8 +103,15 @@ public class ChallengerSelectionView extends View {
                                         .substring(0, 1)
         );
 
+        Integer selectedStartingPlayer = Integer.parseInt(
+                                        ((RadioButton)startingPlayer.getSelectedToggle())
+                                        .getText()
+        );
+
         if (selectedNumberOfPlayers != selectedGods.size())
             MessageBox.show("Number of players and god powers must match!", "Error");
+        else if (selectedStartingPlayer > selectedNumberOfPlayers)
+            MessageBox.show("You can't choose the third player as starting player in a 2-players game!", "Error");
         else {
             try {
                 new ObjectOutputStream(clientSocket.getOutputStream()).writeObject(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods));

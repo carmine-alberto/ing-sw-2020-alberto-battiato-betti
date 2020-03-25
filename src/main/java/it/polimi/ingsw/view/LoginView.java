@@ -68,7 +68,6 @@ public class LoginView extends View {
 
         Scene scene = new Scene(basePane, 800, 600);
         mainStage.setScene(scene);
-        //mainstage.setFullScreen(true);
         mainStage.show();
     }
 
