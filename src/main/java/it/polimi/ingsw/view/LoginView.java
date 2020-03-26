@@ -12,9 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,7 +31,7 @@ public class LoginView extends View {
     @Override
     public void render() {
 
-        Image backgroundImage = new Image("file:C:\\Users\\Casa\\Desktop\\ing-sw-2020-alberto-battiato-betti\\resources\\copertina_santorini_2016.jpg");
+        Image backgroundImage = new Image("file:" + System.getProperty("user.dir") + "\\resources\\copertina_santorini_2016.jpg");
         ImageView imageNode = new ImageView(backgroundImage);
         imageNode.fitHeightProperty().bind(mainStage.heightProperty());
         imageNode.setPreserveRatio(true);
