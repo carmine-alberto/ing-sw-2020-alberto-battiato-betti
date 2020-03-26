@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.MaxHeightReachedException;
+import javafx.concurrent.Worker;
 
 public class FieldCell {
     private GameWorker occupyingWorker;
@@ -13,6 +14,10 @@ public class FieldCell {
         this.posY = posY;
         this.height = 0;
         this.hasDome = false;
+    }
+
+    public void setOccupyingWorker(GameWorker worker){
+        this.occupyingWorker = worker;
     }
 
     public Integer getHeight() {
@@ -31,13 +36,11 @@ public class FieldCell {
     };
 
     public Boolean isOnPerimeter() {
-        if (posX.equals(1) || posX.equals(5) || posY.equals(1) || posY.equals(5))
-            return true;
-        return false;
+        return posX.equals(1) || posX.equals(5) || posY.equals(1) || posY.equals(5);
     };
 
     public Boolean isFree() {
-        return true; //TODO Implementare metodo
+        return this.occupyingWorker == null && !this.hasDome; //TODO Implementare metodo
     }
 
     public GameWorker getWorker() {

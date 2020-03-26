@@ -1,5 +1,6 @@
 package it.polimi.ingsw.actions;
 
+import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
 
@@ -14,8 +15,11 @@ public class Move implements Action {
     }
 
     @Override
-    public void run(String args, GameWorker gw) {
-        gw.setCell(args);
+    public void run(FieldCell cell, GameWorker gw) {
+        if(isLegal()) {
+            gw.setPosition(cell);
+            cell.setOccupyingWorker(gw);
+        }
     }
 
 }

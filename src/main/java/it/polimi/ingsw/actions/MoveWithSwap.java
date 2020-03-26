@@ -11,17 +11,18 @@ public class MoveWithSwap extends Move implements Action {
     }
 
     @Override
-    public void run(String args, GameWorker gw) {
+    public void run(FieldCell cell, GameWorker gw) {
         FieldCell currentWorkerPosition = gw.getCell();
-        FieldCell destinationCell = Game.getCell(args);
         GameWorker opponentWorker;
 
-        if (!destinationCell.isFree()) {
-            opponentWorker = destinationCell.getWorker();
-            opponentWorker.setCell(new String("CurrentWorkerPosition")); //TODO passare FieldCell
+        //TODO aggiungere alle legalità il controllo che il worker sia avversario
+
+        if (!cell.isFree()) { //fase di swap (due worker nella stessa cella)
+            opponentWorker = cell.getWorker();
+            opponentWorker.setPosition(currentWorkerPosition);
         }
 
-        super.run(args, gw);
+        super.run(cell, gw);
 
     }
 }

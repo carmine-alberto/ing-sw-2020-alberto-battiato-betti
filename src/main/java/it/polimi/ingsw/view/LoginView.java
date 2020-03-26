@@ -71,7 +71,7 @@ public class LoginView extends View {
 
     @Override
     public void next() {
-        viewState = new WaitingView(mainStage, clientSocket, viewState); //TODO Assign the correct nextState
+        viewState = new ChallengerSelectionView(mainStage, clientSocket, viewState); //TODO Assign the correct nextState
         viewState.render();
     }
 

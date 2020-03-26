@@ -4,11 +4,28 @@ import java.util.List;
 
 public class Game {
     Player turnPlayer;
+
     List<Player> players;
 
-    private static FieldCell[][] field = new FieldCell[5][5];
+    private FieldCell[][] field = new FieldCell[5][5];
 
-    public static FieldCell getCell(String args) {
-        return field[1][1]; //TODO Settare args in maniera appropriata
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public FieldCell getCell(Integer x, Integer y) {
+        return field[x][y];
+    }
+
+    public GameWorker getWorkerFromPos(Integer x, Integer y){
+        GameWorker worker = null;
+
+        return worker;
+    }
+
+    public Boolean isCellAvailable(Integer x, Integer y){
+        FieldCell cell = null; // TODO da modificare
+
+        return cell.isFree();
     }
 }

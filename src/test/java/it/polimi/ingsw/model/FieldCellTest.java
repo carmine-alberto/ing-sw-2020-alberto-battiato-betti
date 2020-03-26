@@ -8,10 +8,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FieldCellTest {
     FieldCell notOnPerimeterCell;
+    FieldCell onPerimeterCell;
+    FieldCell notFreeCell;
 
     @BeforeEach
     void setUp() {
-        notOnPerimeterCell = new FieldCell(1,3);
+        notOnPerimeterCell = new FieldCell(2,3);
+        onPerimeterCell = new FieldCell(5,5);
+
+        notFreeCell = new FieldCell(3, 3);
+        notFreeCell.placeDome();
     }
 
     @Test
@@ -28,14 +34,13 @@ class FieldCellTest {
 
     @Test
     void isOnPerimeter() {
-        assertTrue(notOnPerimeterCell.isOnPerimeter());
+        assertFalse(notOnPerimeterCell.isOnPerimeter());
+        assertTrue(onPerimeterCell.isOnPerimeter());
     }
 
     @Test
     void isFree() {
+        assertFalse(notFreeCell.isFree());
     }
 
-    @Test
-    void getWorker() {
-    }
 }
