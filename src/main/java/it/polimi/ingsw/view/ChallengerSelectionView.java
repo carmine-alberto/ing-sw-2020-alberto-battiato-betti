@@ -63,7 +63,7 @@ public class ChallengerSelectionView extends View {
         startingPlayer.selectToggle(firstToConnect);
 
         HBox startingPlayerBox = new HBox(5, startingPlayerLabel, firstToConnect, secondToConnect, thirdToConnect);
-        numberOfPlayersBox.setAlignment(Pos.CENTER);
+        startingPlayerBox.setAlignment(Pos.CENTER);
 
 
         Label godPowersLabel = new Label("Select the God Powers to be used: ");
@@ -114,6 +114,7 @@ public class ChallengerSelectionView extends View {
             MessageBox.show("You can't choose the third player as starting player in a 2-players game!", "Error");
         else {
             try {
+                next(); //TODO Remove this line: call to next must be triggered by a server event
                 new ObjectOutputStream(clientSocket.getOutputStream()).writeObject(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods));
             } catch (IOException e) {
                 connectionClosedHandler();
@@ -124,6 +125,7 @@ public class ChallengerSelectionView extends View {
 
     @Override
     public void next() {
+        new GodPowerView(mainStage, clientSocket, viewState).render();
 
     }
 }

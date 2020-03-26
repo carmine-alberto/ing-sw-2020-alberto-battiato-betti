@@ -1,31 +1,34 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.MaxHeightReachedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FieldCellTest {
-    FieldCell cella;
+    FieldCell notOnPerimeterCell;
 
     @BeforeEach
     void setUp() {
-        cella = new FieldCell(1,3);
+        notOnPerimeterCell = new FieldCell(1,3);
     }
 
     @Test
-    void incrementHeight() {
-        cella.incrementHeight();
-        assertEquals(1, (int)cella.getHeight());
+    void incrementHeight() throws MaxHeightReachedException {
+        notOnPerimeterCell.incrementHeight();
+        assertEquals(1, (int) notOnPerimeterCell.getHeight());
     }
 
     @Test
     void placeDome() {
+        notOnPerimeterCell.placeDome();
+        assertTrue(notOnPerimeterCell.isComplete());
     }
 
     @Test
     void isOnPerimeter() {
-        assertTrue(cella.isOnPerimeter());
+        assertTrue(notOnPerimeterCell.isOnPerimeter());
     }
 
     @Test
