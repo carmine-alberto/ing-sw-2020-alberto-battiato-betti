@@ -64,14 +64,14 @@ public class LoginView extends View {
         StackPane basePane = new StackPane();
         basePane.getChildren().addAll(imageNode, userDataBox);
 
-        Scene scene = new Scene(basePane, 800, 600);
+        Scene scene = new Scene(basePane, 700, 600);
         mainStage.setScene(scene);
         mainStage.show();
     }
 
     @Override
     public void next() {
-        viewState = new ChallengerSelectionView(mainStage, clientSocket, viewState); //TODO Assign the correct nextState
+        viewState = new MainView(mainStage, clientSocket, viewState); //TODO Assign the correct nextState
         viewState.render();
     }
 

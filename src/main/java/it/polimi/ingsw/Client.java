@@ -22,6 +22,7 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        //stage.setFullScreen(true);
         this.viewState = new LoginView(stage, clientSocket, viewState);
         viewState.render();
 
