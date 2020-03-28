@@ -30,7 +30,7 @@ public class MovePhase extends TurnPhase {
                 .getSelectedWorker()
                 .getAdjacentCells()
                 .stream()
-                .filter( adjacentCell -> turnPlayer
+                .filter(adjacentCell -> turnPlayer
                         .getMovePredicate()
                         .test(adjacentCell, turnPlayer.getSelectedWorker()))
                 .collect(Collectors.toList());

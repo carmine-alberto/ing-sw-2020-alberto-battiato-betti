@@ -2,7 +2,7 @@ package it.polimi.ingsw.phases;
 
 import it.polimi.ingsw.model.Game;
 
-public class ChooseWorkerPhase extends TurnPhase{
+public class ChooseWorkerPhase extends TurnPhase {
 
     public ChooseWorkerPhase(Game currentGame) {
         super(currentGame);

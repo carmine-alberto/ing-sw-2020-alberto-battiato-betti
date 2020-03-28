@@ -2,8 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.phases.ChooseWorkerPhase;
 import it.polimi.ingsw.phases.TurnPhase;
-
 import java.util.ArrayList;
+import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,24 +20,28 @@ public class Game {
         return players;
     }
 
+    public void setTurnPlayer(Player currentTurnPlayer) {
+        this.turnPlayer = currentTurnPlayer;
+    }
+
     public FieldCell getCell(Integer x, Integer y) {
         return field[x][y];
     }
 
-    public GameWorker getWorkerFromPos(Integer x, Integer y){
-        GameWorker worker = null;
-
-        return worker;
-    }
-
-    public Boolean isCellAvailable(Integer x, Integer y){
-        FieldCell cell = null; // TODO da modificare
-
-        return cell.isFree();
+    public void addPlayer(Player player) {
+        try {
+            for (Player tmp : players)
+                if (tmp.getNickname().equals(player.getNickname()))
+                    throw new AlreadyExistingNameException("Questo Nickname è stato già utilizzato, sceglierne un altro.");
+                else players.add(player);
+        } catch (AlreadyExistingNameException e) {
+            //TODO mostrare wiew con messaggio d'errore
+        }
     }
 
     /**
      * Sets the currentPlayerIndex, used to extract the turnPlayers from the players list
+     *
      * @param currentPlayerIndex as passed by view (incremented by one, to improve user experience)
      */
     public void setCurrentPlayerIndex(Integer currentPlayerIndex) {
@@ -58,7 +62,7 @@ public class Game {
 
     public void removeTurnPlayer() {
         players.remove(turnPlayer);
-        currentPlayerIndex--;
+        currentPlayerIndex--; //Used to handle third to first player case
         if (players.size() == 1) {
             players.get(0).setIsWinner(true);
             endGame();
