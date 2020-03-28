@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-
     public static void main(String[] args){
         startServer(1200);
     }
@@ -27,7 +26,7 @@ public class Server {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                executor.submit(new ClientServerHandler(socket));
+                executor.submit(new ClientHandler(socket));
             } catch (IOException e) {
                 break; // Entrerei qui se serverSocket venisse chiuso
             }

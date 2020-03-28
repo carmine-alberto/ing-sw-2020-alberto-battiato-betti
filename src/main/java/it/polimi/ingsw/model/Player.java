@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.actions.Move;
+import it.polimi.ingsw.model.predicates.MovePredicate;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.actions.Action;
 
@@ -12,8 +14,26 @@ public class Player {
     private Boolean isWinner;
     private Game currentGame;
     private View playerView;
-
     private List<GameWorker> workers;
+
+    //Attributes used to store turnState
+    private GameWorker selectedWorker;
+    private FieldCell selectedCell;
+    private Constructible selectedConstructible;
+    private Action selectedAction;
+
+
+    //Predicates
+    MovePredicate movePredicate = new MovePredicate();
+
+    public MovePredicate getMovePredicate() {
+        return movePredicate;
+    }
+
+    public void setMovePredicate(MovePredicate movePredicate) {
+        this.movePredicate = movePredicate;
+    }
+
 
     public Player(String nickname, View playerView) {
         this.nickname = nickname;
@@ -76,5 +96,41 @@ public class Player {
                 .filter(player -> !player.equals(this))
                 .collect(Collectors.toList());
 
+    }
+
+
+    public GameWorker getSelectedWorker() {
+        return selectedWorker;
+    }
+
+    public void setSelectedWorker(GameWorker selectedWorker) {
+        this.selectedWorker = selectedWorker;
+    }
+
+
+    public FieldCell getSelectedCell() {
+        return selectedCell;
+    }
+
+    public void setSelectedCell(FieldCell selectedCell) {
+        this.selectedCell = selectedCell;
+    }
+
+
+    public Constructible getSelectedConstructible() {
+        return selectedConstructible;
+    }
+
+    public void setSelectedConstructible(Constructible selectedConstructible) {
+        this.selectedConstructible = selectedConstructible;
+    }
+
+
+    public Action getSelectedAction() {
+        return selectedAction;
+    }
+
+    public void setSelectedAction(Action selectedAction) {
+        this.selectedAction = selectedAction;
     }
 }

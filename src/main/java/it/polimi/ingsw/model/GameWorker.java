@@ -19,9 +19,9 @@ public class GameWorker {
         this.position = cell;
     }
 
-    public List<FieldCell> getAvailableCells() {
+    public List<FieldCell> getAdjacentCells() { //TODO Implementare metodo
         List<FieldCell> freeCells = new ArrayList<>();
-        //Controllo le celle adiacenti: se delta_height_up <= 1 AND !cell.hasDome() AND cell.isFree(), la aggiungo alla lista
+
 
         return freeCells;
     }

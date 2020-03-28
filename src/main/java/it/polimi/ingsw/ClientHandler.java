@@ -5,11 +5,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ClientServerHandler implements Runnable {
+public class ClientHandler implements Runnable {
 
         private Socket socket;
 
-        public ClientServerHandler(Socket socket) {
+        public ClientHandler(Socket socket) {
             this.socket = socket;
         }
 

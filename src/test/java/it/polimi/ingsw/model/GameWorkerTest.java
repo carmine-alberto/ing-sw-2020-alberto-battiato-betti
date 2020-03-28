@@ -25,7 +25,7 @@ class GameWorkerTest {
         List<FieldCell> expectedAvailable = List.of(new FieldCell(1,2), new FieldCell(1,3), new FieldCell(1,4),
                                                     new FieldCell(2,2),                                 new FieldCell(2,4),
                                                     new FieldCell(3,2), new FieldCell(3,3), new FieldCell(3,4));
-        assertEquals(expectedAvailable, normalGameWorker.getAvailableCells());
+        assertEquals(expectedAvailable, normalGameWorker.getAdjacentCells());
     }
 
     @Test
