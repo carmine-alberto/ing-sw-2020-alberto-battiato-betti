@@ -16,6 +16,14 @@ public class FieldCell {
         this.hasDome = false;
     }
 
+    public Integer getPosX(){
+        return this.posX;
+    }
+
+    public Integer getPosY(){
+        return this.posY;
+    }
+
     public void setOccupyingWorker(GameWorker worker){
         this.occupyingWorker = worker;
     }
