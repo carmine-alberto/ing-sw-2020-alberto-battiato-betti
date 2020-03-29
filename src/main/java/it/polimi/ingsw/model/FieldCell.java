@@ -30,26 +30,24 @@ public class FieldCell {
 
     public Integer getHeight() {
         return height;
-    };
+    }
 
     public void incrementHeight() throws MaxHeightReachedException {
         if (height < 3)
             height++;
         else
             throw new MaxHeightReachedException();
-    };
+    }
 
     public void placeDome() {
         hasDome = true;
-    };
+    }
 
     public Boolean isOnPerimeter() {
         return posX.equals(1) || posX.equals(5) || posY.equals(1) || posY.equals(5);
-    };
-
-    public Boolean isFree() {
-        return this.occupyingWorker == null && !this.hasDome; //TODO Implementare metodo
     }
+
+    public Boolean isFree() { return this.occupyingWorker == null && !this.hasDome; }
 
     public GameWorker getWorker() {
         return this.occupyingWorker;

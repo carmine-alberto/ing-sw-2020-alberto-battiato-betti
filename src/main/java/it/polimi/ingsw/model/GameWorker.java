@@ -19,16 +19,16 @@ public class GameWorker {
         this.position = cell;
     }
 
-    public List<FieldCell> getAdjacentCells() { //TODO Implementare metodo
+    public List<FieldCell> getAdjacentCells() {
         List<FieldCell> freeCells = new ArrayList<>();
-        Integer i , j;
+        Integer i, j, k;
 
         for (i = 0; i < position.getPosX() - 1; i++);
 
-        for (j =0; j < position.getPosY() - 1; j++);
+        for (j = 0; j < position.getPosY() - 1; j++);
 
-        for (;  i <= position.getPosX() + 1 &&  i < 5 ; i++)
-            for (; j <= position.getPosY() + 1 && j < 5; j++)
+        for (k = j;  i <= position.getPosX() + 1 &&  i < 5 ; i++)
+            for (j = k; j <= position.getPosY() + 1 && j < 5; j++)
                 freeCells.add(this.currentGame.getCell( i, j));
 
         freeCells.remove(this.position);
