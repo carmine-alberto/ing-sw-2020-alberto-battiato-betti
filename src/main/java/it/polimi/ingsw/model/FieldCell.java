@@ -35,26 +35,24 @@ public class FieldCell {
 
     public Integer getHeight() {
         return height;
-    };
+    }
 
     public void incrementHeight() throws MaxHeightReachedException {
         if (height < 3)
             height++;
         else
             throw new MaxHeightReachedException();
-    };
+    }
 
     public void placeDome() {
         hasDome = true;
-    };
+    }
 
     public Boolean isOnPerimeter() {
         return posX.equals(1) || posX.equals(5) || posY.equals(1) || posY.equals(5);
-    };
-
-    public Boolean isFree() {
-        return this.occupyingWorker == null && !this.hasDome;
     }
+
+    public Boolean isFree() { return this.occupyingWorker == null && !this.hasDome; }
 
     public GameWorker getWorker() {
         return this.occupyingWorker;
@@ -79,16 +77,17 @@ public class FieldCell {
     }
 
     public List<FieldCell> getAdjacentCells(FieldCell targetCell) { //TODO Implementare metodo
-        List<FieldCell> freeCells = new ArrayList<>();
+        List<FieldCell> adjacentCells = new ArrayList<>();
+
         Integer i = Math.max(targetCell.getPosX() - 1, 0);
-        Integer j = Math.max(targetCell.getPosY() - 1, 0);
+        Integer k = Math.max(targetCell.getPosY() - 1, 0);
 
         for (;  i <= targetCell.getPosX() + 1 &&  i < 5 ; i++)
-            for (; j <= targetCell.getPosY() + 1 && j < 5; j++)
-                freeCells.add(currentGame.getCell( i, j));
+            for (Integer j = k; j <= targetCell.getPosY() + 1 && j < 5; j++)
+                adjacentCells.add(this.currentGame.getCell(i, j));
 
-        freeCells.remove(targetCell);
+        adjacentCells.remove(targetCell);
 
-        return freeCells;
+        return adjacentCells;
     }
 }

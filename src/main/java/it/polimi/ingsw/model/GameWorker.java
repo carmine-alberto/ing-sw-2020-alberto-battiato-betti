@@ -19,19 +19,6 @@ public class GameWorker {
         this.position = cell;
     }
 
-    public List<FieldCell> getAdjacentCells() { //TODO Implementare metodo
-        List<FieldCell> freeCells = new ArrayList<>();
-        Integer i = Math.max(position.getPosX() - 1, 0);
-        Integer j = Math.max(position.getPosY() - 1, 0);
-
-        for (;  i <= position.getPosX() + 1 &&  i < 5 ; i++)
-            for (; j <= position.getPosY() + 1 && j < 5; j++)
-                freeCells.add(this.currentGame.getCell( i, j));
-
-        freeCells.remove(this.position);
-
-        return freeCells;
-    }
 
     public void move(Integer x, Integer y) { //TODO args non è String
         moveStrategy.run(currentGame.getCell(x, y), this);

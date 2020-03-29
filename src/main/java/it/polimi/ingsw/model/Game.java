@@ -9,12 +9,20 @@ import java.util.stream.Collectors;
 
 public class Game {
     private Player turnPlayer;
-    Integer currentPlayerIndex;
-    List<Player> players = new ArrayList<>();
+    private Integer currentPlayerIndex;
+    private List<Player> players = new ArrayList<>();
 
     private TurnPhase turnPhase;
 
-    private FieldCell[][] field = new FieldCell[5][5];
+    private FieldCell[][] field = new FieldCell[FIELD_SIZE][FIELD_SIZE];
+
+    public static Integer FIELD_SIZE = 5;
+
+    public Game() {
+        for (Integer i = 0; i < FIELD_SIZE; i++)
+            for (Integer j = 0; j < FIELD_SIZE; j++)
+                this.field[i][j] = new FieldCell( i , j );
+    }
 
     public List<Player> getPlayers() {
         return players;
