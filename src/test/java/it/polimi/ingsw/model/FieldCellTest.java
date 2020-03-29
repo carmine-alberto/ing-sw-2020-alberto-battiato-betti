@@ -21,7 +21,7 @@ class FieldCellTest {
     }
 
     @Test
-    void incrementHeight() throws MaxHeightReachedException {
+    void incrementHeight() {
         notOnPerimeterCell.incrementHeight();
         assertEquals(1, (int) notOnPerimeterCell.getHeight());
     }

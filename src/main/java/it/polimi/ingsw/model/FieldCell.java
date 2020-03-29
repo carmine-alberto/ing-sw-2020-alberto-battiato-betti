@@ -32,11 +32,14 @@ public class FieldCell {
         return height;
     }
 
-    public void incrementHeight() throws MaxHeightReachedException {
-        if (height < 3)
+    public void incrementHeight(){
+        try{
+            if (height >= 3)
+                throw new MaxHeightReachedException("Impossibile costruire un altro blocco. Altezza massima raggiunta.");
             height++;
-        else
-            throw new MaxHeightReachedException();
+        } catch (MaxHeightReachedException e) {
+            //TODO Stampare il messaggio d'errore relativo
+        }
     }
 
     public void placeDome() {
