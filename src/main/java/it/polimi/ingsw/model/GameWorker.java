@@ -21,7 +21,17 @@ public class GameWorker {
 
     public List<FieldCell> getAdjacentCells() { //TODO Implementare metodo
         List<FieldCell> freeCells = new ArrayList<>();
+        Integer i , j;
 
+        for (i = 0; i < position.getPosX() - 1; i++);
+
+        for (j =0; j < position.getPosY() - 1; j++);
+
+        for (;  i <= position.getPosX() + 1 &&  i < 5 ; i++)
+            for (; j <= position.getPosY() + 1 && j < 5; j++)
+                freeCells.add(this.currentGame.getCell( i, j));
+
+        freeCells.remove(this.position);
 
         return freeCells;
     }
