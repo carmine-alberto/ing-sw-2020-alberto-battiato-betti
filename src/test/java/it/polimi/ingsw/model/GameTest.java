@@ -34,4 +34,12 @@ class GameTest {
     @Test
     void addPlayer() {
     }
+
+
+    @Test
+    void endGame() {
+        Integer a = 2+2;
+        return;
+    }
+
 }

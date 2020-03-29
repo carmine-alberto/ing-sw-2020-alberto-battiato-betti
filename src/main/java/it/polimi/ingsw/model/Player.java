@@ -1,11 +1,14 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.actions.Move;
+import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.MovePredicate;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.actions.Action;
+import it.polimi.ingsw.model.actions.Action;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class Player {
@@ -24,13 +27,14 @@ public class Player {
 
 
     //Predicates
-    MovePredicate movePredicate = new MovePredicate();
+    BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
+    BiPredicate<FieldCell, GameWorker> buildPredicate;
 
-    public MovePredicate getMovePredicate() {
+    public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
         return movePredicate;
     }
 
-    public void setMovePredicate(MovePredicate movePredicate) {
+    public void setMovePredicate(BiPredicate<FieldCell, GameWorker> movePredicate) {
         this.movePredicate = movePredicate;
     }
 

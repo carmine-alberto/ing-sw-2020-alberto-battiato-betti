@@ -1,7 +1,6 @@
-package it.polimi.ingsw.actions;
+package it.polimi.ingsw.model.actions;
 
 import it.polimi.ingsw.model.FieldCell;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 
 public class MoveWithSwap extends Move implements Action {

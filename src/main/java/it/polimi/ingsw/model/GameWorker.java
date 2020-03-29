@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.actions.Action;
+import it.polimi.ingsw.model.actions.Action;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +21,8 @@ public class GameWorker {
 
     public List<FieldCell> getAdjacentCells() { //TODO Implementare metodo
         List<FieldCell> freeCells = new ArrayList<>();
-        Integer i , j;
-
-        for (i = 0; i < position.getPosX() - 1; i++);
-
-        for (j =0; j < position.getPosY() - 1; j++);
+        Integer i = Math.max(position.getPosX() - 1, 0);
+        Integer j = Math.max(position.getPosY() - 1, 0);
 
         for (;  i <= position.getPosX() + 1 &&  i < 5 ; i++)
             for (; j <= position.getPosY() + 1 && j < 5; j++)
@@ -39,6 +36,7 @@ public class GameWorker {
     public void move(Integer x, Integer y) { //TODO args non è String
         moveStrategy.run(currentGame.getCell(x, y), this);
     }
+    public void move(FieldCell destination) {moveStrategy.run(destination, this);} //TODO Overloading for ease of use, may be removed in the future
 
     public FieldCell getCell() {
         return this.position;

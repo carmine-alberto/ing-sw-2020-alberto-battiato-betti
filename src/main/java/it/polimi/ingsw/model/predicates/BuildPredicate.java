@@ -2,20 +2,17 @@ package it.polimi.ingsw.model.predicates;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
-import it.polimi.ingsw.model.Player;
 
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
-public class MovePredicate implements BiPredicate<FieldCell, GameWorker> { //TODO Remove predicate if content is kept atomized into subpredicates
-
+public class BuildPredicate implements BiPredicate<FieldCell, GameWorker> {
     @Override
-    public boolean test(FieldCell destionationCell, GameWorker gameWorker) {
-       return destionationCell.isFree() && deltaHeight(destionationCell, gameWorker) <= 1;
+    public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
+        return !fieldCell.isComplete() && notUnderItself(fieldCell, gameWorker);
     }
 
-    private Integer deltaHeight(FieldCell destionationCell, GameWorker gameWorker) {
-        return destionationCell.getHeight() - gameWorker.getCell().getHeight();
+    private boolean notUnderItself(FieldCell fieldCell, GameWorker gameWorker) {
+        return fieldCell.equals(gameWorker.getCell());
     }
 
     @Override

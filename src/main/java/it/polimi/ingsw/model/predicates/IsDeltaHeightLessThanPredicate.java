@@ -2,16 +2,14 @@ package it.polimi.ingsw.model.predicates;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
-import it.polimi.ingsw.model.Player;
 
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
-public class MovePredicate implements BiPredicate<FieldCell, GameWorker> { //TODO Remove predicate if content is kept atomized into subpredicates
+public class IsDeltaHeightLessThanPredicate implements BiPredicate<FieldCell, GameWorker> {
 
     @Override
     public boolean test(FieldCell destionationCell, GameWorker gameWorker) {
-       return destionationCell.isFree() && deltaHeight(destionationCell, gameWorker) <= 1;
+        return deltaHeight(destionationCell, gameWorker) <= 1;
     }
 
     private Integer deltaHeight(FieldCell destionationCell, GameWorker gameWorker) {
@@ -20,7 +18,12 @@ public class MovePredicate implements BiPredicate<FieldCell, GameWorker> { //TOD
 
     @Override
     public BiPredicate<FieldCell, GameWorker> and(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return null;
+        return new BiPredicate<>() {
+            @Override
+            public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
+                return this.test(fieldCell, gameWorker) && other.test(fieldCell, gameWorker);
+            }
+        };
     }
 
     @Override
@@ -32,4 +35,5 @@ public class MovePredicate implements BiPredicate<FieldCell, GameWorker> { //TOD
     public BiPredicate<FieldCell, GameWorker> or(BiPredicate<? super FieldCell, ? super GameWorker> other) {
         return null;
     }
+
 }

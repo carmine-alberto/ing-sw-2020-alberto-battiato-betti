@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.actions.Move;
+import it.polimi.ingsw.model.actions.Move;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ class GameWorkerTest {
     @Test
     void getAvailableCells() {
         List<FieldCell> expectedAvailable = List.of(new FieldCell(1,2), new FieldCell(1,3), new FieldCell(1,4),
-                                                    new FieldCell(2,2),                                 new FieldCell(2,4),
+                                                    new FieldCell(2,2),                                  new FieldCell(2,4),
                                                     new FieldCell(3,2), new FieldCell(3,3), new FieldCell(3,4));
         assertEquals(expectedAvailable, normalGameWorker.getAdjacentCells());
     }
