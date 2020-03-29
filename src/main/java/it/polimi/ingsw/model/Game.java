@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.phases.ChooseWorkerPhase;
-import it.polimi.ingsw.phases.TurnPhase;
+import it.polimi.ingsw.model.phases.ChooseWorkerPhase;
+import it.polimi.ingsw.model.phases.TurnPhase;
 import java.util.ArrayList;
 import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Game {
     public Game() {
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
-                this.field[i][j] = new FieldCell(i, j);
+                this.field[i][j] = new FieldCell(this, i, j);
     }
 
     public List<Player> getPlayers() {

@@ -1,10 +1,9 @@
-package it.polimi.ingsw.phases;
+package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public class BuildPhase extends TurnPhase {
         }
 
         //TODO Send notification to the turnPlayer
-        // TODO Wait for response
+        //TODO Wait for response
 
         FieldCell destinationCell = turnPlayer.getSelectedCell();
         if (!availableCells.contains(destinationCell)) {

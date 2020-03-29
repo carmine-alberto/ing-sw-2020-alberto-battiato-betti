@@ -1,9 +1,8 @@
-package it.polimi.ingsw.phases;
+package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import javafx.animation.KeyFrame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,20 +50,16 @@ public class MovePhase extends TurnPhase {
         //TODO Wait for response
 
         FieldCell destinationCell = turnPlayer.getSelectedCell();
-        if (availableCells.contains(destinationCell))
+        if (availableCells.contains(destinationCell)) {
+            checkWinConditions(); //Current worker position is the starting position
             turnPlayer.getSelectedWorker().move(destinationCell);
+        }
+
         else {
             //TODO Send notification of illegal move and let the player choose a valid cell repeating the phase - we expect this branch to be taken only by cheaters, a minority, so no Flyweight pattern is used
             setNextPhase(this);
         }
-
-
-
     }
 
-    @Override
-    protected void stateEnd() {
-        //Se ho un predicato che agisce a fine turno -> eseguo una determinata azione
 
-    }
 }

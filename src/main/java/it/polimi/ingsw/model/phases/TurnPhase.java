@@ -1,6 +1,7 @@
-package it.polimi.ingsw.phases;
+package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
 
 
 public abstract class TurnPhase {
@@ -17,14 +18,31 @@ public abstract class TurnPhase {
     protected abstract void run();
 
     protected void stateEnd() {
+        currentGame.getPlayers().forEach(player -> checkIsWinner(player));
         //TODO Invio notifica
     }
-
 
     public void runPhase() {
         stateInit();
         run();
         stateEnd();
+    }
+
+
+    protected void checkWinConditions() {
+        currentGame.getPlayers().forEach(player -> checkPlayerWinConditions(player));
+    }
+
+
+    private void checkPlayerWinConditions(Player player) {
+        if (player.getWinConditions().test(currentGame, player.getSelectedWorker()))
+            player.setIsWinner(true);
+    }
+
+    private void checkIsWinner(Player player) {
+        if (player.getIsWinner()) {
+            currentGame.endGame();
+        }
     }
 
 

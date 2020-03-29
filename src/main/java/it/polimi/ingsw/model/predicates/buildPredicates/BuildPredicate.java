@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.predicates;
+package it.polimi.ingsw.model.predicates.buildPredicates;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;

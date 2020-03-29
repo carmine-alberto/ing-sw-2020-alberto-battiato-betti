@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class FieldCell {
-    Game currentGame; //TODO Set currentGame (passed to the constructor preferably)
+    Game currentGame;
     private GameWorker occupyingWorker;
     private Integer posX, posY, height;
     private Boolean hasDome;
 
-    public FieldCell(Integer posX, Integer posY) {
+    public FieldCell(Game currentGame, Integer posX, Integer posY) {
         this.occupyingWorker = null;
         this.posX = posX;
         this.posY = posY;
         this.height = 0;
         this.hasDome = false;
+        this.currentGame = currentGame;
     }
 
     public Integer getPosX(){
@@ -33,12 +34,13 @@ public class FieldCell {
         this.occupyingWorker = worker;
     }
 
+
     public Integer getHeight() {
         return height;
     }
 
-    public void incrementHeight(){
-        try{
+    public void incrementHeight() {
+        try {
             if (height >= 3)
                 throw new MaxHeightReachedException("Impossibile costruire un altro blocco. Altezza massima raggiunta.");
             height++;
@@ -47,39 +49,28 @@ public class FieldCell {
         }
     }
 
+
     public void placeDome() {
         hasDome = true;
     }
 
+
     public Boolean isOnPerimeter() {
-        return posX.equals(1) || posX.equals(5) || posY.equals(1) || posY.equals(5);
+        return posX.equals(0) || posX.equals(4) || posY.equals(0) || posY.equals(4);
     }
 
     public Boolean isFree() { return this.occupyingWorker == null && !this.hasDome; }
-
-    public GameWorker getWorker() {
-        return this.occupyingWorker;
-    }
 
     public Boolean isComplete() {
         return hasDome;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FieldCell fieldCell = (FieldCell) o;
-        return posX.equals(fieldCell.posX) &&
-                posY.equals(fieldCell.posY);
+
+    public GameWorker getWorker() {
+        return this.occupyingWorker;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(posX, posY);
-    }
-
-    public List<FieldCell> getAdjacentCells() { //TODO Implementare metodo
+    public List<FieldCell> getAdjacentCells() {
         List<FieldCell> adjacentCells = new ArrayList<>();
 
         Integer i = Math.max(this.getPosX() - 1, 0);
@@ -93,4 +84,23 @@ public class FieldCell {
 
         return adjacentCells;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FieldCell fieldCell = (FieldCell) o;
+        return posX.equals(fieldCell.posX) &&
+                posY.equals(fieldCell.posY);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(posX, posY);
+    }
+
+
 }

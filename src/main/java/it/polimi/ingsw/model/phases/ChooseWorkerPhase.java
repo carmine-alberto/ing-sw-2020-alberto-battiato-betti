@@ -1,4 +1,4 @@
-package it.polimi.ingsw.phases;
+package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.model.Game;
 

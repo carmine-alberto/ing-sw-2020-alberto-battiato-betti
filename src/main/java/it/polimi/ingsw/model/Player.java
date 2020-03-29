@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
-import it.polimi.ingsw.model.predicates.IsDeltaHeightLessThanPredicate;
-import it.polimi.ingsw.model.predicates.MovePredicate;
+import it.polimi.ingsw.model.predicates.movePredicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
+import it.polimi.ingsw.model.predicates.winConditionsPredicate.HasMovedUpPredicate;
+import it.polimi.ingsw.model.predicates.winConditionsPredicate.IsTurnPlayerPredicate;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.model.actions.Action;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
@@ -27,9 +27,11 @@ public class Player {
 
 
     //Predicates
-    BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
-
-    BiPredicate<FieldCell, GameWorker> buildPredicate;
+    private BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
+    private BiPredicate<FieldCell, GameWorker> buildPredicate;
+    private BiPredicate<FieldCell, GameWorker> blockPredicate;
+    private BiPredicate<FieldCell, GameWorker> domePredicate;
+    private BiPredicate<Game, GameWorker> winConditions = new HasMovedUpPredicate().and(new IsTurnPlayerPredicate()); //TODO Delegate winCondition assignment to a specific builder
 
     public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
         return movePredicate;
@@ -47,6 +49,34 @@ public class Player {
     public void setBuildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate) {
         this.buildPredicate = buildPredicate;
     }
+
+
+    public BiPredicate<FieldCell, GameWorker> getBlockPredicate() {
+        return blockPredicate;
+    }
+
+    public void setBlockPredicate(BiPredicate<FieldCell, GameWorker> blockPredicate) {
+        this.blockPredicate = blockPredicate;
+    }
+
+
+    public BiPredicate<FieldCell, GameWorker> getDomePredicate() {
+        return domePredicate;
+    }
+
+    public void setDomePredicate(BiPredicate<FieldCell, GameWorker> domePredicate) {
+        this.domePredicate = domePredicate;
+    }
+
+
+    public BiPredicate<Game, GameWorker> getWinConditions() {
+        return winConditions;
+    }
+
+    public void setWinConditions(BiPredicate<Game, GameWorker> winConditions) {
+        this.winConditions = winConditions;
+    }
+
 
     public Player(String nickname){
         this.nickname = nickname;

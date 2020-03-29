@@ -3,24 +3,15 @@ package it.polimi.ingsw.model.actions;
 import it.polimi.ingsw.model.Constructible;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
-import it.polimi.ingsw.model.Player;
 
-import java.util.List;
-
-public class Move implements Action {
-    Player turnPlayer;
-    List<GameWorker> turnPlayerWorkers;
-
+public class Build implements Action {
     @Override
     public void run(FieldCell cell, GameWorker gw) {
-            gw.setPosition(cell);
-            cell.setOccupyingWorker(gw);
-            gw.getOldMovePositions().add(cell);
+
     }
 
     @Override
     public void run(FieldCell cell, Constructible constructible) {
 
     }
-
 }

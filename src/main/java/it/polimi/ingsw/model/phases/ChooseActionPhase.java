@@ -1,11 +1,9 @@
-package it.polimi.ingsw.phases;
+package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.phases.TurnPhase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class ChooseActionPhase extends TurnPhase {
     List<String> availableActions = new ArrayList<>();
