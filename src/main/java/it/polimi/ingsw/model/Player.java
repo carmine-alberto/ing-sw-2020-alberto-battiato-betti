@@ -38,6 +38,9 @@ public class Player {
         this.movePredicate = movePredicate;
     }
 
+    public Player(String nickname){
+        this.nickname = nickname;
+    }//TODO eliminare questo costruttore
 
     public Player(String nickname, View playerView) {
         this.nickname = nickname;
