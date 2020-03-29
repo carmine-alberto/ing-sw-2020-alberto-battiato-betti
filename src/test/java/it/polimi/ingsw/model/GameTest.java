@@ -45,7 +45,6 @@ class GameTest {
         Player alreadyExistingPlayer = new Player("Es3");
 
         List<Player> allPlayers = List.of(player1, player2, player3);
-        game.addPlayer(player3);
         game.addPlayer(alreadyExistingPlayer);
         assertEquals(allPlayers, game.getPlayers());
     }
@@ -53,9 +52,9 @@ class GameTest {
     @Test
     void removeTurnPlayer() {
         game.setCurrentPlayerIndex(2);
-        game.setTurnPlayer(player2);
+        game.setTurnPlayer(player3);
         game.removeTurnPlayer();
-        List<Player> allPlayers = List.of(player2, player3);
+        List<Player> allPlayers = List.of(player1, player2);
         assertEquals(allPlayers, game.getPlayers());
     }
 
@@ -65,11 +64,25 @@ class GameTest {
         game.setTurnPlayer(player3);
         game.setNextTurnPlayer();
         assertEquals(player1, game.getTurnPlayer());
+    }
 
+    @Test
+    void setNextTurnPlayerAfterRemovingTheLast() {
         game.setCurrentPlayerIndex(2);
         game.setTurnPlayer(player3);
         game.removeTurnPlayer();
+        game.setNextTurnPlayer();
         assertEquals(player1, game.getTurnPlayer());
+
+    }
+
+    @Test
+    void setNextTurnPlayerAfterRemovingTheSecond() {
+        game.setCurrentPlayerIndex(1);
+        game.setTurnPlayer(player2);
+        game.removeTurnPlayer();
+        game.setNextTurnPlayer();
+        assertEquals(player3, game.getTurnPlayer());
     }
 
 

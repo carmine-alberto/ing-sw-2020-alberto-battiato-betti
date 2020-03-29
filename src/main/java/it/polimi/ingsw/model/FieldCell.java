@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class FieldCell {
-    Game currentGame;
+    Game currentGame; //TODO Set currentGame (passed to the constructor preferably)
     private GameWorker occupyingWorker;
     private Integer posX, posY, height;
     private Boolean hasDome;
@@ -79,17 +79,17 @@ public class FieldCell {
         return Objects.hash(posX, posY);
     }
 
-    public List<FieldCell> getAdjacentCells(FieldCell targetCell) { //TODO Implementare metodo
+    public List<FieldCell> getAdjacentCells() { //TODO Implementare metodo
         List<FieldCell> adjacentCells = new ArrayList<>();
 
-        Integer i = Math.max(targetCell.getPosX() - 1, 0);
-        Integer k = Math.max(targetCell.getPosY() - 1, 0);
+        Integer i = Math.max(this.getPosX() - 1, 0);
+        Integer k = Math.max(this.getPosY() - 1, 0);
 
-        for (;  i <= targetCell.getPosX() + 1 &&  i < 5 ; i++)
-            for (Integer j = k; j <= targetCell.getPosY() + 1 && j < 5; j++)
+        for (;  i <= this.getPosX() + 1 &&  i < 5 ; i++)
+            for (Integer j = k; j <= this.getPosY() + 1 && j < 5; j++)
                 adjacentCells.add(this.currentGame.getCell(i, j));
 
-        adjacentCells.remove(targetCell);
+        adjacentCells.remove(this);
 
         return adjacentCells;
     }

@@ -33,6 +33,7 @@ public class MovePhase extends TurnPhase {
 
         availableCells = turnPlayer
                 .getSelectedWorker()
+                .getCell()
                 .getAdjacentCells()
                 .stream()
                 .filter(adjacentCell -> turnPlayer

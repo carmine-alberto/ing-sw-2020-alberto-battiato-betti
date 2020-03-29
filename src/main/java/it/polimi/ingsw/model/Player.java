@@ -28,6 +28,7 @@ public class Player {
 
     //Predicates
     BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
+
     BiPredicate<FieldCell, GameWorker> buildPredicate;
 
     public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
@@ -36,6 +37,15 @@ public class Player {
 
     public void setMovePredicate(BiPredicate<FieldCell, GameWorker> movePredicate) {
         this.movePredicate = movePredicate;
+    }
+
+
+    public BiPredicate<FieldCell, GameWorker> getBuildPredicate() {
+        return buildPredicate;
+    }
+
+    public void setBuildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate) {
+        this.buildPredicate = buildPredicate;
     }
 
     public Player(String nickname){

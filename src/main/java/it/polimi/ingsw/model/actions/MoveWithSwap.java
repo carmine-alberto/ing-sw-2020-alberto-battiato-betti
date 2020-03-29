@@ -4,10 +4,6 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
 
 public class MoveWithSwap extends Move implements Action {
-    @Override
-    public Boolean isLegal() {
-        return true;
-    }
 
     @Override
     public void run(FieldCell cell, GameWorker gw) {

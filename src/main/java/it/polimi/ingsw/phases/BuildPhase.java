@@ -26,14 +26,17 @@ public class BuildPhase extends TurnPhase {
     protected void run() {
         Player turnPlayer = currentGame.getTurnPlayer();
 
-        availableCells = turnPlayer
+        List<FieldCell> adjacentCellsPlusSelf = turnPlayer  //TODO Fix ugly code
                 .getSelectedCell()
-                .getAdjacentCells()
-                .add(turnPlayer.getSelectedCell())  //Passing adjacent cells + the cell I'm on, for Zeus
+                .getAdjacentCells();
+        adjacentCellsPlusSelf.add(turnPlayer.getSelectedCell());  //Passing adjacent cells + the cell I'm on, for Zeus
+
+        availableCells = adjacentCellsPlusSelf
                 .stream()
                 .filter(adjacentCell -> turnPlayer
                         .getBuildPredicate()
-                        .test(adjacentCell, turnPlayer.getSelectedWorker()))
+                        .test(adjacentCell, turnPlayer.getSelectedWorker())
+                       )
                 .collect(Collectors.toList());
 
         if (availableCells.isEmpty()) { //TODO Currently, the player loses even if the second worker can build. Should we rollback to the ChooseWorkerPhase()?

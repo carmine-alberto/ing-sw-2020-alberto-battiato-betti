@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Game {
-    private Player turnPlayer;
+    private Player turnPlayer;  //TODO Bind turnPlayer to currentPlayerIndex to enforce synchronization
     private Integer currentPlayerIndex;
     private List<Player> players = new ArrayList<>();
 
@@ -21,7 +21,7 @@ public class Game {
     public Game() {
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
-                this.field[i][j] = new FieldCell( i , j );
+                this.field[i][j] = new FieldCell(i, j);
     }
 
     public List<Player> getPlayers() {
@@ -43,7 +43,7 @@ public class Game {
                     throw new AlreadyExistingNameException("Questo Nickname è stato già utilizzato, sceglierne un altro.");
             players.add(player);
         } catch (AlreadyExistingNameException e) {
-            //TODO mostrare wiew con messaggio d'errore
+            //TODO mostrare view con messaggio d'errore
         }
     }
 
@@ -68,9 +68,9 @@ public class Game {
         this.turnPhase = nextTurnPhase;
     }
 
-    public void removeTurnPlayer() { // automaticamente fa passare anche iol turno al giocatore successivo
-        players.remove(turnPlayer); //Used to handle third to first player case
-        turnPlayer = players.get(currentPlayerIndex % players.size()); // "passa" il turno al giocatore successivo, che da ora avrà il suo vecchio index
+    public void removeTurnPlayer() {
+        players.remove(turnPlayer);
+        currentPlayerIndex--; //Used to handle third to first player case
         if (players.size() == 1) {
             players.get(0).setIsWinner(true);
             endGame();
@@ -91,7 +91,7 @@ public class Game {
 
     private Integer getNextPlayerIndex() {
         currentPlayerIndex++;
-        return currentPlayerIndex = currentPlayerIndex % players.size();
+        return currentPlayerIndex % players.size();
     }
 
 
