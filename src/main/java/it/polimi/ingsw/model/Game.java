@@ -41,7 +41,7 @@ public class Game {
             for (Player tmp : players)
                 if (tmp.getNickname().equals(player.getNickname()))
                     throw new AlreadyExistingNameException("Questo Nickname è stato già utilizzato, sceglierne un altro.");
-                else players.add(player);
+            players.add(player);
         } catch (AlreadyExistingNameException e) {
             //TODO mostrare wiew con messaggio d'errore
         }
@@ -53,7 +53,7 @@ public class Game {
      * @param currentPlayerIndex as passed by view (incremented by one, to improve user experience)
      */
     public void setCurrentPlayerIndex(Integer currentPlayerIndex) {
-        this.currentPlayerIndex = currentPlayerIndex - 1;
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 
     public void initGame() {
@@ -68,9 +68,9 @@ public class Game {
         this.turnPhase = nextTurnPhase;
     }
 
-    public void removeTurnPlayer() {
-        players.remove(turnPlayer);
-        currentPlayerIndex--; //Used to handle third to first player case
+    public void removeTurnPlayer() { // automaticamente fa passare anche iol turno al giocatore successivo
+        players.remove(turnPlayer); //Used to handle third to first player case
+        turnPlayer = players.get(currentPlayerIndex % players.size()); // "passa" il turno al giocatore successivo, che da ora avrà il suo vecchio index
         if (players.size() == 1) {
             players.get(0).setIsWinner(true);
             endGame();
@@ -90,7 +90,8 @@ public class Game {
     }
 
     private Integer getNextPlayerIndex() {
-        return ++currentPlayerIndex % players.size();
+        currentPlayerIndex++;
+        return currentPlayerIndex = currentPlayerIndex % players.size();
     }
 
 
