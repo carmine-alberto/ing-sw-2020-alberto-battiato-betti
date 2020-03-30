@@ -5,12 +5,11 @@ import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPred
 import it.polimi.ingsw.model.predicates.winConditionsPredicate.HasMovedUpPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicate.IsTurnPlayerPredicate;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.model.actions.Action;
-import it.polimi.ingsw.model.ActionEnum;
 
 
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Player {
@@ -27,11 +26,13 @@ public class Player {
     private Constructible selectedConstructible;
     private ActionEnum selectedAction;
 
+
     //Predicates
     private BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
     private BiPredicate<FieldCell, GameWorker> buildPredicate;
     private BiPredicate<FieldCell, GameWorker> blockPredicate;
     private BiPredicate<FieldCell, GameWorker> domePredicate;
+    private Predicate<Player> actionPredicate;
     private BiPredicate<Game, GameWorker> winConditions = new HasMovedUpPredicate().and(new IsTurnPlayerPredicate()); //TODO Delegate winCondition assignment to a specific builder
 
     public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
@@ -69,6 +70,13 @@ public class Player {
         this.domePredicate = domePredicate;
     }
 
+    public Predicate<Player> getActionPredicate() {
+        return actionPredicate;
+    }
+
+    public void setActionPredicate(Predicate<Player> actionPredicate) {
+        this.actionPredicate = actionPredicate;
+    }
 
     public BiPredicate<Game, GameWorker> getWinConditions() {
         return winConditions;
@@ -86,7 +94,6 @@ public class Player {
     public Player(String nickname, View playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
-        
     }
 
 
@@ -175,11 +182,11 @@ public class Player {
     }
 
 
-    public Action getSelectedAction() {
+    public ActionEnum getSelectedAction() {
         return selectedAction;
     }
 
-    public void setSelectedAction(Action selectedAction) {
+    public void setSelectedAction(ActionEnum selectedAction) {
         this.selectedAction = selectedAction;
     }
 }
