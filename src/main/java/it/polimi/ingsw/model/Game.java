@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Game {
-    private Player turnPlayer;  //TODO Bind turnPlayer to currentPlayerIndex to enforce synchronization
+    public Integer NUM_OF_PLAYERS;
+
+    private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
     private Integer currentPlayerIndex;
     private List<Player> players = new ArrayList<>();
 

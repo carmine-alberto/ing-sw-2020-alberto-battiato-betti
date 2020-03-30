@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.events.LoginEvent;
 import it.polimi.ingsw.view.utility.MessageBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -87,7 +88,7 @@ public class LoginView extends View {
             ObjectOutputStream clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-            clientOutputStream.writeObject(username);
+            clientOutputStream.writeObject(new LoginEvent(username));
             next(); //TODO Delete this call: next should be called upon reception of a server SwitchView Event - used for testing purposes
         } catch (IOException ex) {
             connectionClosedHandler();
