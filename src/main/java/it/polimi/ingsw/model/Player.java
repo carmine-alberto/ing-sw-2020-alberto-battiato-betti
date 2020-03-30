@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.predicates.winConditionsPredicate.HasMovedUpPredica
 import it.polimi.ingsw.model.predicates.winConditionsPredicate.IsTurnPlayerPredicate;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.model.actions.Action;
+import it.polimi.ingsw.model.ActionEnum;
+
 
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -23,8 +25,7 @@ public class Player {
     private GameWorker selectedWorker;
     private FieldCell selectedCell;
     private Constructible selectedConstructible;
-    private Action selectedAction;
-
+    private ActionEnum selectedAction;
 
     //Predicates
     private BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
@@ -85,6 +86,7 @@ public class Player {
     public Player(String nickname, View playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
+        
     }
 
 
