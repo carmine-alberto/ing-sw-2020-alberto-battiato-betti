@@ -2,6 +2,8 @@ package it.polimi.ingsw.controller.events;
 
 import it.polimi.ingsw.controller.ControllerState;
 
-public interface Event {
+import java.io.Serializable;
+
+public interface Event extends Serializable {
     public void visit(ControllerState eventHandler);
 }

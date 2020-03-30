@@ -12,7 +12,7 @@ public class Game {
 
     private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
     private Integer currentPlayerIndex;
-    private List<Player> players = new ArrayList<>();
+    private List<Player> players;
 
     private TurnPhase turnPhase;
 
@@ -21,6 +21,9 @@ public class Game {
     public static Integer FIELD_SIZE = 5;
 
     public Game() {
+        players = new ArrayList<>();
+        NUM_OF_PLAYERS = 2;
+
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
                 this.field[i][j] = new FieldCell(this, i, j);

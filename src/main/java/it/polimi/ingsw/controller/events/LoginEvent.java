@@ -4,7 +4,7 @@ import it.polimi.ingsw.controller.ControllerState;
 
 import java.io.Serializable;
 
-public class LoginEvent implements Event, Serializable {
+public class LoginEvent implements Event {
     public String playerUsername;
 
     public LoginEvent(String username) {
