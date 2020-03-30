@@ -19,8 +19,6 @@ public class Move implements Action {
     }
 
     @Override
-    public void run(FieldCell cell, Constructible constructible) {
-
-    }
+    public void run(FieldCell cell, Constructible constructible){ return;}
 
 }

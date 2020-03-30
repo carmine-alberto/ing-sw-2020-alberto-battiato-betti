@@ -27,7 +27,7 @@ public class ChooseBlockPhase extends TurnPhase {
         if (turnPlayer.getBlockPredicate().test(turnPlayer.getSelectedCell(), turnPlayer.getSelectedWorker())) //TODO Do we really need a BiPredicate here? FieldCell should be enough
             availableBlocks.add(Constructible.BLOCK);
 
-        if (turnPlayer.getDomePredicate().test(turnPlayer.getSelectedCell(), turnPlayer.getSelectedWorker()))
+        if (turnPlayer.getDomePredicate().test(turnPlayer.getSelectedCell(), turnPlayer.getSelectedWorker()))   //TODO same check as ChooseActionPhase
             availableBlocks.add(Constructible.DOME);
 
         //If we get here, the worker can certainly build something, no need to check the legality of the move
@@ -40,8 +40,8 @@ public class ChooseBlockPhase extends TurnPhase {
         }
 
         turnPlayer.getSelectedWorker().build(turnPlayer.getSelectedCell(), turnPlayer.getSelectedConstructible());
+        turnPlayer.getSelectedWorker().getOldBuildPositions().add(turnPlayer.getSelectedCell());
         checkWinConditions();
-
 
     }
 

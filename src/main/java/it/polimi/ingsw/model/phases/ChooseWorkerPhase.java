@@ -10,7 +10,7 @@ public class ChooseWorkerPhase extends TurnPhase {
 
     @Override
     protected void stateInit() {
-        nextPhase = new ChooseWorkerPhase(currentGame);
+        nextPhase = new ChooseActionPhase(currentGame);
         //Notify current player of the phase change
     }
 
