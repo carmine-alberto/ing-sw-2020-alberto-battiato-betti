@@ -1,6 +1,6 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.clientView;
 
-import javafx.application.*;
+import it.polimi.ingsw.view.clientView.View;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.shape.*;
@@ -148,8 +148,4 @@ public class View3D extends View {
         mainStage.show();
     }
 
-    @Override
-    public void next() {
-
-    }
 }

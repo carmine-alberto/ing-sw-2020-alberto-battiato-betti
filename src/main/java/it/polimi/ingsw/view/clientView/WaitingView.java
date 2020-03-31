@@ -1,18 +1,12 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.clientView;
 
+import it.polimi.ingsw.view.clientView.View;
 import javafx.animation.*;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -46,11 +40,6 @@ public class WaitingView extends View {
         animationContainer.getChildren().addAll(particles);
 
         mainStage.getScene().setRoot(animationContainer);
-    }
-
-    @Override
-    public void next() {
-
     }
 
     private void animateParticle(Node particle, Shape path, Float timeBeforeNext){

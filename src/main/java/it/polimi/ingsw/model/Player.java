@@ -4,7 +4,8 @@ import it.polimi.ingsw.model.predicates.movePredicates.IsCellFreePredicate;
 import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicate.HasMovedUpPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicate.IsTurnPlayerPredicate;
-import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.clientView.View;
+import it.polimi.ingsw.view.serverView.VirtualView;
 
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class Player {
     private String colour;
     private Boolean isWinner;
     private Game currentGame;
-    private View playerView;
+    private VirtualView playerView;
     private List<GameWorker> workers;
 
     //Attributes used to store turnState
@@ -91,7 +92,7 @@ public class Player {
         this.nickname = nickname;
     }//TODO eliminare questo costruttore
 
-    public Player(String nickname, View playerView) {
+    public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
     }
@@ -142,7 +143,7 @@ public class Player {
     }
 
 
-    public View getPlayerView() {
+    public VirtualView getPlayerView() {
         return playerView;
     }
 

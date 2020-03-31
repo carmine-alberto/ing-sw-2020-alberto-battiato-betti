@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.clientView;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.view.utility.MessageBox;
@@ -68,8 +68,4 @@ public class MainView extends View {
         MessageBox.show(clickedCell.getId(), "Cell clicked");
     }
 
-    @Override
-    public void next() {
-
-    }
-}
+ }

@@ -1,33 +1,29 @@
 package it.polimi.ingsw.controller.events;
 
 import it.polimi.ingsw.controller.ChallengerSelectionController;
-import it.polimi.ingsw.controller.ControllerState;
 import it.polimi.ingsw.controller.LoginController;
+import it.polimi.ingsw.view.serverView.ServerViewState;
 import it.polimi.ingsw.view.serverView.VirtualView;
 
-import java.io.Serializable;
+public class ChangeViewEvent implements Event {
+    public ServerViewState nextState;
 
-public class LoginEvent implements Event {
-    public String playerUsername;
-
-    public LoginEvent(String username) {
-        this.playerUsername = username;
+    public ChangeViewEvent(ServerViewState nextState) {
+        this.nextState = nextState;
     }
-
 
     @Override
     public void visit(LoginController eventHandler, VirtualView view) {
-        eventHandler.handle(this, view);
-
+        return;
     }
 
     @Override
     public void visit(ChallengerSelectionController eventHandler, VirtualView view) {
-        eventHandler.handle(this, view);
+
     }
 
     @Override
     public void visit(ChallengerSelectionController eventHandler) {
-
+        return;
     }
 }

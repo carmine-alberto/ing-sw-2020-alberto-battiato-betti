@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.view.LoginView;
-import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.clientView.LoginView;
+import it.polimi.ingsw.view.clientView.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

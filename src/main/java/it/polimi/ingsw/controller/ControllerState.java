@@ -1,7 +1,9 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
-import it.polimi.ingsw.controller.events.LoginEvent;
+import it.polimi.ingsw.view.clientView.View;
+import it.polimi.ingsw.view.serverView.VirtualView;
+
 
 public abstract class ControllerState {
     protected Controller mainController;
@@ -11,5 +13,5 @@ public abstract class ControllerState {
     }
 
 
-    public abstract void handle(Event loginEvent);
+    public abstract void handle(Event event, VirtualView view);
 }

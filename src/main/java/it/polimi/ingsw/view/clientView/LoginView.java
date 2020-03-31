@@ -1,7 +1,8 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.clientView;
 
+import it.polimi.ingsw.controller.events.ChangeViewEvent;
+import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.LoginEvent;
-import it.polimi.ingsw.view.utility.MessageBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public class LoginView extends View {
@@ -70,12 +72,6 @@ public class LoginView extends View {
         mainStage.show();
     }
 
-    @Override
-    public void next() {
-        viewState = new ChallengerSelectionView(mainStage, clientSocket, viewState); //TODO Assign the correct nextState
-        viewState.render();
-    }
-
     private void sendDataToServer() {
         String interfaceChoice = cliGUIChoice.getValue();
         //TODO Controllo su validità di username e IP inseriti
@@ -89,8 +85,11 @@ public class LoginView extends View {
             ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 
             clientOutputStream.writeObject(new LoginEvent(username));
-            next(); //TODO Delete this call: next should be called upon reception of a server SwitchView Event - used for testing purposes
-        } catch (IOException ex) {
+
+            ChangeViewEvent serverEvent = (ChangeViewEvent) clientInputStream.readObject();
+
+            next(serverEvent.nextState.getClientName());
+        } catch (IOException | ClassNotFoundException ex) {
             connectionClosedHandler();
         }
     }

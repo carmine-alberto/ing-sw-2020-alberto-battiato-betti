@@ -49,5 +49,6 @@ public class ChooseBlockPhase extends TurnPhase {
     protected void stateEnd() {
         super.stateEnd();
         currentGame.setNextTurnPlayer();
+        //TODO empty whatever structure needs to be emptied (e.g. OldMovePositions)
     }
 }

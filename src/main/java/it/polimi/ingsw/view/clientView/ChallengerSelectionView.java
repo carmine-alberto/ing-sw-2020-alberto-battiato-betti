@@ -1,10 +1,9 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.clientView;
 
 import it.polimi.ingsw.view.utility.MessageBox;
 import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -68,12 +67,12 @@ public class ChallengerSelectionView extends View {
 
         Label godPowersLabel = new Label("Select the God Powers to be used: ");
 
-        List<String> godsList = new ArrayList<>(List.of("Apollo", "Athena", "Artemis","Atlas", "Apollo", "Athena", "Artemis","Atlas", "Apollo", "Athena", "Artemis","Atlas")); //TODO Fill the list the correct way
+        List<String> godsList = new ArrayList<>(List.of("Apollo", "Athena", "Artemis", "Atlas", "Apollo", "Athena", "Artemis", "Atlas", "Apollo", "Athena", "Artemis", "Atlas")); //TODO Fill the list the correct way
 
         godsIcons = new FlowPane();
         godsIcons.setHgap(8);
         godsIcons.setVgap(10);
-        for (String god: godsList)
+        for (String god : godsList)
             godsIcons.getChildren().add(new ToggleButton(god));
 
 
@@ -93,19 +92,19 @@ public class ChallengerSelectionView extends View {
 
     private void sendDataToServer() {
         List<String> selectedGods = godsIcons.getChildren().stream()
-                            .filter(godButton -> ((ToggleButton)godButton).isSelected())
-                            .map(godButton -> ((ToggleButton) godButton).getText())
-                            .collect(Collectors.toList());
+                .filter(godButton -> ((ToggleButton) godButton).isSelected())
+                .map(godButton -> ((ToggleButton) godButton).getText())
+                .collect(Collectors.toList());
 
         Integer selectedNumberOfPlayers = Integer.parseInt(
-                                        ((RadioButton)numberOfPlayers.getSelectedToggle())
-                                        .getText()
-                                        .substring(0, 1)
+                ((RadioButton) numberOfPlayers.getSelectedToggle())
+                        .getText()
+                        .substring(0, 1)
         );
 
         Integer selectedStartingPlayer = Integer.parseInt(
-                                        ((RadioButton)startingPlayer.getSelectedToggle())
-                                        .getText()
+                ((RadioButton) startingPlayer.getSelectedToggle())
+                        .getText()
         );
 
         if (selectedNumberOfPlayers != selectedGods.size())
@@ -114,18 +113,11 @@ public class ChallengerSelectionView extends View {
             MessageBox.show("You can't choose the third player as starting player in a 2-players game!", "Error");
         else {
             try {
-                next(); //TODO Remove this line: call to next must be triggered by a server event
-                new ObjectOutputStream(clientSocket.getOutputStream()).writeObject(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods));
+                //TODO Handle ChangeViewEvent
+                new ObjectOutputStream(clientSocket.getOutputStream()).writeObject(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods, selectedStartingPlayer));
             } catch (IOException e) {
                 connectionClosedHandler();
             }
         }
-    }
-
-
-    @Override
-    public void next() {
-        new GodPowerView(mainStage, clientSocket, viewState).render();
-
     }
 }

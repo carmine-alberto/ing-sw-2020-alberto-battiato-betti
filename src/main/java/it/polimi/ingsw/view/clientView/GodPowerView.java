@@ -1,11 +1,9 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.clientView;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -37,11 +35,6 @@ public class GodPowerView extends View {
         selectGodBox.setAlignment(Pos.CENTER);
 
         mainStage.getScene().setRoot(selectGodBox);
-
-    }
-
-    @Override
-    public void next() {
 
     }
 }
