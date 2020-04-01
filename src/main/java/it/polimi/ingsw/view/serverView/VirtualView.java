@@ -57,7 +57,7 @@ public class VirtualView implements Runnable {
 
     public void setNextState(ServerViewState nextState) {
             viewState = nextState;
-            sendToClient(new ChangeViewEvent(nextState));
+            sendToClient(new ChangeViewEvent(nextState.getClientName()));
     }
 
 

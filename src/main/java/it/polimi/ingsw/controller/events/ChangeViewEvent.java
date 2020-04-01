@@ -6,10 +6,10 @@ import it.polimi.ingsw.view.serverView.ServerViewState;
 import it.polimi.ingsw.view.serverView.VirtualView;
 
 public class ChangeViewEvent implements Event {
-    public ServerViewState nextState;
+    public String viewState;
 
-    public ChangeViewEvent(ServerViewState nextState) {
-        this.nextState = nextState;
+    public ChangeViewEvent(String nextState) {
+        this.viewState = nextState;
     }
 
     @Override

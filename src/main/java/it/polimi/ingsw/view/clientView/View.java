@@ -21,16 +21,14 @@ public abstract class  View {
 
 
     public void next(String nextState) {
-        viewState = switch(nextState) {
-            case "ChallengerSelectionView" -> new ChallengerSelectionView(mainStage, clientSocket, viewState);
-            case "WaitingView" -> new WaitingView(mainStage, clientSocket, viewState);
-            case "GodPowerView" -> new GodPowerView(mainStage, clientSocket, viewState);
-            case "MainView" -> new MainView(mainStage, clientSocket, viewState);
-            default -> null;
-        };
-
-        //(View) Class.forName(nextState).getConstructor().newInstance(mainStage, clientSocket, viewState); --- alternativa allo switch
-
+        try {
+            viewState = (View) Class.forName("it.polimi.ingsw.view.clientView." + nextState)
+                    .getConstructors()[0]
+                    .newInstance(mainStage, clientSocket, viewState);
+        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace(); //TODO Handle exception properly
+        }
+        
         viewState.render();
     }
 

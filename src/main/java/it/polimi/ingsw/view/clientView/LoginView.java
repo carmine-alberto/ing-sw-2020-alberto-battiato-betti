@@ -88,7 +88,7 @@ public class LoginView extends View {
 
             ChangeViewEvent serverEvent = (ChangeViewEvent) clientInputStream.readObject();
 
-            next(serverEvent.nextState.getClientName());
+            next(serverEvent.viewState);
         } catch (IOException | ClassNotFoundException ex) {
             connectionClosedHandler();
         }
