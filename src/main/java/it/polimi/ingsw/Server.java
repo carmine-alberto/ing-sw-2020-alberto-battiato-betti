@@ -2,14 +2,13 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.cview.serverView.VirtualView;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,16 +42,12 @@ public class Server {
 
     private static void listenToNewGameConnections() {
         lastGame = games.get(games.size() - 1);
-        acceptNextPlayer = true;
-        while (lastGame.getPlayers().size() < lastGame.NUM_OF_PLAYERS) {
+        while (true) {
             try {
                 System.out.println("Server ready, players: " + lastGame.getPlayers().size() + " of " + lastGame.NUM_OF_PLAYERS);
                 Socket socket = serverSocket.accept();
                 executor.submit(new VirtualView(socket, controller));
-                acceptNextPlayer = false;
-                /*while (!acceptNextPlayer) {
-                    busy wait, variable set after a player is successfully added to the playerList - TODO should be substituted by an observer object
-                }*/
+
             } catch (IOException e) {
                 break; // Entrerei qui se serverSocket venisse chiuso
             }

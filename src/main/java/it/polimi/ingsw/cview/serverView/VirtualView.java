@@ -1,10 +1,11 @@
-package it.polimi.ingsw.view.serverView;
+package it.polimi.ingsw.cview.serverView;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.controller.events.ChangeViewEvent;
 import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.controller.events.WarningEvent;
+import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.view.clientView.View;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,12 +18,12 @@ public class VirtualView implements Runnable {
         private Controller controller;
         private ObjectInputStream serverInputStream;
         private ObjectOutputStream serverOutputStream;
-        ServerViewState viewState;
+        private View viewState;
 
         public VirtualView(Socket socket, Controller controller) {
             this.socket = socket;
             this.controller = controller;
-            this.viewState = new VirtualLoginView();
+            this.viewState = new VirtualLoginView(this, socket, viewState);
         }
 
         public void run() {
@@ -55,9 +56,13 @@ public class VirtualView implements Runnable {
         this.viewOwner = viewOwner;
     }
 
-    public void setNextState(ServerViewState nextState) {
+    public void changeView(View nextState) {
             viewState = nextState;
-            sendToClient(new ChangeViewEvent(nextState.getClientName()));
+            sendToClient(new ChangeViewEvent(nextState.toString()));
+    }
+
+    public void showMessage(String messageContent) {
+            sendToClient(new WarningEvent(messageContent));
     }
 
 

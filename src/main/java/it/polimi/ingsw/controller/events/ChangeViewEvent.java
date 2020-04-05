@@ -1,9 +1,10 @@
 package it.polimi.ingsw.controller.events;
 
 import it.polimi.ingsw.controller.ChallengerSelectionController;
+import it.polimi.ingsw.controller.GodPowerController;
 import it.polimi.ingsw.controller.LoginController;
-import it.polimi.ingsw.view.serverView.ServerViewState;
-import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.cview.clientView.ViewEventHandler;
+import it.polimi.ingsw.cview.serverView.VirtualView;
 
 public class ChangeViewEvent implements Event {
     public String viewState;
@@ -25,5 +26,16 @@ public class ChangeViewEvent implements Event {
     @Override
     public void visit(ChallengerSelectionController eventHandler) {
         return;
+    }
+
+    @Override
+    public void visit(ViewEventHandler eventHandler) {
+        eventHandler.handle(this);
+
+    }
+
+    @Override
+    public void visit(GodPowerController godPowerController) {
+
     }
 }

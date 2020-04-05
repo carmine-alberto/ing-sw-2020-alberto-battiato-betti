@@ -1,6 +1,8 @@
-package it.polimi.ingsw.view.clientView;
+package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.view.utility.MessageBox;
+import it.polimi.ingsw.Client;
+import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.utility.MessageBox;
 import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,12 +24,13 @@ public class ChallengerSelectionView extends View {
     private ToggleGroup numberOfPlayers;
     private ToggleGroup startingPlayer;
     private FlowPane godsIcons;
+    private List<String> godsList;
 
 
-    public ChallengerSelectionView(Stage stage, Socket clientSocket, View viewState) {
-        super(stage, clientSocket, viewState);
+    public ChallengerSelectionView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
+        super(stage, clientSocket, client, out);
+        godsList = new ArrayList<>(List.of("Apollo", "Athena", "Artemis", "Atlas"));
     }
-
 
     @Override
     public void render() {
@@ -67,8 +70,6 @@ public class ChallengerSelectionView extends View {
 
         Label godPowersLabel = new Label("Select the God Powers to be used: ");
 
-        List<String> godsList = new ArrayList<>(List.of("Apollo", "Athena", "Artemis", "Atlas", "Apollo", "Athena", "Artemis", "Atlas", "Apollo", "Athena", "Artemis", "Atlas")); //TODO Fill the list the correct way
-
         godsIcons = new FlowPane();
         godsIcons.setHgap(8);
         godsIcons.setVgap(10);
@@ -91,7 +92,8 @@ public class ChallengerSelectionView extends View {
     }
 
     private void sendDataToServer() {
-        List<String> selectedGods = godsIcons.getChildren().stream()
+        List<String> selectedGods = godsIcons.getChildren()
+                .stream()
                 .filter(godButton -> ((ToggleButton) godButton).isSelected())
                 .map(godButton -> ((ToggleButton) godButton).getText())
                 .collect(Collectors.toList());
@@ -111,13 +113,11 @@ public class ChallengerSelectionView extends View {
             MessageBox.show("Number of players and god powers must match!", "Error");
         else if (selectedStartingPlayer > selectedNumberOfPlayers)
             MessageBox.show("You can't choose the third player as starting player in a 2-players game!", "Error");
-        else {
-            try {
-                //TODO Handle ChangeViewEvent
-                new ObjectOutputStream(clientSocket.getOutputStream()).writeObject(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods, selectedStartingPlayer));
-            } catch (IOException e) {
-                connectionClosedHandler();
-            }
-        }
+        else
+            sendToServer(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods, selectedStartingPlayer));
+    }
+
+    public void setGodsList(List<String> godsList) {
+        this.godsList = godsList;
     }
 }

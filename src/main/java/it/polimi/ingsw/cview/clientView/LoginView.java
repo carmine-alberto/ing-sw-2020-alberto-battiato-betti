@@ -1,8 +1,8 @@
-package it.polimi.ingsw.view.clientView;
+package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.controller.events.ChangeViewEvent;
-import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.LoginEvent;
+import it.polimi.ingsw.cview.View;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public class LoginView extends View {
@@ -27,8 +26,8 @@ public class LoginView extends View {
     private TextField usernameInput;
     private TextField serverIPInput;
 
-    public LoginView(Stage stage, Socket clientSocket, View viewState) {
-        super(stage, clientSocket, viewState);
+    public LoginView(Stage stage, Socket clientSocket, Client client) {
+        super(stage, clientSocket, client, null);
     }
 
     @Override
@@ -81,15 +80,16 @@ public class LoginView extends View {
 
         try {
             clientSocket = new Socket(serverIP, PORT_NUMBER);
-            ObjectOutputStream clientOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-            clientOutputStream.writeObject(new LoginEvent(username));
+            Thread serverListener = new Thread(new ViewEventHandler(client, clientInputStream));
+            serverListener.start();
+            System.out.println("Thread started");
 
-            ChangeViewEvent serverEvent = (ChangeViewEvent) clientInputStream.readObject();
+            out.writeObject(new LoginEvent(username));
 
-            next(serverEvent.viewState);
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException ex) {
             connectionClosedHandler();
         }
     }

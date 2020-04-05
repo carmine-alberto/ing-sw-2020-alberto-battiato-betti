@@ -13,6 +13,7 @@ public class Game {
     private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
     private Integer currentPlayerIndex;
     private List<Player> players;
+    private List<String> godPowers;
 
     private TurnPhase turnPhase;
 
@@ -22,7 +23,8 @@ public class Game {
 
     public Game() {
         players = new ArrayList<>();
-        NUM_OF_PLAYERS = 2;
+        godPowers = new ArrayList<>(List.of("Apollo", "Artemis", "Athena", "Atlas", "Hephaestus", "Demeter", "Minotaur", "Pan")); //TODO Read available godPowers from a file
+        NUM_OF_PLAYERS = -1;
 
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
@@ -102,5 +104,14 @@ public class Game {
 
     public Player getTurnPlayer() {
         return turnPlayer;
+    }
+
+
+    public List<String> getGodPowers() {
+        return godPowers;
+    }
+
+    public void setGodPowers(List<String> godPowers) {
+        this.godPowers = godPowers;
     }
 }

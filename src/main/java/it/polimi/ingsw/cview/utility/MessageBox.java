@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.utility;
+package it.polimi.ingsw.cview.utility;
 
 import javafx.stage.*;
 import javafx.scene.*;

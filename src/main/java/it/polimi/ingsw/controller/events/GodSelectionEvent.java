@@ -6,20 +6,12 @@ import it.polimi.ingsw.controller.LoginController;
 import it.polimi.ingsw.cview.clientView.ViewEventHandler;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
-import java.util.List;
+public class GodSelectionEvent implements Event {
+    public String selectedGod;
 
-public class ChallengerSelectionEvent implements Event {
-    public List<String> selectedGods;
-    public Integer selectedNumberOfPlayers;
-    public Integer selectedStartingPlayerIndex;
-
-
-    public ChallengerSelectionEvent(Integer selectedNumberOfPlayers, List<String> selectedGods, Integer selectedStartingPlayerIndex) {
-        this.selectedGods = selectedGods;
-        this.selectedNumberOfPlayers = selectedNumberOfPlayers;
-        this.selectedStartingPlayerIndex = selectedStartingPlayerIndex;
+    public GodSelectionEvent(String selectedGod) {
+        this.selectedGod = selectedGod;
     }
-
     @Override
     public void visit(LoginController eventHandler, VirtualView view) {
 
@@ -27,7 +19,7 @@ public class ChallengerSelectionEvent implements Event {
 
     @Override
     public void visit(ChallengerSelectionController eventHandler, VirtualView view) {
-        eventHandler.handle(this, view);
+
     }
 
     @Override
@@ -37,11 +29,10 @@ public class ChallengerSelectionEvent implements Event {
 
     @Override
     public void visit(ViewEventHandler eventHandler) {
-
     }
 
     @Override
-    public void visit(GodPowerController godPowerController) {
-
+    public void visit(GodPowerController eventHandler) {
+        eventHandler.handle(this);
     }
 }

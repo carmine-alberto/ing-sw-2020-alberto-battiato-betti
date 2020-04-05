@@ -1,19 +1,20 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.Server;
-import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
-import it.polimi.ingsw.controller.events.Event;
-import it.polimi.ingsw.controller.events.LoginEvent;
+import it.polimi.ingsw.controller.events.*;
+import it.polimi.ingsw.cview.clientView.GodPowerView;
+import it.polimi.ingsw.cview.serverView.VirtualGodPowerView;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.view.serverView.VirtualChallengerSelectionView;
-import it.polimi.ingsw.view.serverView.VirtualView;
-import it.polimi.ingsw.view.serverView.VirtualWaitingView;
+import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.cview.serverView.VirtualWaitingView;
 
 import java.util.stream.Collectors;
 
 public class ChallengerSelectionController extends ControllerState {
     public ChallengerSelectionController(Controller mainController) {
         super(mainController);
+        notifyAvailableGods(mainController.getCurrentGame().getPlayers().get(0));
     }
 
     @Override
@@ -22,25 +23,50 @@ public class ChallengerSelectionController extends ControllerState {
     }
 
     public void handle(LoginEvent loginEvent, VirtualView senderView) {
-        Player newPlayer = new Player(loginEvent.playerUsername, senderView);
-        mainController.getCurrentGame().addPlayer(newPlayer);
-        newPlayer.getPlayerView().setNextState(new VirtualWaitingView());
-        Server.acceptNextPlayer = true; //TODO Remove when a better method to handle asynchronous connections is implemented
+        Game currentGame = mainController.getCurrentGame();
+        Player newPlayer;
+
+        if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() < 2 || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
+            newPlayer = new Player(loginEvent.playerUsername, senderView);
+            currentGame.addPlayer(newPlayer);
+            newPlayer.getPlayerView().changeView(new VirtualWaitingView());
+        } else {
+            senderView.showMessage("Challenger not ready! Try again later");
+        }
+        if (currentGame.getPlayers().size() == currentGame.NUM_OF_PLAYERS)
+            moveToNextState(currentGame);
 
         System.out.println(mainController.getCurrentGame().getPlayers().stream().map(player -> player.getNickname()).collect(Collectors.toList()));
 
     }
 
-    public void handle(ChallengerSelectionEvent event) { //TODO Check legality of choices
+    public void handle(ChallengerSelectionEvent event, VirtualView senderView) { //TODO Check legality of choices
         mainController.getCurrentGame().setCurrentPlayerIndex(event.selectedStartingPlayerIndex - 1);
         mainController.getCurrentGame().NUM_OF_PLAYERS = event.selectedNumberOfPlayers;
+        mainController.getCurrentGame().setGodPowers(event.selectedGods);
 
-        Server.acceptNextPlayer = true; //TODO Remove when a better method to handle asynchronous connections is implemented
+        mainController.getCurrentGame().getPlayers().get(0).getPlayerView().changeView(new VirtualWaitingView());
 
         if (mainController.getCurrentGame().getPlayers().size() == mainController.getCurrentGame().NUM_OF_PLAYERS) {
-            //TODO Implement phase swap
+            moveToNextState(mainController.getCurrentGame());
         }
 
         //TODO Add selected God Powers to the game
+    }
+
+    private void moveToNextState(Game currentGame) {
+        currentGame.getPlayers().get(0).getPlayerView().changeView(new VirtualWaitingView());
+        currentGame.getPlayers().get(1).getPlayerView().changeView(new VirtualGodPowerView());
+        mainController.controllerState = new GodPowerController(mainController);
+    }
+
+    private void notifyAvailableGods(Player playerToBeNotified) {
+        playerToBeNotified
+                .getPlayerView()
+                .sendToClient(new AvailableGodsEvent(mainController
+                        .getCurrentGame()
+                        .getGodPowers()
+                        .stream()
+                        .collect(Collectors.toList()))); //This may be moved into the model: the game changes (god powers are added) and a notification is sent - Downsides: what if the gods are set before other clients are connected?
     }
 }

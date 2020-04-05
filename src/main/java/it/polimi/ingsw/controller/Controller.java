@@ -2,8 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.view.clientView.View;
-import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.cview.serverView.VirtualView;
 
 public class Controller {
     private Game currentGame;
@@ -14,7 +13,7 @@ public class Controller {
         this.controllerState = new LoginController(this);
     }
 
-    public void handle(Event event, VirtualView view) {
+    public synchronized void handle(Event event, VirtualView view) {
         controllerState.handle(event, view);
     }
 

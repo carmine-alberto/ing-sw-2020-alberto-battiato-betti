@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.view.clientView.LoginView;
-import it.polimi.ingsw.view.clientView.View;
+import it.polimi.ingsw.cview.clientView.LoginView;
+import it.polimi.ingsw.cview.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -23,8 +23,17 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         //stage.setFullScreen(true);
-        this.viewState = new LoginView(stage, clientSocket, viewState);
+        this.viewState = new LoginView(stage, clientSocket, this);
         viewState.render();
 
     }
+
+    public View getViewState() {
+        return viewState;
+    }
+
+    public void setViewState(View viewState) {
+        this.viewState = viewState;
+    }
+
 }

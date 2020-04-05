@@ -4,8 +4,7 @@ import it.polimi.ingsw.model.predicates.movePredicates.IsCellFreePredicate;
 import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicate.HasMovedUpPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicate.IsTurnPlayerPredicate;
-import it.polimi.ingsw.view.clientView.View;
-import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.cview.serverView.VirtualView;
 
 
 import java.util.List;
@@ -20,6 +19,7 @@ public class Player {
     private Game currentGame;
     private VirtualView playerView;
     private List<GameWorker> workers;
+    private String selectedGodPower; //TODO Refactor into proper type
 
     //Attributes used to store turnState
     private GameWorker selectedWorker;
@@ -152,7 +152,6 @@ public class Player {
         return currentGame.getPlayers().stream()
                 .filter(player -> !player.equals(this))
                 .collect(Collectors.toList());
-
     }
 
 
@@ -189,5 +188,14 @@ public class Player {
 
     public void setSelectedAction(ActionEnum selectedAction) {
         this.selectedAction = selectedAction;
+    }
+
+
+    public String getSelectedGodPower() {
+        return selectedGodPower;
+    }
+
+    public void setSelectedGodPower(String selectedGodPower) {
+        this.selectedGodPower = selectedGodPower;
     }
 }

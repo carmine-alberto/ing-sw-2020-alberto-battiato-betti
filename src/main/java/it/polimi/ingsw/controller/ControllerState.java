@@ -1,8 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
-import it.polimi.ingsw.view.clientView.View;
-import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.cview.serverView.VirtualView;
 
 
 public abstract class ControllerState {

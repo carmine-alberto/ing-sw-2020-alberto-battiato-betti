@@ -1,7 +1,9 @@
-package it.polimi.ingsw.view.clientView;
+package it.polimi.ingsw.cview.clientView;
 
+import it.polimi.ingsw.Client;
+import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.FieldCell;
-import it.polimi.ingsw.view.utility.MessageBox;
+import it.polimi.ingsw.cview.utility.MessageBox;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Insets;
@@ -13,14 +15,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class MainView extends View {
     FieldCell[][] board = new FieldCell[5][5];
     final Integer edgeTolerance = 20;
 
-    public MainView(Stage stage, Socket clientSocket, View viewState) {
-        super(stage, clientSocket, viewState);
+    public MainView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
+        super(stage, clientSocket, client, out);
     }
 
     @Override
