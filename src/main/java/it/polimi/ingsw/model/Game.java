@@ -103,6 +103,8 @@ public class Game {
 
 
     public Player getTurnPlayer() {
+        if (turnPlayer == null)
+            turnPlayer = players.get(currentPlayerIndex);
         return turnPlayer;
     }
 

@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.cview.clientView.LoginView;
 import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -14,6 +15,7 @@ import java.net.Socket;
 public class Client extends Application {
     private Socket clientSocket;
     private View viewState;
+    private FieldCell[][] board;
 
     public static void main(String[] args) {
         System.out.println( "Jacopo Gay lol" );
@@ -36,4 +38,11 @@ public class Client extends Application {
         this.viewState = viewState;
     }
 
+    public FieldCell[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(FieldCell[][] board) {
+        this.board = board;
+    }
 }

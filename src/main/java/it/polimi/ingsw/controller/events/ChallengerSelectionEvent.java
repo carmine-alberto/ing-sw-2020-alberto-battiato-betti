@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller.events;
 import it.polimi.ingsw.controller.ChallengerSelectionController;
 import it.polimi.ingsw.controller.GodPowerController;
 import it.polimi.ingsw.controller.LoginController;
+import it.polimi.ingsw.controller.WorkerSetupController;
 import it.polimi.ingsw.cview.clientView.ViewEventHandler;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
@@ -42,6 +43,11 @@ public class ChallengerSelectionEvent implements Event {
 
     @Override
     public void visit(GodPowerController godPowerController) {
+
+    }
+
+    @Override
+    public void visit(WorkerSetupController workerSetupController) {
 
     }
 }

@@ -18,16 +18,23 @@ import javafx.stage.Stage;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class MainView extends View {
-    FieldCell[][] board = new FieldCell[5][5];
+public class BoardView extends View {
     final Integer edgeTolerance = 20;
+    final Integer BOARD_SIZE = 5;
 
-    public MainView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
+    public BoardView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
+
+        FieldCell[][] newBoard = new FieldCell[BOARD_SIZE][BOARD_SIZE];
+        for (Integer i = 0; i < BOARD_SIZE; i++)
+            for (Integer j = 0; j < BOARD_SIZE; j++)
+                newBoard[i][j] = new FieldCell(null, i, j);
+        client.setBoard(newBoard);
     }
 
     @Override
     public void render() {
+        FieldCell[][] boardRep = client.getBoard();
         Button cell;
 
         TilePane board = new TilePane();
@@ -43,7 +50,7 @@ public class MainView extends View {
 
         for (Integer i = 1; i < 6; i++)
             for (Integer j = 1; j < 6; j++) {
-                cell = new Button();
+                cell = new Button(); //TODO Two ideas: changing the BackgroundFill according to the cell content using a Factory method OR creating a StackPane, stacking the cell content and adding the button at the top for interactivity
                 cell.setId(i.toString() + " " + j.toString());
                 cell.setBackground(new Background(new BackgroundFill(new Color(0.47, 0.95, 0.98, 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
                 cell.setStyle("-fx-border-color: black");
