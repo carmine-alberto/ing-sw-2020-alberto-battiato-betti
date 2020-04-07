@@ -17,8 +17,9 @@ public class Client extends Application {
     private View viewState;
     private FieldCell[][] board;
 
+
     public static void main(String[] args) {
-        System.out.println( "Jacopo Gay lol" );
+        System.out.println( "Jacopo" + "gay");
         launch();
     }
 
