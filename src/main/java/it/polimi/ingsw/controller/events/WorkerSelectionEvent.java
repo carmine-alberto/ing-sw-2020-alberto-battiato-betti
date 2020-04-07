@@ -9,13 +9,16 @@ import it.polimi.ingsw.cview.serverView.VirtualView;
 
 import java.util.List;
 
-public class AvailableGodsEvent implements Event {
-    public List<String> godPowers;
+public class WorkerSelectionEvent implements Event {
+    public List<Integer> xCoordinates;
+    public List<Integer> yCoordinates;
+    public String selectedColor;
 
-    public AvailableGodsEvent(List<String> godPowers) {
-        this.godPowers = godPowers;
+    public WorkerSelectionEvent(List<Integer> xCoordinates, List<Integer> yCoordinates, String color) {
+        this.xCoordinates = xCoordinates;
+        this.yCoordinates = yCoordinates;
+        this.selectedColor = color;
     }
-
 
     @Override
     public void visit(LoginController eventHandler, VirtualView view) {
@@ -34,7 +37,7 @@ public class AvailableGodsEvent implements Event {
 
     @Override
     public void visit(ViewEventHandler eventHandler) {
-        eventHandler.handle(this);
+
     }
 
     @Override
@@ -43,6 +46,6 @@ public class AvailableGodsEvent implements Event {
 
     @Override
     public void visit(WorkerSetupController eventHandler, VirtualView view) {
-
+        eventHandler.handle(this, view);
     }
 }

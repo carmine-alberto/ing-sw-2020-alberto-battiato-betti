@@ -65,6 +65,13 @@ public class VirtualView implements Runnable {
             sendToClient(new WarningEvent(messageContent));
     }
 
+    public void terminate() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 

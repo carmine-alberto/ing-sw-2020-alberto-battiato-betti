@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -33,7 +34,7 @@ public class LoginView extends View {
     @Override
     public void render() {
 
-        Image backgroundImage = new Image("file:" + System.getProperty("user.dir") + "\\resources\\copertina_santorini_2016.jpg");
+        Image backgroundImage = new Image("file:" + System.getProperty("user.dir") + File.separator + "resources" + File.separator + "copertina_santorini_2016.jpg");
         ImageView imageNode = new ImageView(backgroundImage);
         imageNode.fitHeightProperty().bind(mainStage.heightProperty());
         imageNode.setPreserveRatio(true);

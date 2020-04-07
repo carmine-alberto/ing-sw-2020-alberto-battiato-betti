@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.net.Socket;
 
 /**
@@ -18,7 +19,7 @@ public class Client extends Application {
     private FieldCell[][] board;
 
     public static void main(String[] args) {
-        System.out.println( "Jacopo Gay lol" );
+        System.out.println( "Jacopo Gay lol " + File.separator);
         launch();
     }
 

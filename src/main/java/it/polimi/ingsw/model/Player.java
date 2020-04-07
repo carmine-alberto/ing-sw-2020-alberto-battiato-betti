@@ -7,34 +7,35 @@ import it.polimi.ingsw.model.predicates.winConditionsPredicate.IsTurnPlayerPredi
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class Player {
+public class Player implements Serializable {
     private String nickname;
     private String colour;
     private Boolean isWinner;
-    private Game currentGame;
-    private VirtualView playerView;
+    private transient Game currentGame;
+    private transient VirtualView playerView;
     private List<GameWorker> workers;
     private String selectedGodPower; //TODO Refactor into proper type
 
     //Attributes used to store turnState
-    private GameWorker selectedWorker;
-    private FieldCell selectedCell;
-    private Constructible selectedConstructible;
-    private ActionEnum selectedAction;
+    private transient GameWorker selectedWorker;
+    private transient FieldCell selectedCell;
+    private transient Constructible selectedConstructible;
+    private transient ActionEnum selectedAction;
 
 
     //Predicates
-    private BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
-    private BiPredicate<FieldCell, GameWorker> buildPredicate;
-    private BiPredicate<FieldCell, GameWorker> blockPredicate;
-    private BiPredicate<FieldCell, GameWorker> domePredicate;
-    private Predicate<Player> actionPredicate;
-    private BiPredicate<Game, GameWorker> winConditions = new HasMovedUpPredicate().and(new IsTurnPlayerPredicate()); //TODO Delegate winCondition assignment to a specific builder
+    private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
+    private transient BiPredicate<FieldCell, GameWorker> buildPredicate;
+    private transient BiPredicate<FieldCell, GameWorker> blockPredicate;
+    private transient BiPredicate<FieldCell, GameWorker> domePredicate;
+    private transient Predicate<Player> actionPredicate;
+    private transient BiPredicate<Game, GameWorker> winConditions = new HasMovedUpPredicate().and(new IsTurnPlayerPredicate()); //TODO Delegate winCondition assignment to a specific builder
 
     public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
         return movePredicate;
@@ -198,4 +199,5 @@ public class Player {
     public void setSelectedGodPower(String selectedGodPower) {
         this.selectedGodPower = selectedGodPower;
     }
+
 }

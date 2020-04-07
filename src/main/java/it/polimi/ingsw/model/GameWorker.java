@@ -1,18 +1,20 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.actions.Action;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameWorker {
+public class GameWorker implements Serializable  {
 
-    private Action moveStrategy;
-    private Action buildStrategy;
+    private transient Action moveStrategy;
+    private transient Action buildStrategy;
     private FieldCell position;
-    private Game currentGame;
+    private transient Game currentGame;
     private Player owner;
-    private List<FieldCell> oldMovePositions;
-    private List<FieldCell> oldBuildPositions;
+    private transient List<FieldCell> oldMovePositions;
+    private transient List<FieldCell> oldBuildPositions;
 
     public GameWorker(Action moveStrategy, Action buildStrategy, Game currentGame, Player owner) {
         this.moveStrategy = moveStrategy;
@@ -23,6 +25,8 @@ public class GameWorker {
 
     public void setPosition(FieldCell cell) {
         this.position = cell;
+        if (!this.equals(cell.getWorker()))
+            cell.setOccupyingWorker(this);
     }
 
 

@@ -42,12 +42,12 @@ public class ChallengerSelectionEvent implements Event {
     }
 
     @Override
-    public void visit(GodPowerController godPowerController) {
+    public void visit(GodPowerController eventHandler) {
 
     }
 
     @Override
-    public void visit(WorkerSetupController workerSetupController) {
+    public void visit(WorkerSetupController eventHandler, VirtualView view) {
 
     }
 }

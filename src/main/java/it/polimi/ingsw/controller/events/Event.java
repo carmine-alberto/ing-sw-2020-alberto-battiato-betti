@@ -18,7 +18,8 @@ public interface Event extends Serializable {
 
     void visit(ViewEventHandler eventHandler);
 
-    void visit(GodPowerController godPowerController);
+    void visit(GodPowerController eventHandler);
 
-    void visit(WorkerSetupController workerSetupController);
+    void visit(WorkerSetupController eventHandler, VirtualView view);
+
 }

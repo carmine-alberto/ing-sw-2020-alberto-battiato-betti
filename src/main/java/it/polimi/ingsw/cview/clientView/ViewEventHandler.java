@@ -29,7 +29,7 @@ public class ViewEventHandler implements Runnable {
                 Event receivedEvent = (Event) in.readObject();
                 this.accept(receivedEvent);
             } catch (IOException e) {
-                e.printStackTrace();
+                break;
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -59,6 +59,13 @@ public class ViewEventHandler implements Runnable {
     public void handle(AvailableGodsEvent availableGodsEvent) {
         Platform.runLater(() -> {
             ((ChallengerSelectionView) client.getViewState()).setGodsList((availableGodsEvent.godPowers));
+            client.getViewState().render();
+        });
+    }
+
+    public void handle(BoardUpdate boardUpdate) {
+        Platform.runLater(() -> {
+            client.setBoard(boardUpdate.board);
             client.getViewState().render();
         });
     }

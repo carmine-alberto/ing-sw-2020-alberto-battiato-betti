@@ -6,17 +6,14 @@ import it.polimi.ingsw.controller.LoginController;
 import it.polimi.ingsw.controller.WorkerSetupController;
 import it.polimi.ingsw.cview.clientView.ViewEventHandler;
 import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.model.FieldCell;
 
-import java.util.List;
+public class BoardUpdate implements Event {
+    public FieldCell[][] board;
 
-public class AvailableGodsEvent implements Event {
-    public List<String> godPowers;
-
-    public AvailableGodsEvent(List<String> godPowers) {
-        this.godPowers = godPowers;
+    public BoardUpdate(FieldCell[][] board) {
+        this.board = board.clone();
     }
-
-
     @Override
     public void visit(LoginController eventHandler, VirtualView view) {
 
@@ -39,6 +36,7 @@ public class AvailableGodsEvent implements Event {
 
     @Override
     public void visit(GodPowerController eventHandler) {
+
     }
 
     @Override

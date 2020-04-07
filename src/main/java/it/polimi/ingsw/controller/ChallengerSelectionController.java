@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 import it.polimi.ingsw.cview.serverView.VirtualWaitingView;
+import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 
 import java.util.stream.Collectors;
 
@@ -26,15 +27,21 @@ public class ChallengerSelectionController extends ControllerState {
         Game currentGame = mainController.getCurrentGame();
         Player newPlayer;
 
-        if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() < 2 || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
-            newPlayer = new Player(loginEvent.playerUsername, senderView);
-            currentGame.addPlayer(newPlayer);
-            newPlayer.getPlayerView().changeView(new VirtualWaitingView());
-        } else {
-            senderView.showMessage("Challenger not ready! Try again later");
+        try {
+            if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() < 2 || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
+                newPlayer = new Player(loginEvent.playerUsername, senderView);
+                currentGame.addPlayer(newPlayer);
+                newPlayer.getPlayerView().changeView(new VirtualWaitingView());
+            } else {
+                senderView.showMessage("Challenger not ready! Try again later");
+                senderView.terminate();
+            }
+            if (currentGame.getPlayers().size() == currentGame.NUM_OF_PLAYERS)
+                moveToNextState(currentGame);
+        } catch (AlreadyExistingNameException e) {
+            senderView.showMessage(e.getMessage());
+            senderView.terminate();
         }
-        if (currentGame.getPlayers().size() == currentGame.NUM_OF_PLAYERS)
-            moveToNextState(currentGame);
 
         System.out.println(mainController.getCurrentGame().getPlayers().stream().map(player -> player.getNickname()).collect(Collectors.toList()));
 

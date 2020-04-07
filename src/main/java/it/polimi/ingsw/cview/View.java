@@ -4,6 +4,7 @@ import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 import it.polimi.ingsw.cview.utility.MessageBox;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -42,16 +43,18 @@ public abstract class  View {
 
 
     public void next(String nextState) {
-        try {
-            View newState = (View) Class.forName("it.polimi.ingsw.cview.clientView." + nextState)
-                    .getConstructors()[0]
-                    .newInstance(mainStage, clientSocket, client, out);
-            client.setViewState(newState);
-        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace(); //TODO Handle exception properly
-        }
-        System.out.println("viewstate set: " + this.getClass());
-        client.getViewState().render();
+        Platform.runLater(() -> {
+            try {
+                View newState = (View) Class.forName("it.polimi.ingsw.cview.clientView." + nextState)
+                        .getConstructors()[0]
+                        .newInstance(mainStage, clientSocket, client, out);
+                client.setViewState(newState);
+            } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace(); //TODO Handle exception properly
+            }
+            System.out.println("viewstate set: " + this.getClass());
+            client.getViewState().render();
+        });
     }
 
 

@@ -38,7 +38,7 @@ public class GodSelectionEvent implements Event {
     }
 
     @Override
-    public void visit(WorkerSetupController workerSetupController) {
+    public void visit(WorkerSetupController eventHandler, VirtualView view) {
 
     }
 }

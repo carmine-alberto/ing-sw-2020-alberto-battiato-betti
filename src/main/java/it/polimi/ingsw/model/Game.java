@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Observable;
 import it.polimi.ingsw.model.phases.ChooseWorkerPhase;
 import it.polimi.ingsw.model.phases.TurnPhase;
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Game {
+public class Game extends Observable<FieldCell[][]> {
     public Integer NUM_OF_PLAYERS;
 
     private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
@@ -43,15 +44,12 @@ public class Game {
         return field[x][y];
     }
 
-    public void addPlayer(Player player) {
-        try {
-            for (Player tmp : players)
+    public void addPlayer(Player player) throws AlreadyExistingNameException {
+       for (Player tmp : players)
                 if (tmp.getNickname().equals(player.getNickname()))
                     throw new AlreadyExistingNameException("Questo Nickname è stato già utilizzato, sceglierne un altro.");
             players.add(player);
-        } catch (AlreadyExistingNameException e) {
-            //TODO mostrare view con messaggio d'errore
-        }
+
     }
 
     /**
@@ -115,5 +113,9 @@ public class Game {
 
     public void setGodPowers(List<String> godPowers) {
         this.godPowers = godPowers;
+    }
+
+    public void notifyObservers() {
+        this.notify(field);
     }
 }

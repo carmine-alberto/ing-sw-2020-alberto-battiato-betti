@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +21,13 @@ class GameTest {
         player1 = new Player("Es1");
         player2 = new Player("Es2");
         player3 = new Player("Es3");
-        game.addPlayer(player1);
-        game.addPlayer(player2);
-        game.addPlayer(player3);
+        try {
+            game.addPlayer(player1);
+            game.addPlayer(player2);
+            game.addPlayer(player3);
+        } catch (AlreadyExistingNameException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -42,7 +47,11 @@ class GameTest {
         Player alreadyExistingPlayer = new Player("Es3");
 
         List<Player> allPlayers = List.of(player1, player2, player3);
-        game.addPlayer(alreadyExistingPlayer);
+        try {
+            game.addPlayer(alreadyExistingPlayer);
+        } catch (AlreadyExistingNameException e) {
+            e.printStackTrace();
+        }
         assertEquals(allPlayers, game.getPlayers());
     }
 

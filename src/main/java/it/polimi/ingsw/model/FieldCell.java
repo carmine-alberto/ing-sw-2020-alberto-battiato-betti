@@ -3,12 +3,13 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.MaxHeightReachedException;
 import javafx.concurrent.Worker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FieldCell {
-    Game currentGame;
+public class FieldCell implements Serializable {
+    private transient Game currentGame;
     private GameWorker occupyingWorker;
     private Integer posX, posY, height;
     private Boolean hasDome;
@@ -32,6 +33,9 @@ public class FieldCell {
 
     public void setOccupyingWorker(GameWorker worker){
         this.occupyingWorker = worker;
+        if (!worker.getCell().equals(this))
+            worker.setPosition(this);
+        currentGame.notifyObservers();
     }
 
 
@@ -44,6 +48,7 @@ public class FieldCell {
             if (height >= 3)
                 throw new MaxHeightReachedException("Impossibile costruire un altro blocco. Altezza massima raggiunta.");
             height++;
+            currentGame.notifyObservers();
         } catch (MaxHeightReachedException e) {
             //TODO Stampare il messaggio d'errore relativo
         }
@@ -52,6 +57,7 @@ public class FieldCell {
 
     public void placeDome() {
         hasDome = true;
+        currentGame.notifyObservers();
     }
 
 
