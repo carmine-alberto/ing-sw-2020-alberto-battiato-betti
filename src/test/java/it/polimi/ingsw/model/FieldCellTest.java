@@ -44,6 +44,7 @@ class FieldCellTest {
     @Test
     void isFree() {
         assertFalse(notFreeCell.isFree());
+        assertTrue(notOnPerimeterCell.isFree());
     }
 
     @Test

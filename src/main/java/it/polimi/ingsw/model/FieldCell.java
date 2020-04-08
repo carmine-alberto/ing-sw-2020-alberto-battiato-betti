@@ -68,7 +68,11 @@ public class FieldCell implements Serializable {
     public Boolean isFree() { return this.occupyingWorker == null && !this.hasDome; }
 
     public Boolean isComplete() {
-        return hasDome;
+        return this.hasDome && this.getHeight()==3;
+    }
+
+    public Boolean getHasDome() {
+        return this.hasDome;
     }
 
 

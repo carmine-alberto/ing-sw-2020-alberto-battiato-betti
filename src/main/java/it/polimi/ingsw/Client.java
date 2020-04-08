@@ -18,8 +18,10 @@ public class Client extends Application {
     private View viewState;
     private FieldCell[][] board;
 
+
     public static void main(String[] args) {
         System.out.println( "Jacopo Gay lol " + File.separator);
+
         launch();
     }
 
