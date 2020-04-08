@@ -37,10 +37,7 @@ public class WorkerSetupController extends ControllerState {
                 playerWorkers.get(i).setPosition(mainController.getCurrentGame().getCell(workerSelectionEvent.xCoordinates.get(i) - 1, //TODO Check bounds: exceptions or checks?
                         workerSelectionEvent.yCoordinates.get(i) - 1));
             }
-                /*mainController -- TODO double binding between cell and worker (implemented in the class methods) makes this snippet useless, check and remove
-                        .getCurrentGame()
-                        .getCell(workerSelectionEvent.xCoordinates.get(i), workerSelectionEvent.yCoordinates.get(i))
-                        .setOccupyingWorker(playerWorkers.get(i));*/
+            turnPlayer.setWorkers(playerWorkers);
 
             mainController.getCurrentGame().setNextTurnPlayer();
             promptTurnPlayer();

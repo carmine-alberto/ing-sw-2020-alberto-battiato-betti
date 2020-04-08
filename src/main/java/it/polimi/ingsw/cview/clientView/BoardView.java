@@ -29,7 +29,7 @@ public class BoardView extends View {
     final Integer edgeTolerance = 20;
     final Integer BOARD_SIZE = 5;
 
-    private ChoiceBox<String> colorPicker;
+    private ColorPicker colorPicker;
     private TilePane board;
 
     public BoardView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
@@ -47,9 +47,8 @@ public class BoardView extends View {
         FieldCell[][] boardRep = client.getBoard();
         StackPane cell;
 
-        colorPicker = new ChoiceBox<>();
-        colorPicker.getItems().addAll("RED", "BLUE", "PURPLE");
-        colorPicker.setValue("RED");
+        colorPicker = new ColorPicker();
+        colorPicker.setValue(Color.ORANGE);
 
         Button confirmSelections = new Button("Confirm");
         confirmSelections.setOnAction(e -> handleConfirmation((Button)e.getSource()));
@@ -134,17 +133,19 @@ public class BoardView extends View {
         }
 
         if (fieldCell.isComplete()) {
-            Circle dome = new Circle(cell.getPrefWidth()/2, cell.getPrefHeight()/2, baseWidth, Color.ALICEBLUE);
+            Circle dome = new Circle(baseWidth, Color.ALICEBLUE);
             cell.getChildren().add(dome);
+            cell.setAlignment(dome, Pos.CENTER);
         }
 
-        if (fieldCell.getWorker() != null) {
-            Circle worker = new Circle(cell.getPrefWidth()/2, cell.getPrefHeight()/2, baseWidth/2, Color.valueOf(fieldCell
+        if (fieldCell.getWorker() != null) { //TODO Worker should look better than a plain circle
+            Circle worker = new Circle(baseWidth/2, Color.valueOf(fieldCell
                                                                                                                 .getWorker()
                                                                                                                 .getOwner()
                                                                                                                 .getColour()
                                                                                                                 .toUpperCase()));
             cell.getChildren().add(worker);
+            cell.setAlignment(worker, Pos.CENTER);
         }
     }
 

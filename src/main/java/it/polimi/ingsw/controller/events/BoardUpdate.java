@@ -12,7 +12,7 @@ public class BoardUpdate implements Event {
     public FieldCell[][] board;
 
     public BoardUpdate(FieldCell[][] board) {
-        this.board = board.clone();
+        this.board = board;
     }
     @Override
     public void visit(LoginController eventHandler, VirtualView view) {

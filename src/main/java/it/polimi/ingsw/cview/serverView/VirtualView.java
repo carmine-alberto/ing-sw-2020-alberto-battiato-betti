@@ -47,6 +47,7 @@ public class VirtualView implements Runnable {
     public void sendToClient(Event event) {
         try {
             serverOutputStream.writeObject(event);
+            serverOutputStream.reset();
         } catch (IOException e) {
             e.printStackTrace(); //TODO Handle closed connection
         }
