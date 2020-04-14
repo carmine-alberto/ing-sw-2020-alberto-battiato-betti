@@ -13,4 +13,8 @@ public abstract class ControllerState {
 
 
     public abstract void handle(Event event, VirtualView view);
+
+    protected Boolean isTurnPlayer(VirtualView view) {
+        return mainController.getCurrentGame().getTurnPlayer().getPlayerView().equals(view);
+    }
 }

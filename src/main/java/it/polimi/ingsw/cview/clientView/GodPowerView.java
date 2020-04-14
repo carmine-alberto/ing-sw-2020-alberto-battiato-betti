@@ -3,7 +3,6 @@ package it.polimi.ingsw.cview.clientView;
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.GodSelectionEvent;
 import it.polimi.ingsw.cview.View;
-import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,7 +12,6 @@ import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GodPowerView extends View {
@@ -52,6 +50,6 @@ public class GodPowerView extends View {
 
 
     private void sendSelectionToServer(Button pressedButton) {
-        sendToServer(new GodSelectionEvent(pressedButton.getText()));
+        notify(new GodSelectionEvent(pressedButton.getText()));
     }
 }

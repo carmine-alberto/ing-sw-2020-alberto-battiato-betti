@@ -21,6 +21,7 @@ public class Player implements Serializable {
     private transient VirtualView playerView;
     private List<GameWorker> workers;
     private String selectedGodPower; //TODO Refactor into proper type
+    private transient Boolean needToWait = new Boolean(true);
 
     //Attributes used to store turnState
     private transient GameWorker selectedWorker;
@@ -36,6 +37,16 @@ public class Player implements Serializable {
     private transient BiPredicate<FieldCell, GameWorker> domePredicate;
     private transient Predicate<Player> actionPredicate;
     private transient BiPredicate<Game, GameWorker> winConditions = new HasMovedUpPredicate().and(new IsTurnPlayerPredicate()); //TODO Delegate winCondition assignment to a specific builder
+
+    public Player(String nickname){
+        this.nickname = nickname;
+    }//TODO eliminare questo costruttore
+
+    public Player(String nickname, VirtualView playerView) {
+        this.nickname = nickname;
+        this.playerView = playerView;
+    }
+
 
     public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
         return movePredicate;
@@ -87,17 +98,6 @@ public class Player implements Serializable {
     public void setWinConditions(BiPredicate<Game, GameWorker> winConditions) {
         this.winConditions = winConditions;
     }
-
-
-    public Player(String nickname){
-        this.nickname = nickname;
-    }//TODO eliminare questo costruttore
-
-    public Player(String nickname, VirtualView playerView) {
-        this.nickname = nickname;
-        this.playerView = playerView;
-    }
-
 
     public List<GameWorker> getWorkers() {
         return workers;
@@ -198,6 +198,14 @@ public class Player implements Serializable {
 
     public void setSelectedGodPower(String selectedGodPower) {
         this.selectedGodPower = selectedGodPower;
+    }
+
+    public Boolean getNeedToWaitLockObject() {
+        return needToWait;
+    }
+
+    public void setNeedToWait(Boolean needToWait) {
+        this.needToWait = needToWait;
     }
 
 }

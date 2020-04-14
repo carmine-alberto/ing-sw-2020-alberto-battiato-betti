@@ -64,7 +64,6 @@ public class GodPowerController extends ControllerState {
     }
 
     private void moveToNextState() {
-        System.out.println("Moving to next state");
         mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualBoardView(player.getPlayerView(), mainController.getCurrentGame())));
         mainController.controllerState = new WorkerSetupController(mainController);
     }

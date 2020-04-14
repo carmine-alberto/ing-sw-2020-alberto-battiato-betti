@@ -33,6 +33,7 @@ public class VirtualView implements Runnable {
 
                 while (true) {
                     Event receivedEvent = (Event) serverInputStream.readObject(); // controllare stringa vuota
+                    System.out.println(receivedEvent.getClass());
                     controller.handle(receivedEvent, this);
                 }
 

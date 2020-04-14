@@ -19,6 +19,7 @@ public class BuildPhase extends TurnPhase {
     protected void stateInit() {
         this.nextPhase = new ChooseBlockPhase(currentGame);
 
+
     }
 
     @Override

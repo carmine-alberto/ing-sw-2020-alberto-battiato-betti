@@ -1,9 +1,6 @@
 package it.polimi.ingsw.controller.events;
 
-import it.polimi.ingsw.controller.ChallengerSelectionController;
-import it.polimi.ingsw.controller.GodPowerController;
-import it.polimi.ingsw.controller.LoginController;
-import it.polimi.ingsw.controller.WorkerSetupController;
+import it.polimi.ingsw.controller.*;
 import it.polimi.ingsw.cview.clientView.ViewEventHandler;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
@@ -46,6 +43,12 @@ public class WorkerSelectionEvent implements Event {
 
     @Override
     public void visit(WorkerSetupController eventHandler, VirtualView view) {
+        eventHandler.handle(this, view);
+    }
+
+    @Override
+    public void visit(GamePhasesController eventHandler, VirtualView view) {
+        System.out.println("Inside visit GamePhasesController");
         eventHandler.handle(this, view);
     }
 }
