@@ -65,7 +65,7 @@ public class FieldCell implements Serializable {
         return posX.equals(0) || posX.equals(4) || posY.equals(0) || posY.equals(4);
     }
 
-    public Boolean isFree() { return this.occupyingWorker == null && !this.hasDome; }
+    public Boolean isFree() { return this.occupyingWorker == null && !this.hasDome; } // una cella è libera se non c'è ne cupola ne worker
 
     public Boolean isComplete() {
         return this.hasDome && this.getHeight()==3;

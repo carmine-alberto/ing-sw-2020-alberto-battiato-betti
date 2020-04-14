@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.predicates.movePredicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.buildPredicates.NotUnderItselfPredicate;
+import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
 import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
-import it.polimi.ingsw.model.predicates.winConditionsPredicate.HasMovedUpPredicate;
-import it.polimi.ingsw.model.predicates.winConditionsPredicate.IsTurnPlayerPredicate;
+import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
+import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
 
@@ -22,54 +24,29 @@ public class Player implements Serializable {
     private List<GameWorker> workers;
     private String selectedGodPower; //TODO Refactor into proper type
 
-    //Attributes used to store turnState
-    private transient GameWorker selectedWorker;
-    private transient FieldCell selectedCell;
-    private transient Constructible selectedConstructible;
-    private transient ActionEnum selectedAction;
-
+    private PlayerState playerState;
 
     //Predicates
     private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
-    private transient BiPredicate<FieldCell, GameWorker> buildPredicate;
-    private transient BiPredicate<FieldCell, GameWorker> blockPredicate;
-    private transient BiPredicate<FieldCell, GameWorker> domePredicate;
+    private transient BiPredicate<FieldCell, GameWorker> buildPredicate = new IsCellFreePredicate().and(new NotUnderItselfPredicate());
+    private transient BlockPredicate blockPredicate = new BlockPredicate();
     private transient Predicate<Player> actionPredicate;
-    private transient BiPredicate<Game, GameWorker> winConditions = new HasMovedUpPredicate().and(new IsTurnPlayerPredicate()); //TODO Delegate winCondition assignment to a specific builder
+    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
 
     public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
         return movePredicate;
     }
 
-    public void setMovePredicate(BiPredicate<FieldCell, GameWorker> movePredicate) {
-        this.movePredicate = movePredicate;
-    }
-
-
     public BiPredicate<FieldCell, GameWorker> getBuildPredicate() {
         return buildPredicate;
     }
 
-    public void setBuildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate) {
-        this.buildPredicate = buildPredicate;
-    }
-
-
-    public BiPredicate<FieldCell, GameWorker> getBlockPredicate() {
+    public BiPredicate<Player, Constructible> getBlockPredicate() {
         return blockPredicate;
     }
 
-    public void setBlockPredicate(BiPredicate<FieldCell, GameWorker> blockPredicate) {
-        this.blockPredicate = blockPredicate;
-    }
-
-
-    public BiPredicate<FieldCell, GameWorker> getDomePredicate() {
-        return domePredicate;
-    }
-
-    public void setDomePredicate(BiPredicate<FieldCell, GameWorker> domePredicate) {
-        this.domePredicate = domePredicate;
+    public void setBlockPredicate(Integer height) {
+        this.blockPredicate.setMinimumHeight(height);
     }
 
     public Predicate<Player> getActionPredicate() {
@@ -98,6 +75,13 @@ public class Player implements Serializable {
         this.playerView = playerView;
     }
 
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
+
+    public void setPlayerState(PlayerState playerState) {
+        this.playerState = playerState;
+    }
 
     public List<GameWorker> getWorkers() {
         return workers;
@@ -154,43 +138,6 @@ public class Player implements Serializable {
                 .filter(player -> !player.equals(this))
                 .collect(Collectors.toList());
     }
-
-
-    public GameWorker getSelectedWorker() {
-        return selectedWorker;
-    }
-
-    public void setSelectedWorker(GameWorker selectedWorker) {
-        this.selectedWorker = selectedWorker;
-    }
-
-
-    public FieldCell getSelectedCell() {
-        return selectedCell;
-    }
-
-    public void setSelectedCell(FieldCell selectedCell) {
-        this.selectedCell = selectedCell;
-    }
-
-
-    public Constructible getSelectedConstructible() {
-        return selectedConstructible;
-    }
-
-    public void setSelectedConstructible(Constructible selectedConstructible) {
-        this.selectedConstructible = selectedConstructible;
-    }
-
-
-    public ActionEnum getSelectedAction() {
-        return selectedAction;
-    }
-
-    public void setSelectedAction(ActionEnum selectedAction) {
-        this.selectedAction = selectedAction;
-    }
-
 
     public String getSelectedGodPower() {
         return selectedGodPower;

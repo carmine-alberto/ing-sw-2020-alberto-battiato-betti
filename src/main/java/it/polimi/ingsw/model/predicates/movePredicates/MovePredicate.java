@@ -10,12 +10,12 @@ import java.util.function.Predicate;
 public class MovePredicate implements BiPredicate<FieldCell, GameWorker> { //TODO Remove predicate if content is kept atomized into subpredicates
 
     @Override
-    public boolean test(FieldCell destionationCell, GameWorker gameWorker) {
-       return destionationCell.isFree() && deltaHeight(destionationCell, gameWorker) <= 1;
+    public boolean test(FieldCell destinationCell, GameWorker gameWorker) {
+       return destinationCell.isFree() && deltaHeight(destinationCell, gameWorker) <= 1;
     }
 
-    private Integer deltaHeight(FieldCell destionationCell, GameWorker gameWorker) {
-        return destionationCell.getHeight() - gameWorker.getCell().getHeight();
+    private Integer deltaHeight(FieldCell destinationCell, GameWorker gameWorker) {
+        return destinationCell.getHeight() - gameWorker.getCell().getHeight();
     }
 
     @Override

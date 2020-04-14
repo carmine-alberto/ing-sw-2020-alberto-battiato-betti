@@ -8,12 +8,12 @@ import java.util.function.BiPredicate;
 public class IsDeltaHeightLessThanPredicate implements BiPredicate<FieldCell, GameWorker> {
 
     @Override
-    public boolean test(FieldCell destionationCell, GameWorker gameWorker) {
-        return deltaHeight(destionationCell, gameWorker) <= 1;
+    public boolean test(FieldCell destinationCell, GameWorker gameWorker) {
+        return deltaHeight(destinationCell, gameWorker) <= 1;
     }
 
-    private Integer deltaHeight(FieldCell destionationCell, GameWorker gameWorker) {
-        return destionationCell.getHeight() - gameWorker.getCell().getHeight();
+    private Integer deltaHeight(FieldCell destinationCell, GameWorker gameWorker) {
+        return destinationCell.getHeight() - gameWorker.getCell().getHeight();
     }
 
     @Override

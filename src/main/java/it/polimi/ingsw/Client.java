@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.cview.clientView.LoginView;
 import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.clientView.LoginView;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Application;
 import javafx.stage.Stage;

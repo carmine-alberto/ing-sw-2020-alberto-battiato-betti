@@ -25,8 +25,10 @@ public class GameWorker implements Serializable  {
 
     public void setPosition(FieldCell cell) {
         this.position = cell;
-        if (!this.equals(cell.getWorker()))
+        if (!this.equals(cell.getWorker())) {
             cell.setOccupyingWorker(this);
+            this.oldMovePositions.add(cell);
+        }
     }
 
 
