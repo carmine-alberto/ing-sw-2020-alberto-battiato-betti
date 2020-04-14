@@ -3,8 +3,6 @@ package it.polimi.ingsw.cview.clientViewCLI;
 import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.*;
-import javafx.print.PageLayout;
-import javafx.scene.input.InputEvent;
 
 import java.util.Scanner;
 
@@ -24,7 +22,7 @@ public class BoardViewCLI extends View {
         FieldCell[][] boardRep = client.getBoard();
         showBoard(boardRep);
         if(currentGame.getTurnPlayer().equals(callee))
-            moveWorker(callee, currentGame);
+            getInput(callee, currentGame);
 
     }
 
@@ -90,33 +88,13 @@ public class BoardViewCLI extends View {
         System.out.println("╝");
     }
 
-    private void moveWorker(Player callee, Game currentGame){
+    private void getInput(Player callee, Game currentGame) {
         Scanner input = new Scanner(System.in);
-
-
 
         String sel = input.nextLine();
-        sendToServer(new UserInputEvent(sel)); // (3, 2)
-
-        sendToServer(new UserInputEvent(new String()))
-
-        System.out.println("Enter the coordinates you wold like to move the worker to");
-
-        String dest = input.nextLine();
-        sendToServer(new UserInputEvent(dest)); //(3, 3)
-
-        build(currentGame.getCell(x,y).getWorker(), currentGame);
+        notify(new UserInputEvent(sel));
+//        System.out.println("Enter the coordinates you wold like to move the worker to");
     }
-
-    private void build(GameWorker worker, Game currentGame){
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("Where would you like to build? Enter the coordinates");
-
-        int x = input.nextInt();
-        int y = input.nextInt();
-
-        worker.build(currentGame.getCell(x, y), Constructible.BLOCK);
-    }
+//        System.out.println("Where would you like to build? Enter the coordinates");
 
 }

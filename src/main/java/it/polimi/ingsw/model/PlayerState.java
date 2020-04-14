@@ -1,15 +1,14 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.cview.serverView.VirtualView;
-
-public class PlayerState extends Player {
+public class PlayerState{
     private transient GameWorker selectedWorker;
     private transient FieldCell selectedCell;
     private transient Constructible selectedConstructible;
     private transient ActionEnum selectedAction;
+    private transient Player player;
 
-    public PlayerState(String nickname, VirtualView playerView) {
-        super(nickname, playerView);
+    public PlayerState(Player player) {
+        this.player = player;
     }
 
     public GameWorker getSelectedWorker() {

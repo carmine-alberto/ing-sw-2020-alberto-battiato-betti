@@ -25,7 +25,7 @@ public class Player implements Serializable {
     private String selectedGodPower; //TODO Refactor into proper type
     private transient Boolean needToWait = new Boolean(true);
 
-    private PlayerState playerState;
+    private transient PlayerState playerState;
 
     //Predicates
     private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
@@ -41,6 +41,7 @@ public class Player implements Serializable {
     public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
+        this.playerState = new PlayerState(this);
     }
 
 

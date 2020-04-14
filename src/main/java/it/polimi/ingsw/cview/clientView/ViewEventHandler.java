@@ -40,7 +40,7 @@ public class ViewEventHandler implements Runnable {
         client.getViewState().next(event.viewState);
         System.out.println(client.getViewState().getClass());
     }
-
+/*
     public void handle(ChoseActionEvent event) {
         client.getViewState().render();
         client.getViewState().showMessage("Scegli quale azione eseguire");
@@ -56,7 +56,7 @@ public class ViewEventHandler implements Runnable {
         //todo mandare azioni disponibili
         System.out.println(client.getViewState().getClass());
     }
-
+*/
 
     private void accept(Event receivedEvent) {
         receivedEvent.visit(this);
