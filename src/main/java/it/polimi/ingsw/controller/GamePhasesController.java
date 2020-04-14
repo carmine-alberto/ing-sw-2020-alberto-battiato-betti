@@ -34,7 +34,7 @@ public class GamePhasesController extends ControllerState {
                 System.out.println("End of if");
 
                 if (selectedWorker != null) {
-                    turnPlayer.setSelectedWorker(selectedWorker);
+                    turnPlayer.getPlayerState().setSelectedWorker(selectedWorker);
                     System.out.println("Before notify");
 
                     turnPlayer.setNeedToWait(false);

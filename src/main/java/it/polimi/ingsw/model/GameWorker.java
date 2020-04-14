@@ -13,8 +13,8 @@ public class GameWorker implements Serializable  {
     private FieldCell position;
     private transient Game currentGame;
     private Player owner;
-    private transient List<FieldCell> oldMovePositions;
-    private transient List<FieldCell> oldBuildPositions;
+    private transient List<FieldCell> oldMovePositions = new ArrayList<>();
+    private transient List<FieldCell> oldBuildPositions= new ArrayList<>();
 
     public GameWorker() {};
 
@@ -29,7 +29,7 @@ public class GameWorker implements Serializable  {
         this.position = cell;
         if (!this.equals(cell.getWorker())) {
             cell.setOccupyingWorker(this);
-            this.oldMovePositions.add(cell);
+            this.oldMovePositions.add(cell);    //TODO empty in endphase
         }
     }
 

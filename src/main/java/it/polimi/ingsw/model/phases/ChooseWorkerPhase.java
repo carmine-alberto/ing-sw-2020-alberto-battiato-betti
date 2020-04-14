@@ -27,8 +27,8 @@ public class ChooseWorkerPhase extends TurnPhase {
                 }
             }
             currentGame.getTurnPlayer().setNeedToWait(true);
-            if (currentGame.getTurnPlayer().getSelectedWorker() != null)
-                System.out.println(currentGame.getTurnPlayer().getSelectedWorker());
+            if (currentGame.getTurnPlayer().getPlayerState().getSelectedWorker() != null)
+                System.out.println(currentGame.getTurnPlayer().getPlayerState().getSelectedWorker());
             else
                 System.out.println("Found null");
         }

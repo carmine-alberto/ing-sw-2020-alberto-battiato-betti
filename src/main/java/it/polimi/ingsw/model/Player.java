@@ -149,4 +149,7 @@ public class Player implements Serializable {
         this.needToWait = needToWait;
     }
 
+    public PlayerState getPlayerState() {
+        return this.playerState;
+    }
 }
