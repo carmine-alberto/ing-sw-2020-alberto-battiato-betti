@@ -1,30 +1,48 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
+import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.cview.View;
-import it.polimi.ingsw.model.FieldCell;
+import it.polimi.ingsw.model.*;
+import javafx.print.PageLayout;
+import javafx.scene.input.InputEvent;
+
+import java.util.Scanner;
 
 public class BoardViewCLI extends View {
 
-    final Integer BOARD_SIZE = 5;
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
+    private final Integer BOARD_SIZE = 5;
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_YELLOW = "\u001B[33m";
+
+    private Player callee;
+    private Game currentGame;
 
     @Override
     public void render() {
         FieldCell[][] boardRep = client.getBoard();
         showBoard(boardRep);
+        if(currentGame.getTurnPlayer().equals(callee))
+            moveWorker(callee, currentGame);
 
     }
 
     private void showBoard(FieldCell[][] board) {
 /*                      Esempio di scacchiera a video
-        o0 o0 o0 o0 o0
-        o0 o0 o0 o0 o0
-        o0 o0 o0 o0 o0
-        o0 o0 o0 o0 o0
-        o0 o0 o0 o0 o0
+
+   1    2    3    4    5
+ ╔════════════════════════╗
+1║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+ ║════════════════════════║
+2║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+ ║════════════════════════║
+3║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+ ║════════════════════════║
+4║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+ ║════════════════════════║
+5║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+ ╚════════════════════════╝
 */
         System.out.println("This is the current game board\n\n");
         System.out.println("Each letter represent a cell. Legend: \n" +
@@ -36,24 +54,69 @@ public class BoardViewCLI extends View {
         String color = "";
         FieldCell x;
 
-        for(int i = 1; i <= BOARD_SIZE; i++, System.out.println("\n"))
-            for(int j = 0; j <= BOARD_SIZE; j++){
+
+        System.out.print(" ");
+        for (int c = 1; c <= BOARD_SIZE; c++)
+            System.out.print("  " + c);
+
+        System.out.print("\n" + " ╔");
+        for (int c = 1; c <= BOARD_SIZE + 3; c++)
+            System.out.print("══");
+        System.out.println("╗");
+
+        for(int i = 1; i <= BOARD_SIZE; i++, System.out.println(" ║")) {
+            System.out.print(i + "║ ");
+            for (int j = 0; j <= BOARD_SIZE; j++) {
                 x = board[i][j];
                 if (x.isFree())
-                    System.out.println("o" + board[i][j].getHeight() + " ");
+                    System.out.print("o" + board[i][j].getHeight() + " ");
+                else if (x.getHasDome())
+                    System.out.print("d" + board[i][j].getHeight() + " ");
                 else
-                    if (x.getHasDome())
-                        System.out.println("d" + board[i][j].getHeight() + " ");
-                    else
-                        color = x.getWorker().getOwner().getColour();
-                        switch (color) {
-                            case "Red":
-                                System.out.println(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                            case "Green":
-                                System.out.println(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                            case "Yellow":
-                                System.out.println(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                        }
+                    color = x.getWorker().getOwner().getColour();
+                switch (color) {
+                    case "Red":
+                        System.out.print(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                    case "Green":
+                        System.out.print(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                    case "Yellow":
+                        System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                }
             }
+        }
+        System.out.print("╚");
+        for (int c = 1; c <= BOARD_SIZE + 3; c++)
+            System.out.print("══");
+        System.out.println("╝");
     }
+
+    private void moveWorker(Player callee, Game currentGame){
+        Scanner input = new Scanner(System.in);
+
+
+
+        String sel = input.nextLine();
+        sendToServer(new UserInputEvent(sel)); // (3, 2)
+
+        sendToServer(new UserInputEvent(new String()))
+
+        System.out.println("Enter the coordinates you wold like to move the worker to");
+
+        String dest = input.nextLine();
+        sendToServer(new UserInputEvent(dest)); //(3, 3)
+
+        build(currentGame.getCell(x,y).getWorker(), currentGame);
+    }
+
+    private void build(GameWorker worker, Game currentGame){
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Where would you like to build? Enter the coordinates");
+
+        int x = input.nextInt();
+        int y = input.nextInt();
+
+        worker.build(currentGame.getCell(x, y), Constructible.BLOCK);
+    }
+
 }

@@ -70,4 +70,8 @@ public abstract class  View {
             connectionClosedHandler();
         }
     }
+
+    public void showMessage(String msg){ //todo da mettere astratto
+        System.out.println(msg);
+    }
 }
