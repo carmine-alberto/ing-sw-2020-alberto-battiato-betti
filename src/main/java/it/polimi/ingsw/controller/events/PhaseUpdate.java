@@ -4,16 +4,12 @@ import it.polimi.ingsw.controller.*;
 import it.polimi.ingsw.cview.clientView.ViewEventHandler;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
-import java.util.List;
+public class PhaseUpdate implements Event {
+    public String message;
 
-public class AvailableGodsEvent implements Event {
-    public List<String> godPowers;
-
-    public AvailableGodsEvent(List<String> godPowers) {
-        this.godPowers = godPowers;
+    public PhaseUpdate(String message) {
+        this.message = message;
     }
-
-
     @Override
     public void visit(LoginController eventHandler, VirtualView view) {
 
@@ -32,10 +28,12 @@ public class AvailableGodsEvent implements Event {
     @Override
     public void visit(ViewEventHandler eventHandler) {
         eventHandler.handle(this);
+
     }
 
     @Override
     public void visit(GodPowerController eventHandler) {
+
     }
 
     @Override

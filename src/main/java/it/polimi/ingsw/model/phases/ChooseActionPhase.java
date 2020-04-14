@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ChooseActionPhase extends TurnPhase {
-    List<ActionEnum> availableActions = new ArrayList<ActionEnum>(EnumSet.allOf(ActionEnum.class));
+    List<ActionEnum> availableActions = new ArrayList(EnumSet.allOf(ActionEnum.class));
     Player turnPlayer;
 
     public ChooseActionPhase(Game currentGame) {

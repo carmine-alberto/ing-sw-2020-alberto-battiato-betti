@@ -1,15 +1,19 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Observable;
+import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.cview.serverView.VirtualBoardView;
+import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.phases.ChooseWorkerPhase;
 import it.polimi.ingsw.model.phases.TurnPhase;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Game extends Observable<FieldCell[][]> {
+public class Game extends Observable<Event> implements Runnable {
     public Integer NUM_OF_PLAYERS;
 
     private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
@@ -63,6 +67,12 @@ public class Game extends Observable<FieldCell[][]> {
     }
 
     public void initGame() {
+        Thread gameThread = new Thread(this);
+        gameThread.start();
+    }
+
+    @Override
+    public void run() {
         turnPhase = new ChooseWorkerPhase(this);
         while (true) {
             turnPhase.runPhase();
@@ -158,7 +168,21 @@ public class Game extends Observable<FieldCell[][]> {
         }*/
     }
 
-    public void notifyObservers() {
-        this.notify(field);
+
+    public void notifyObservers(Event e) {
+        this.notify(e);
+    }
+
+    public void notifyTurnPlayer(Event event) {
+        this.notify(observers
+                .stream()
+                .filter(observer -> ((VirtualBoardView)observer).getVirtualView().equals(turnPlayer.getPlayerView()))
+                .collect(Collectors.toList())
+                .get(0),
+                event);
+    }
+
+    FieldCell[][] getField() {
+        return this.field;
     }
 }

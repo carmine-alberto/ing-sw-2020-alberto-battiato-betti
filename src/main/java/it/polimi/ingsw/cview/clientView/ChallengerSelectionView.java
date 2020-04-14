@@ -12,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -114,7 +113,7 @@ public class ChallengerSelectionView extends View {
         else if (selectedStartingPlayer > selectedNumberOfPlayers)
             MessageBox.show("You can't choose the third player as starting player in a 2-players game!", "Error");
         else
-            sendToServer(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods, selectedStartingPlayer));
+            notify(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods, selectedStartingPlayer));
     }
 
     public void setGodsList(List<String> godsList) {

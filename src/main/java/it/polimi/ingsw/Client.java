@@ -20,7 +20,7 @@ public class Client extends Application {
 
 
     public static void main(String[] args) {
-        System.out.println( "Jacopo Gay lol " + File.separator);
+        System.out.println( "Ce la faremo!");
 
         launch();
     }

@@ -28,9 +28,9 @@ public class WorkerSetupController extends ControllerState {
         Player turnPlayer = mainController.getCurrentGame().getTurnPlayer();
         List<GameWorker> playerWorkers = new ArrayList<>(); //TODO Call Player builder
 
-        if (view.equals(turnPlayer.getPlayerView())) {
+        if (isTurnPlayer(view)) {
 
-            turnPlayer.setColour(workerSelectionEvent.selectedColor);
+            turnPlayer.setColour(workerSelectionEvent.selectedColor); //TODO Check colour is not already selected
 
             for (Integer i = 0; i < 2; i++) {
                 playerWorkers.add(new GameWorker(new Move(), new Build(), mainController.getCurrentGame(), turnPlayer));
@@ -40,8 +40,13 @@ public class WorkerSetupController extends ControllerState {
             turnPlayer.setWorkers(playerWorkers);
 
             mainController.getCurrentGame().setNextTurnPlayer();
-            promptTurnPlayer();
 
+            if (mainController.getCurrentGame().getTurnPlayer().getWorkers() != null) { //TODO Low-quality way to check whether the game is ready to be started, can/should we do better?
+                mainController.controllerState = new GamePhasesController(mainController);
+                mainController.getCurrentGame().initGame(); //TODO This call should be handled by a separate thread maybe
+                System.out.println("Going to listen again");
+            } else
+                promptTurnPlayer();
         }
     }
 
