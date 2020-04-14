@@ -13,9 +13,8 @@ public class Move implements Action {
 
     @Override
     public void run(FieldCell cell, GameWorker gw) {
+            gw.getCell().setOccupyingWorker(null);
             gw.setPosition(cell);
-            cell.setOccupyingWorker(gw);
-            gw.getOldMovePositions().add(cell);
     }
 
     @Override

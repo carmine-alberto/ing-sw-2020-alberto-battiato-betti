@@ -57,6 +57,6 @@ public class ChallengerSelectionViewCLI extends View {
         selectedStarter = input.nextInt();
 
 
-        sendToServer(new ChallengerSelectionEvent(selectedNumber, selectedGods, selectedStarter));
+        notify(new ChallengerSelectionEvent(selectedNumber, selectedGods, selectedStarter));
     }
 }

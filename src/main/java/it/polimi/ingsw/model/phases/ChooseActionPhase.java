@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ChooseActionPhase extends TurnPhase {
-    List<ActionEnum> availableActions = new ArrayList<ActionEnum>(EnumSet.allOf(ActionEnum.class));
+    List<ActionEnum> availableActions = new ArrayList(EnumSet.allOf(ActionEnum.class));
     Player turnPlayer;
 
     public ChooseActionPhase(Game currentGame) {
@@ -32,25 +32,25 @@ public class ChooseActionPhase extends TurnPhase {
         availableActions = availableActions.stream()
                                            .filter(actionEnum -> turnPlayer.getActionPredicate().test(turnPlayer))
                                            .collect(Collectors.toList());
-
+        // bisogna implementare anche le azioni legali (?)
         if (availableActions.size() > 1) {
             //Invio la notifica al giocatore
             //Mi metto in attesa della risposta
         }
         else
-            turnPlayer.setSelectedAction(ActionEnum.MOVE);
+            turnPlayer.getPlayerState().setSelectedAction(ActionEnum.MOVE);
 
     }
 
     @Override
     protected void stateEnd() {
-        switch (turnPlayer.getSelectedAction()) {
+        switch (turnPlayer.getPlayerState().getSelectedAction()) {
             case BUILD:
                 nextPhase = new BuildPhase(currentGame);
                 break;
             case DISPLACE: //TODO implementare lo switch del giocatore avversario
                 break;
-            case MOVE: break; // settato in stateinit()
+            case MOVE: break; // setted in stateInit()
         }
     }
 }

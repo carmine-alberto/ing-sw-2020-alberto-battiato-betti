@@ -1,14 +1,14 @@
 package it.polimi.ingsw.model.phases;
 
-import it.polimi.ingsw.model.Constructible;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.*;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChooseBlockPhase extends TurnPhase {
-    List<Constructible> availableBlocks = new ArrayList<>();
+    List<Constructible> availableBlocks = new ArrayList<>(EnumSet.allOf(Constructible.class));
 
     public ChooseBlockPhase(Game currentGame) {
         super(currentGame);
@@ -22,25 +22,26 @@ public class ChooseBlockPhase extends TurnPhase {
 
     @Override
     protected void run() {
+        //If we get here, the worker can certainly build something, no need to check the legality of the move
+
         Player turnPlayer = currentGame.getTurnPlayer();
+        PlayerState turnPlayerState = turnPlayer.getPlayerState();
 
-        if (turnPlayer.getBlockPredicate().test(turnPlayer.getSelectedCell(), turnPlayer.getSelectedWorker())) //TODO Do we really need a BiPredicate here? FieldCell should be enough
-            availableBlocks.add(Constructible.BLOCK);
-
-        if (turnPlayer.getDomePredicate().test(turnPlayer.getSelectedCell(), turnPlayer.getSelectedWorker()))   //TODO same check as ChooseActionPhase
-            availableBlocks.add(Constructible.DOME);
+        availableBlocks = availableBlocks.stream()
+                .filter(block -> turnPlayer.getBlockPredicate().test(turnPlayer, block))
+                .collect(Collectors.toList());
 
         //If we get here, the worker can certainly build something, no need to check the legality of the move
 
         if (availableBlocks.size() == 1)
-            turnPlayer.setSelectedConstructible(availableBlocks.get(0));
+            turnPlayer.getPlayerState().setSelectedConstructible(availableBlocks.get(0));
         else {
             // TODO Send notification
             // TODO Wait for user response
         }
 
-        turnPlayer.getSelectedWorker().build(turnPlayer.getSelectedCell(), turnPlayer.getSelectedConstructible());
-        turnPlayer.getSelectedWorker().getOldBuildPositions().add(turnPlayer.getSelectedCell());
+        turnPlayerState.getSelectedWorker().build(turnPlayerState.getSelectedCell(), turnPlayerState.getSelectedConstructible());
+        turnPlayerState.getSelectedWorker().getOldBuildPositions().add(turnPlayerState.getSelectedCell());
         checkWinConditions();
 
     }

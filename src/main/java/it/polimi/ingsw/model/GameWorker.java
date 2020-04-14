@@ -16,6 +16,8 @@ public class GameWorker implements Serializable  {
     private transient List<FieldCell> oldMovePositions;
     private transient List<FieldCell> oldBuildPositions;
 
+    public GameWorker() {};
+
     public GameWorker(Action moveStrategy, Action buildStrategy, Game currentGame, Player owner) {
         this.moveStrategy = moveStrategy;
         this.buildStrategy = buildStrategy;
@@ -25,8 +27,10 @@ public class GameWorker implements Serializable  {
 
     public void setPosition(FieldCell cell) {
         this.position = cell;
-        if (!this.equals(cell.getWorker()))
+        if (!this.equals(cell.getWorker())) {
             cell.setOccupyingWorker(this);
+            this.oldMovePositions.add(cell);
+        }
     }
 
 
@@ -54,5 +58,6 @@ public class GameWorker implements Serializable  {
     public Player getOwner() {
         return owner;
     }
+
 
 }

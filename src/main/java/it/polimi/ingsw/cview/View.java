@@ -63,9 +63,10 @@ public abstract class  View {
         mainStage.close();
     }
 
-    protected void sendToServer(Event e) {
+    protected void notify(Event e) {
         try {
             out.writeObject(e);
+            out.reset();
         } catch (IOException ex) {
             connectionClosedHandler();
         }

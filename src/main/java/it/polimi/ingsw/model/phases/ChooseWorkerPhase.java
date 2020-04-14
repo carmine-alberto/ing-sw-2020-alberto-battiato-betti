@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.phases;
 
+import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.Game;
 
 public class ChooseWorkerPhase extends TurnPhase {
@@ -11,13 +12,26 @@ public class ChooseWorkerPhase extends TurnPhase {
     @Override
     protected void stateInit() {
         nextPhase = new ChooseActionPhase(currentGame);
-        //Notify current player of the phase change
+        currentGame.notifyTurnPlayer(new PhaseUpdate("Select the desired worker"));
     }
 
     @Override
     protected void run() {
-        //game.waitForEvent();
-
+        synchronized (currentGame.getTurnPlayer()) {
+            while (currentGame.getTurnPlayer().getNeedToWaitLockObject()) {
+                try {
+                    System.out.println("inside new thread");
+                    currentGame.getTurnPlayer().wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            currentGame.getTurnPlayer().setNeedToWait(true);
+            if (currentGame.getTurnPlayer().getSelectedWorker() != null)
+                System.out.println(currentGame.getTurnPlayer().getSelectedWorker());
+            else
+                System.out.println("Found null");
+        }
     }
 
     @Override

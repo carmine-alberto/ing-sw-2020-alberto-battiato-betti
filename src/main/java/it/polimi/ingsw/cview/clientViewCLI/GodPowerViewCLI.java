@@ -31,7 +31,7 @@ public class GodPowerViewCLI extends View {
     }
 
     private void sendSelectionToServer(String selection){
-        sendToServer(new GodSelectionEvent(selection));
+        notify(new GodSelectionEvent(selection));
 
     }
 

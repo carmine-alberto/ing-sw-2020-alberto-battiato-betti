@@ -35,7 +35,7 @@ public abstract class TurnPhase {
 
 
     private void checkPlayerWinConditions(Player player) {
-        if (player.getWinConditions().test(currentGame, player.getSelectedWorker()))
+        if (player.getWinConditions().test(currentGame, player.getPlayerState().getSelectedWorker()))
             player.setIsWinner(true);
     }
 

@@ -10,8 +10,8 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -22,15 +22,24 @@ import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.cview.clientView.BoardView.CellCoordinate.X;
+import static it.polimi.ingsw.cview.clientView.BoardView.CellCoordinate.Y;
+
 public class BoardView extends View {
+    enum CellCoordinate {
+        X, Y;
+    }
+
     final Integer edgeTolerance = 20;
     final Integer BOARD_SIZE = 5;
 
     private ColorPicker colorPicker;
     private TilePane board;
+    private Boolean hideColorPickerBox;
 
     public BoardView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
@@ -40,6 +49,8 @@ public class BoardView extends View {
             for (Integer j = 0; j < BOARD_SIZE; j++)
                 newBoard[i][j] = new FieldCell(null, i, j);
         client.setBoard(newBoard);
+
+        hideColorPickerBox = false;
     }
 
     @Override
@@ -83,7 +94,9 @@ public class BoardView extends View {
 
         Label selectedGodPower = new Label("Your selected God Power is: ");
 
-        VBox interfaceBox = new VBox (20, colorPickerBox, board, selectedGodPower);
+        VBox interfaceBox = new VBox (20, board, selectedGodPower);
+        if (!hideColorPickerBox)
+            interfaceBox.getChildren().add(0, colorPickerBox);
         interfaceBox.setAlignment(Pos.CENTER);
         interfaceBox.setFillWidth(false);
 
@@ -97,14 +110,14 @@ public class BoardView extends View {
                 .getChildren()
                 .stream()
                 .filter(cell -> ((StackPane)cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
-                .map(cell -> Integer.parseInt(cell.getId().substring(0, 1)))
+                .map(cell -> extractCellCoordinate(X, cell))
                 .collect(Collectors.toList());
 
         List<Integer> yCoordinates = board
                 .getChildren()
                 .stream()
                 .filter(cell -> ((StackPane)cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
-                .map(cell -> Integer.parseInt(cell.getId().substring(2, 3)))
+                .map(cell -> extractCellCoordinate(Y, cell))
                 .collect(Collectors.toList());
 
         board
@@ -112,9 +125,15 @@ public class BoardView extends View {
             .forEach(cell ->
                     ((StackPane)cell).setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT))));
 
-        MessageBox.show(xCoordinates.toString() + "\n" + yCoordinates.toString(), "Selection");
 
-        sendToServer(new WorkerSelectionEvent(xCoordinates, yCoordinates, color));
+        notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, color));
+    }
+
+    private Integer extractCellCoordinate(CellCoordinate coord, Node cell) {
+        return switch (coord) {
+                case X -> Integer.parseInt(cell.getId().substring(0, 1));
+                case Y -> Integer.parseInt(cell.getId().substring(2, 3));
+        };
     }
 
     private void fillCell(StackPane cell, FieldCell fieldCell) {
@@ -140,10 +159,10 @@ public class BoardView extends View {
 
         if (fieldCell.getWorker() != null) { //TODO Worker should look better than a plain circle
             Circle worker = new Circle(baseWidth/2, Color.valueOf(fieldCell
-                                                                                                                .getWorker()
-                                                                                                                .getOwner()
-                                                                                                                .getColour()
-                                                                                                                .toUpperCase()));
+                                                                        .getWorker()
+                                                                        .getOwner()
+                                                                        .getColour()
+                                                                        .toUpperCase()));
             cell.getChildren().add(worker);
             cell.setAlignment(worker, Pos.CENTER);
         }
@@ -154,7 +173,15 @@ public class BoardView extends View {
     }
 
     private void handleCellClick(StackPane clickedCell) {
-        toggleCell(clickedCell);
+        if (!hideColorPickerBox)
+            toggleCell(clickedCell);
+        else {
+            notify(new WorkerSelectionEvent(new ArrayList<>(List.of(extractCellCoordinate(CellCoordinate.X, clickedCell))),
+                    new ArrayList<>(List.of(extractCellCoordinate(CellCoordinate.Y, clickedCell))),
+                    null)
+            );
+            MessageBox.show("Message sent: " + clickedCell.getId(), "Event");
+        }
     }
 
     private void toggleCell(StackPane clickedCell) {
@@ -166,4 +193,7 @@ public class BoardView extends View {
         }
     }
 
+    public void setHideColorPickerBox(Boolean hideColorPickerBox) {
+        this.hideColorPickerBox = hideColorPickerBox;
+    }
 }

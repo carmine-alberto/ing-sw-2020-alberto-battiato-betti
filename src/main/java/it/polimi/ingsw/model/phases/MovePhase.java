@@ -31,13 +31,14 @@ public class MovePhase extends TurnPhase {
         Player turnPlayer = currentGame.getTurnPlayer();
 
         availableCells = turnPlayer
+                .getPlayerState()
                 .getSelectedWorker()
                 .getCell()
                 .getAdjacentCells()
                 .stream()
                 .filter(adjacentCell -> turnPlayer
                         .getMovePredicate()
-                        .test(adjacentCell, turnPlayer.getSelectedWorker()))
+                        .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker()))
                 .collect(Collectors.toList());
 
         if (availableCells.isEmpty()) { //TODO Currently, the player loses even if the second worker can move. Should we add a check and let him select the remaining one?
@@ -49,10 +50,10 @@ public class MovePhase extends TurnPhase {
         //TODO Send notification to turnPlayer containing availableCells
         //TODO Wait for response
 
-        FieldCell destinationCell = turnPlayer.getSelectedCell();
+        FieldCell destinationCell = turnPlayer.getPlayerState().getSelectedCell();
         if (availableCells.contains(destinationCell)) {
             checkWinConditions(); //Current worker position is the starting position
-            turnPlayer.getSelectedWorker().move(destinationCell);
+            turnPlayer.getPlayerState().getSelectedWorker().move(destinationCell);
         }
 
         else {

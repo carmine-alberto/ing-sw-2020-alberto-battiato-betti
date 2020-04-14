@@ -88,4 +88,12 @@ public class ViewEventHandler implements Runnable {
             client.getViewState().render();
         });
     }
+
+    public void handle(PhaseUpdate update) {
+        Platform.runLater(() -> {
+            ((BoardView)client.getViewState()).setHideColorPickerBox(true);
+            client.getViewState().render();
+            MessageBox.show(update.message, "Notification");
+        });
+    }
 }

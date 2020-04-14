@@ -25,16 +25,15 @@ public class BuildPhase extends TurnPhase {
     protected void run() {
         Player turnPlayer = currentGame.getTurnPlayer();
 
-        List<FieldCell> adjacentCellsPlusSelf = turnPlayer  //TODO Fix ugly code
-                .getSelectedCell()
-                .getAdjacentCells();
-        adjacentCellsPlusSelf.add(turnPlayer.getSelectedCell());  //Passing adjacent cells + the cell I'm on, for Zeus
+        List<FieldCell> adjacentCellsPlusSelf = turnPlayer.getPlayerState().getSelectedCell()
+                                                          .getAdjacentCells();
+        adjacentCellsPlusSelf.add(turnPlayer.getPlayerState().getSelectedCell());  //Passing adjacent cells + the cell I'm on, for Zeus
 
         availableCells = adjacentCellsPlusSelf
                 .stream()
                 .filter(adjacentCell -> turnPlayer
                         .getBuildPredicate()
-                        .test(adjacentCell, turnPlayer.getSelectedWorker())
+                        .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker())
                        )
                 .collect(Collectors.toList());
 
@@ -47,7 +46,7 @@ public class BuildPhase extends TurnPhase {
         //TODO Send notification to the turnPlayer
         //TODO Wait for response
 
-        FieldCell destinationCell = turnPlayer.getSelectedCell();
+        FieldCell destinationCell = turnPlayer.getPlayerState().getSelectedCell();
         if (!availableCells.contains(destinationCell)) {
             //TODO Send notification of illegal move and let the player choose a valid cell repeating the phase - we expect this branch to be taken only by cheaters, a minority, so no Flyweight pattern is used
             setNextPhase(this);

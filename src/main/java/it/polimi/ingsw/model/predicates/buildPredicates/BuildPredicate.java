@@ -8,10 +8,10 @@ import java.util.function.BiPredicate;
 public class BuildPredicate implements BiPredicate<FieldCell, GameWorker> {
     @Override
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
-        return !fieldCell.isComplete() && notUnderItself(fieldCell, gameWorker);
+        return !fieldCell.isComplete() && !UnderItself(fieldCell, gameWorker);
     }
 
-    private boolean notUnderItself(FieldCell fieldCell, GameWorker gameWorker) {
+    private boolean UnderItself(FieldCell fieldCell, GameWorker gameWorker) {
         return fieldCell.equals(gameWorker.getCell());
     }
 
