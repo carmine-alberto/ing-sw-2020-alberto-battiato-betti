@@ -65,7 +65,7 @@ public class ViewEventHandler implements Runnable {
 
 
     public void handle(WarningEvent event) {
-        Platform.runLater(() -> MessageBox.show(event.message, "Warning"));
+        client.getViewState().showWarning(event.message);
     }
 
     public void handle(SelectedGodsEvent selectedGodsEvent) {
@@ -90,10 +90,13 @@ public class ViewEventHandler implements Runnable {
     }
 
     public void handle(PhaseUpdate update) {
+        client.getViewState().showMessage(update.message);
+    }
+
+    public void handle(GameStartedEvent gameStartedEvent) {
         Platform.runLater(() -> {
             ((BoardView)client.getViewState()).setHideColorPickerBox(true);
             client.getViewState().render();
-            MessageBox.show(update.message, "Notification");
         });
     }
 }

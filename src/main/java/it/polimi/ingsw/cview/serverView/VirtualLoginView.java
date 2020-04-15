@@ -22,4 +22,5 @@ public class VirtualLoginView extends View {
         throw new UnsupportedOperationException("Operation not available on the server");
     }
 
+
 }

@@ -1,7 +1,11 @@
 package it.polimi.ingsw.model.phases;
 
+import it.polimi.ingsw.cview.clientView.BoardView;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.IllegalFormatException;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+import javafx.scene.Node;
 
 
 public abstract class TurnPhase {
@@ -12,22 +16,15 @@ public abstract class TurnPhase {
         this.currentGame = currentGame;
     }
 
+    public abstract void stateInit();
 
-    protected abstract void stateInit();
+    public abstract void run(String arg) throws IllegalFormatException, InvalidSelectionException;
 
-    protected abstract void run();
-
-    protected void stateEnd() {
+    public void stateEnd() {
         currentGame.getPlayers().forEach(player -> checkIsWinner(player));
         //TODO Invio notifica
-    }
 
-    public void runPhase() {
-        stateInit();
-        run();
-        stateEnd();
     }
-
 
     protected void checkWinConditions() {
         currentGame.getPlayers().forEach(player -> checkPlayerWinConditions(player));

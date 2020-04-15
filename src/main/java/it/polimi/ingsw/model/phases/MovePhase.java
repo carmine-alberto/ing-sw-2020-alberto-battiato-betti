@@ -16,7 +16,7 @@ public class MovePhase extends TurnPhase {
     }
 
     @Override
-    protected void stateInit() {
+    public void stateInit() {
         nextPhase = new BuildPhase(currentGame);
 
     }
@@ -25,9 +25,10 @@ public class MovePhase extends TurnPhase {
      * The adjacentCells list is passed to ease the computation (no god lets you move farther than 1 cell);
      * a more flexible solution would be passing the entire field and adding a predicate enforcing a check on the
      * distance from the current position
+     * @param arg
      */
     @Override
-    protected void run() {
+    public void run(String arg) {
         Player turnPlayer = currentGame.getTurnPlayer();
 
         availableCells = turnPlayer

@@ -72,7 +72,16 @@ public abstract class  View {
         }
     }
 
-    public void showMessage(String msg){ //todo da mettere astratto
-        System.out.println(msg);
+    public void showMessage(String message) {                  //TODO Define either 2 subclasses of View (CLIView - GUIView) implementing methods shared among views of a kind or a RenderingStrategy
+        Platform.runLater(() -> {
+            MessageBox.show(message, "Notification");
+
+        });
+    }
+
+    public void showWarning(String message) {
+        Platform.runLater(() -> {
+            MessageBox.show(message, "Warning");
+        });
     }
 }

@@ -23,7 +23,6 @@ public class Player implements Serializable {
     private transient VirtualView playerView;
     private List<GameWorker> workers;
     private String selectedGodPower; //TODO Refactor into proper type
-    private transient Boolean needToWait = new Boolean(true);
 
     private transient PlayerState playerState;
 
@@ -142,13 +141,6 @@ public class Player implements Serializable {
         this.selectedGodPower = selectedGodPower;
     }
 
-    public Boolean getNeedToWaitLockObject() {
-        return needToWait;
-    }
-
-    public void setNeedToWait(Boolean needToWait) {
-        this.needToWait = needToWait;
-    }
 
     public PlayerState getPlayerState() {
         return this.playerState;

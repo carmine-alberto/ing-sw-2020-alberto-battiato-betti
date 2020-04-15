@@ -37,9 +37,6 @@ public class VirtualView implements Runnable {
                     controller.handle(receivedEvent, this);
                 }
 
-               /* serverOutputStream.close();
-                serverInputStream.close();
-                socket.close();*/
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println(e.getMessage());
             }

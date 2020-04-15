@@ -2,9 +2,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Observable;
 import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.controller.events.GameStartedEvent;
 import it.polimi.ingsw.cview.serverView.VirtualBoardView;
 import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
+import it.polimi.ingsw.model.exceptions.IllegalFormatException;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import it.polimi.ingsw.model.phases.ChooseWorkerPhase;
 import it.polimi.ingsw.model.phases.TurnPhase;
 
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Game extends Observable<Event> implements Runnable {
+public class Game extends Observable<Event> {
     public Integer NUM_OF_PLAYERS;
 
     private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
@@ -67,18 +70,11 @@ public class Game extends Observable<Event> implements Runnable {
     }
 
     public void initGame() {
-        Thread gameThread = new Thread(this);
-        gameThread.start();
+        notifyObservers(new GameStartedEvent());
+        turnPhase = new ChooseWorkerPhase(this);
+        turnPhase.stateInit();
     }
 
-    @Override
-    public void run() {
-        turnPhase = new ChooseWorkerPhase(this);
-        while (true) {
-            turnPhase.runPhase();
-            turnPhase = turnPhase.getNextPhase();
-        }
-    }
 
     public void setPhase(TurnPhase nextTurnPhase) {
         this.turnPhase = nextTurnPhase;
@@ -184,5 +180,15 @@ public class Game extends Observable<Event> implements Runnable {
 
     FieldCell[][] getField() {
         return this.field;
+    }
+
+    public void runPhase(String inputString) throws IllegalFormatException, InvalidSelectionException {
+        this.turnPhase.run(inputString);
+    }
+
+    public void endPhase() {
+        turnPhase.stateEnd();
+        turnPhase = turnPhase.getNextPhase();
+        turnPhase.stateInit();
     }
 }

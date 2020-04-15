@@ -1,15 +1,14 @@
 package it.polimi.ingsw.controller.events;
 
 import it.polimi.ingsw.controller.*;
-import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.cview.clientView.ViewEventHandler;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
 public class UserInputEvent implements Event {
-    public String dest;
+    public String inputString;
 
-    public UserInputEvent(String dest) {
-        this.dest = dest;
+    public UserInputEvent(String inputString) {
+        this.inputString = inputString;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class UserInputEvent implements Event {
 
     @Override
     public void visit(GamePhasesController eventHandler, VirtualView view) {
-
+        eventHandler.handle(this, view);
     }
 
 }

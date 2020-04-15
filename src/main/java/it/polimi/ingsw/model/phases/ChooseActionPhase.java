@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.phases;
 import it.polimi.ingsw.model.ActionEnum;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.actions.Action;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -19,14 +18,14 @@ public class ChooseActionPhase extends TurnPhase {
     }
 
     @Override
-    protected void stateInit() {
+    public void stateInit() {
         nextPhase = new MovePhase(currentGame);
         //Notification
 
     }
 
     @Override
-    protected void run() {
+    public void run(String arg) {
         turnPlayer = currentGame.getTurnPlayer();
 
         availableActions = availableActions.stream()
@@ -43,7 +42,7 @@ public class ChooseActionPhase extends TurnPhase {
     }
 
     @Override
-    protected void stateEnd() {
+    public void stateEnd() {
         switch (turnPlayer.getPlayerState().getSelectedAction()) {
             case BUILD:
                 nextPhase = new BuildPhase(currentGame);

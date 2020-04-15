@@ -1,10 +1,12 @@
 package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.Client;
+import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.cview.utility.MessageBox;
+import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Insets;
@@ -175,13 +177,7 @@ public class BoardView extends View {
     private void handleCellClick(StackPane clickedCell) {
         if (!hideColorPickerBox)
             toggleCell(clickedCell);
-        else {
-            notify(new WorkerSelectionEvent(new ArrayList<>(List.of(extractCellCoordinate(CellCoordinate.X, clickedCell))),
-                    new ArrayList<>(List.of(extractCellCoordinate(CellCoordinate.Y, clickedCell))),
-                    null)
-            );
-            MessageBox.show("Message sent: " + clickedCell.getId(), "Event");
-        }
+        else notify(new UserInputEvent(clickedCell.getId()));
     }
 
     private void toggleCell(StackPane clickedCell) {
@@ -196,4 +192,5 @@ public class BoardView extends View {
     public void setHideColorPickerBox(Boolean hideColorPickerBox) {
         this.hideColorPickerBox = hideColorPickerBox;
     }
+
 }

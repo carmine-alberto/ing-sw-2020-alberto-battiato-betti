@@ -43,8 +43,7 @@ public class WorkerSetupController extends ControllerState {
 
             if (mainController.getCurrentGame().getTurnPlayer().getWorkers() != null) { //TODO Low-quality way to check whether the game is ready to be started, can/should we do better?
                 mainController.controllerState = new GamePhasesController(mainController);
-                mainController.getCurrentGame().initGame(); //TODO This call should be handled by a separate thread maybe
-                System.out.println("Going to listen again");
+                mainController.getCurrentGame().initGame();
             } else
                 promptTurnPlayer();
         }

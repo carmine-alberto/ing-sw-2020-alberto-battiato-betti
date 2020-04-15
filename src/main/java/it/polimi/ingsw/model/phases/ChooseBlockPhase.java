@@ -15,13 +15,13 @@ public class ChooseBlockPhase extends TurnPhase {
     }
 
     @Override
-    protected void stateInit() {
+    public void stateInit() {
         this.nextPhase = new ChooseWorkerPhase(currentGame);
 
     }
 
     @Override
-    protected void run() {
+    public void run(String arg) {
         //If we get here, the worker can certainly build something, no need to check the legality of the move
 
         Player turnPlayer = currentGame.getTurnPlayer();
@@ -47,7 +47,7 @@ public class ChooseBlockPhase extends TurnPhase {
     }
 
     @Override
-    protected void stateEnd() {
+    public void stateEnd() {
         super.stateEnd();
         currentGame.setNextTurnPlayer();
         //TODO empty whatever structure needs to be emptied (e.g. OldMovePositions)

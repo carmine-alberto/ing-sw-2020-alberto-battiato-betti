@@ -94,6 +94,7 @@ public class LoginView extends View {
             connectionClosedHandler();
         }
     }
+
 }
 
 

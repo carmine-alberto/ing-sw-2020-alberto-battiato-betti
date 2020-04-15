@@ -16,13 +16,13 @@ public class BuildPhase extends TurnPhase {
     }
 
     @Override
-    protected void stateInit() {
+    public void stateInit() {
         this.nextPhase = new ChooseBlockPhase(currentGame);
 
     }
 
     @Override
-    protected void run() {
+    public void run(String arg) {
         Player turnPlayer = currentGame.getTurnPlayer();
 
         List<FieldCell> adjacentCellsPlusSelf = turnPlayer.getPlayerState().getSelectedCell()
@@ -57,7 +57,7 @@ public class BuildPhase extends TurnPhase {
 
 
     @Override
-    protected void stateEnd() {
+    public void stateEnd() {
 
     }
 }
