@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * Hello world!
@@ -17,6 +18,8 @@ public class Client extends Application {
     private Socket clientSocket;
     private View viewState;
     private FieldCell[][] board;
+    private List<Integer> availableCellsX;
+    private List<Integer> availableCellsY;
 
 
     public static void main(String[] args) {
@@ -47,5 +50,21 @@ public class Client extends Application {
 
     public void setBoard(FieldCell[][] board) {
         this.board = board;
+    }
+
+    public List<Integer> getAvailableCellsX() {
+        return availableCellsX;
+    }
+
+    public void setAvailableCellsX(List<Integer> availableCellsX) {
+        this.availableCellsX = availableCellsX;
+    }
+
+    public List<Integer> getAvailableCellsY() {
+        return availableCellsY;
+    }
+
+    public void setAvailableCellsY(List<Integer> availableCellsY) {
+        this.availableCellsY = availableCellsY;
     }
 }

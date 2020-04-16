@@ -2,7 +2,9 @@ package it.polimi.ingsw.cview;
 
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.cview.utility.ChoiceBox;
 import it.polimi.ingsw.cview.utility.MessageBox;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -11,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.util.List;
 
 public abstract class  View {
     protected Stage mainStage;
@@ -82,6 +85,13 @@ public abstract class  View {
     public void showWarning(String message) {
         Platform.runLater(() -> {
             MessageBox.show(message, "Warning");
+        });
+    }
+
+    public void showChoices(List<String> availableChoices) {
+        Platform.runLater(() -> {
+            String choice = ChoiceBox.show("Available items", availableChoices );
+            notify(new UserInputEvent(choice));
         });
     }
 }

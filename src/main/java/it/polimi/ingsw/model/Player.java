@@ -35,12 +35,14 @@ public class Player implements Serializable {
 
     public Player(String nickname){
         this.nickname = nickname;
+        this.isWinner = false;
     }//TODO eliminare questo costruttore
 
     public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
         this.playerState = new PlayerState(this);
+        this.isWinner = false;
     }
 
 

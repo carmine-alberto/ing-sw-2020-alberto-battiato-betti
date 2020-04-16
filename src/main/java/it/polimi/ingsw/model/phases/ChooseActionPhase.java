@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model.phases;
 
+import it.polimi.ingsw.controller.events.AvailableChoicesUpdate;
+import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.ActionEnum;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -10,35 +13,51 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ChooseActionPhase extends TurnPhase {
-    List<ActionEnum> availableActions = new ArrayList(EnumSet.allOf(ActionEnum.class));
+    List<ActionEnum> availableActions;
     Player turnPlayer;
 
     public ChooseActionPhase(Game currentGame) {
         super(currentGame);
+        availableActions = new ArrayList(EnumSet.allOf(ActionEnum.class));
     }
 
     @Override
     public void stateInit() {
         nextPhase = new MovePhase(currentGame);
-        //Notification
+        turnPlayer = currentGame.getTurnPlayer();
 
+        availableActions = availableActions
+                .stream()
+                .filter(actionEnum -> turnPlayer.getActionPredicate().test(turnPlayer))
+                .collect(Collectors.toList());
+
+        if (availableActions.size() > 1) {
+            currentGame.notifyTurnPlayer(new PhaseUpdate("Select the action to perform"));
+
+            currentGame.notifyTurnPlayer(new AvailableChoicesUpdate(stringify(availableActions)));
+        }
+        else
+            try {
+                run(availableActions.get(0).toString());
+                currentGame.endPhase();
+            } catch (Exception e) {
+                //Never thrown since the passed string is well-formatted
+            }
     }
 
     @Override
-    public void run(String arg) {
-        turnPlayer = currentGame.getTurnPlayer();
+    public void run(String arg) throws InvalidSelectionException {
+        parseArg(arg);
 
-        availableActions = availableActions.stream()
-                                           .filter(actionEnum -> turnPlayer.getActionPredicate().test(turnPlayer))
-                                           .collect(Collectors.toList());
-        // bisogna implementare anche le azioni legali (?)
-        if (availableActions.size() > 1) {
-            //Invio la notifica al giocatore
-            //Mi metto in attesa della risposta
-        }
-        else
-            turnPlayer.getPlayerState().setSelectedAction(ActionEnum.MOVE);
+        ActionEnum selectedAction = ActionEnum.valueOf(arg);
 
+        turnPlayer.getPlayerState().setSelectedAction(selectedAction);
+    }
+
+    private void parseArg(String arg) throws InvalidSelectionException {
+        if (stringify(availableActions).contains(arg))
+            return;
+        throw new InvalidSelectionException("The specified action is not available, try with a different one");
     }
 
     @Override
@@ -49,7 +68,9 @@ public class ChooseActionPhase extends TurnPhase {
                 break;
             case DISPLACE: //TODO implementare lo switch del giocatore avversario
                 break;
-            case MOVE: break; // setted in stateInit()
+            case MOVE: break;
         }
     }
+
+
 }

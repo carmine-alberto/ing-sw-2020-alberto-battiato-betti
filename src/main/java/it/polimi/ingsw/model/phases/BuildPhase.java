@@ -1,8 +1,12 @@
 package it.polimi.ingsw.model.phases;
 
+import it.polimi.ingsw.controller.events.AvailableCellsUpdate;
+import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.IllegalFormatException;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +14,8 @@ import java.util.stream.Collectors;
 
 public class BuildPhase extends TurnPhase {
     List<FieldCell> availableCells = new ArrayList<>();
+    Player turnPlayer;
+
 
     public BuildPhase(Game currentGame) {
         super(currentGame);
@@ -17,16 +23,14 @@ public class BuildPhase extends TurnPhase {
 
     @Override
     public void stateInit() {
-        this.nextPhase = new ChooseBlockPhase(currentGame);
+        nextPhase = new ChooseBlockPhase(currentGame);
+        turnPlayer = currentGame.getTurnPlayer();
 
-    }
+        List<FieldCell> adjacentCellsPlusSelf = turnPlayer
+                .getPlayerState()
+                .getSelectedCell()
+                .getAdjacentCells();
 
-    @Override
-    public void run(String arg) {
-        Player turnPlayer = currentGame.getTurnPlayer();
-
-        List<FieldCell> adjacentCellsPlusSelf = turnPlayer.getPlayerState().getSelectedCell()
-                                                          .getAdjacentCells();
         adjacentCellsPlusSelf.add(turnPlayer.getPlayerState().getSelectedCell());  //Passing adjacent cells + the cell I'm on, for Zeus
 
         availableCells = adjacentCellsPlusSelf
@@ -34,23 +38,25 @@ public class BuildPhase extends TurnPhase {
                 .filter(adjacentCell -> turnPlayer
                         .getBuildPredicate()
                         .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker())
-                       )
+                )
                 .collect(Collectors.toList());
 
-        if (availableCells.isEmpty()) { //TODO Currently, the player loses even if the second worker can build. Should we rollback to the ChooseWorkerPhase()?
-            currentGame.removeTurnPlayer();
-            setNextPhase(new ChooseWorkerPhase(currentGame));
-            currentGame.setNextTurnPlayer();
-        }
+        if (availableCells.isEmpty())  //TODO Currently, the player loses even if the second worker can build. Should we rollback to the ChooseWorkerPhase()?
+            removeTurnPlayerFromGame();
 
-        //TODO Send notification to the turnPlayer
-        //TODO Wait for response
+        currentGame.notifyTurnPlayer(new PhaseUpdate("Select the cell where you want to build"));
 
-        FieldCell destinationCell = turnPlayer.getPlayerState().getSelectedCell();
-        if (!availableCells.contains(destinationCell)) {
-            //TODO Send notification of illegal move and let the player choose a valid cell repeating the phase - we expect this branch to be taken only by cheaters, a minority, so no Flyweight pattern is used
-            setNextPhase(this);
-        }
+        currentGame.notifyTurnPlayer(new AvailableCellsUpdate(availableCells));
+    }
+
+    @Override
+    public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
+        parseCoordinatesArg(arg);
+
+        FieldCell selectedCell = extractCellFromCoordinates(arg);
+        if (!availableCells.contains(selectedCell))
+            throw new InvalidSelectionException("You can't build on the selected cell. Try with a different one");
+        turnPlayer.getPlayerState().setSelectedCell(selectedCell);
     }
 
 

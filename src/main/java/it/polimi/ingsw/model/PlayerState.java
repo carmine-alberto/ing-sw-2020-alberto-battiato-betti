@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class PlayerState{
+public class PlayerState {
     private transient GameWorker selectedWorker;
     private transient FieldCell selectedCell;
     private transient Constructible selectedConstructible;
@@ -45,4 +45,14 @@ public class PlayerState{
     public void setSelectedAction(ActionEnum selectedAction) {
         this.selectedAction = selectedAction;
     }
+
+    public void reset() {  //TODO To be called at the end of the turn
+        selectedWorker.getOldMovePositions().clear();
+        selectedWorker.getOldBuildPositions().clear();
+        setSelectedWorker(null);
+        setSelectedAction(null);
+        setSelectedConstructible(null);
+        setSelectedCell(null);
+    }
+
 }

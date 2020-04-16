@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 public class GamePhasesController extends ControllerState {
     Player turnPlayer;
     Game currentGame;
+
     public GamePhasesController(Controller mainController) {
         super(mainController);
         currentGame = mainController.getCurrentGame();
@@ -30,6 +31,8 @@ public class GamePhasesController extends ControllerState {
                 currentGame.runPhase(event.inputString);
                 currentGame.endPhase();
             }
+            else
+                view.showMessage("It's not your turn!");
         } catch (Exception e) {
             turnPlayer.getPlayerView().showMessage(e.getMessage());
         }

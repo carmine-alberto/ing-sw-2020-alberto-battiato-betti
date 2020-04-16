@@ -1,14 +1,12 @@
 package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.Client;
-import it.polimi.ingsw.controller.ChallengerSelectionController;
 import it.polimi.ingsw.controller.events.*;
-import it.polimi.ingsw.cview.View;
-import it.polimi.ingsw.cview.utility.MessageBox;
 import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 public class ViewEventHandler implements Runnable {
     private ObjectInputStream in;
@@ -90,6 +88,9 @@ public class ViewEventHandler implements Runnable {
     }
 
     public void handle(PhaseUpdate update) {
+        client.setAvailableCellsX(new ArrayList<>());  //At every phase change, the available cells are reset
+        client.setAvailableCellsY(new ArrayList<>());
+
         client.getViewState().showMessage(update.message);
     }
 
@@ -98,5 +99,18 @@ public class ViewEventHandler implements Runnable {
             ((BoardView)client.getViewState()).setHideColorPickerBox(true);
             client.getViewState().render();
         });
+    }
+
+    public void handle(AvailableChoicesUpdate update) {
+        client.getViewState().showChoices(update.availableChoices);
+
+    }
+
+    public void handle(AvailableCellsUpdate availableCellsUpdate) {
+        client.setAvailableCellsX(availableCellsUpdate.xCoordinates);
+        client.setAvailableCellsY(availableCellsUpdate.yCoordinates);
+
+        client.getViewState().render();
+
     }
 }

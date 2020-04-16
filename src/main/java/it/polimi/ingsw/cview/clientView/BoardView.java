@@ -52,11 +52,14 @@ public class BoardView extends View {
                 newBoard[i][j] = new FieldCell(null, i, j);
         client.setBoard(newBoard);
 
+        client.setAvailableCellsX(new ArrayList<>());
+        client.setAvailableCellsY(new ArrayList<>());
+
         hideColorPickerBox = false;
     }
 
     @Override
-    public void render() {
+    public void render() { Platform.runLater(() -> {
         FieldCell[][] boardRep = client.getBoard();
         StackPane cell;
 
@@ -64,7 +67,7 @@ public class BoardView extends View {
         colorPicker.setValue(Color.ORANGE);
 
         Button confirmSelections = new Button("Confirm");
-        confirmSelections.setOnAction(e -> handleConfirmation((Button)e.getSource()));
+        confirmSelections.setOnAction(e -> handleConfirmation((Button) e.getSource()));
 
         HBox colorPickerBox = new HBox(10, colorPicker, confirmSelections);
 
@@ -85,25 +88,25 @@ public class BoardView extends View {
                 cell.setId(i.toString() + " " + j.toString());
                 cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
                 cell.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                cell.setOnMouseClicked(e -> handleCellClick((StackPane)e.getSource()));
+                cell.setOnMouseClicked(e -> handleCellClick((StackPane) e.getSource()));
                 cell.prefHeightProperty().bind(tileSideLength);
                 cell.prefWidthProperty().bind(tileSideLength);
 
-                fillCell(cell, boardRep[i-1][j-1]);
+                fillCell(cell, boardRep[i - 1][j - 1]);
 
                 board.getChildren().add(cell);
             }
 
         Label selectedGodPower = new Label("Your selected God Power is: ");
 
-        VBox interfaceBox = new VBox (20, board, selectedGodPower);
+        VBox interfaceBox = new VBox(20, board, selectedGodPower);
         if (!hideColorPickerBox)
             interfaceBox.getChildren().add(0, colorPickerBox);
         interfaceBox.setAlignment(Pos.CENTER);
         interfaceBox.setFillWidth(false);
 
         mainStage.getScene().setRoot(interfaceBox);
-
+    });
     }
 
     private void handleConfirmation(Button source) {
@@ -139,6 +142,9 @@ public class BoardView extends View {
     }
 
     private void fillCell(StackPane cell, FieldCell fieldCell) {
+        List<Integer> availableXCoordinates = client.getAvailableCellsX();
+        List<Integer> availableYCoordinates = client.getAvailableCellsY();
+
         Double baseWidth = 0.9 * cell.getPrefWidth();
 
         Rectangle block;
@@ -168,6 +174,12 @@ public class BoardView extends View {
             cell.getChildren().add(worker);
             cell.setAlignment(worker, Pos.CENTER);
         }
+
+        for (Integer i = 0; i < availableXCoordinates.size(); i++)
+            if (fieldCell.getPosX().equals(availableXCoordinates.get(i))
+                                        &&
+                fieldCell.getPosY().equals(availableYCoordinates.get(i)))
+                toggleCell(cell);
     }
 
     private void updateProperty(FloatProperty tileSideLength) {
@@ -181,7 +193,6 @@ public class BoardView extends View {
     }
 
     private void toggleCell(StackPane clickedCell) {
-        System.out.println(clickedCell.getBorder().getStrokes().get(0));
         if (clickedCell.getBorder().getStrokes().get(0).getLeftStroke().equals(Color.BLACK)) {
             clickedCell.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         } else {
