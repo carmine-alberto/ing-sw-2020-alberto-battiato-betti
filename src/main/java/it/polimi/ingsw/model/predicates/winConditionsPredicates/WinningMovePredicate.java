@@ -12,7 +12,9 @@ public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
     }
 
     private boolean movedFromLevel2ToLevel3(Game game, GameWorker gameWorker) {
-        return gameWorker.getCell().getHeight() == 2
+        return gameWorker != null
+                            &&
+               gameWorker.getCell().getHeight() == 2
                             &&
                game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight() == 3;
     }

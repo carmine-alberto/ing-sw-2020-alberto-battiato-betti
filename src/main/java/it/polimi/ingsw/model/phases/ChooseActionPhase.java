@@ -32,7 +32,7 @@ public class ChooseActionPhase extends TurnPhase {
                 .collect(Collectors.toList());
 
         if (availableActions.size() > 1) {
-            currentGame.notifyTurnPlayer(new PhaseUpdate("Select the action to perform"));
+            //currentGame.notifyTurnPlayer(new PhaseUpdate("Select the action to perform")); //TODO Fix MessageBox overlapping with ChoiceBox
 
             currentGame.notifyTurnPlayer(new AvailableChoicesUpdate(stringify(availableActions)));
         }

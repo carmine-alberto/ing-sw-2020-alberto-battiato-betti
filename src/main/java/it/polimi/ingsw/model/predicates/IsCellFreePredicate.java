@@ -18,7 +18,7 @@ public class IsCellFreePredicate implements BiPredicate<FieldCell, GameWorker> {
 
         @Override
         public BiPredicate<FieldCell, GameWorker> and(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-            return new BiPredicate<>() {
+            return new BiPredicate<>() { //TODO Something is wrong here
                 @Override
                 public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
                     return this.test(fieldCell, gameWorker) && other.test(fieldCell, gameWorker);

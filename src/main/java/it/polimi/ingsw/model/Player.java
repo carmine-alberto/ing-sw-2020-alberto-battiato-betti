@@ -27,11 +27,11 @@ public class Player implements Serializable {
     private transient PlayerState playerState;
 
     //Predicates
-    private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
-    private transient BiPredicate<FieldCell, GameWorker> buildPredicate = new IsCellFreePredicate().and(new NotUnderItselfPredicate());
+    private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate();
+    private transient BiPredicate<FieldCell, GameWorker> buildPredicate = new IsCellFreePredicate();
     private transient BlockPredicate blockPredicate = new BlockPredicate();
-    private transient Predicate<Player> actionPredicate;
-    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
+    private transient Predicate<Player> actionPredicate = player -> true; //TODO Add proper predicate
+    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate();
 
     public Player(String nickname){
         this.nickname = nickname;
