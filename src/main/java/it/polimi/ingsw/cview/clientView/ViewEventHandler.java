@@ -90,8 +90,10 @@ public class ViewEventHandler implements Runnable {
     public void handle(PhaseUpdate update) {
         client.setAvailableCellsX(new ArrayList<>());  //At every phase change, the available cells are reset
         client.setAvailableCellsY(new ArrayList<>());
+        client.getViewState().render();
 
         client.getViewState().showMessage(update.message);
+
     }
 
     public void handle(GameStartedEvent gameStartedEvent) {

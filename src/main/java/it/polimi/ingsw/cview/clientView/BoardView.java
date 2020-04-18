@@ -5,7 +5,6 @@ import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.FieldCell;
-import it.polimi.ingsw.cview.utility.MessageBox;
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -160,7 +159,7 @@ public class BoardView extends View {
         }
 
         if (fieldCell.isComplete()) {
-            Circle dome = new Circle(baseWidth, Color.ALICEBLUE);
+            Circle dome = new Circle(baseWidth/2, Color.BLUE);
             cell.getChildren().add(dome);
             cell.setAlignment(dome, Pos.CENTER);
         }

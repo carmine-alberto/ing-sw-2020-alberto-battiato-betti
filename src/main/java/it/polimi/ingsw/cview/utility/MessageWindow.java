@@ -6,7 +6,7 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 
-public class MessageBox
+public class MessageWindow
 {
     public static void show(String message, String title)
     {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.cview.utility;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +10,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class ChoiceBox {
+public class ChoiceWindow {
     static Stage stage;
     static String choice;
 
@@ -20,6 +21,7 @@ public class ChoiceBox {
         stage.setMinWidth(250);
 
         HBox choicesBox = new HBox(20);
+        choicesBox.setPadding(new Insets(60));
         for (String choice: choices) {
             Button choiceButton = new Button(choice);
             choiceButton.setOnAction(e -> handleChoice((Button)e.getSource()));

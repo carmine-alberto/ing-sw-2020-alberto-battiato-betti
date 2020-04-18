@@ -4,8 +4,8 @@ import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.cview.utility.ChoiceBox;
-import it.polimi.ingsw.cview.utility.MessageBox;
+import it.polimi.ingsw.cview.utility.ChoiceWindow;
+import it.polimi.ingsw.cview.utility.MessageWindow;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -62,7 +62,7 @@ public abstract class  View {
 
 
     protected void connectionClosedHandler() {
-        MessageBox.show("Connection closed - Restart the client and try again!", "Connection Error");
+        MessageWindow.show("Connection closed - Restart the client and try again!", "Connection Error");
         mainStage.close();
     }
 
@@ -77,20 +77,20 @@ public abstract class  View {
 
     public void showMessage(String message) {                  //TODO Define either 2 subclasses of View (CLIView - GUIView) implementing methods shared among views of a kind or a RenderingStrategy
         Platform.runLater(() -> {
-            MessageBox.show(message, "Notification");
+            MessageWindow.show(message, "Notification");
 
         });
     }
 
     public void showWarning(String message) {
         Platform.runLater(() -> {
-            MessageBox.show(message, "Warning");
+            MessageWindow.show(message, "Warning");
         });
     }
 
     public void showChoices(List<String> availableChoices) {
         Platform.runLater(() -> {
-            String choice = ChoiceBox.show("Available items", availableChoices );
+            String choice = ChoiceWindow.show("Available items", availableChoices );
             notify(new UserInputEvent(choice));
         });
     }

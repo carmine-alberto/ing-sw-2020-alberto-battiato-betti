@@ -2,7 +2,7 @@ package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.cview.View;
-import it.polimi.ingsw.cview.utility.MessageBox;
+import it.polimi.ingsw.cview.utility.MessageWindow;
 import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -109,9 +109,9 @@ public class ChallengerSelectionView extends View {
         );
 
         if (selectedNumberOfPlayers != selectedGods.size())
-            MessageBox.show("Number of players and god powers must match!", "Error");
+            MessageWindow.show("Number of players and god powers must match!", "Error");
         else if (selectedStartingPlayer > selectedNumberOfPlayers)
-            MessageBox.show("You can't choose the third player as starting player in a 2-players game!", "Error");
+            MessageWindow.show("You can't choose the third player as starting player in a 2-players game!", "Error");
         else
             notify(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods, selectedStartingPlayer));
     }
