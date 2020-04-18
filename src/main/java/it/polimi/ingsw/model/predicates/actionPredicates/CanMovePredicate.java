@@ -1,25 +1,19 @@
 package it.polimi.ingsw.model.predicates.actionPredicates;
 
+import it.polimi.ingsw.model.ActionEnum;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.actions.Action;
 
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-public class CanMovePredicate implements Predicate<Player> {
-    private boolean CanMove = true;
+public class CanMovePredicate implements BiPredicate<ActionEnum, Player> {
 
     @Override
-    public boolean test(Player player) {
+    public boolean test(ActionEnum actionEnum, Player player) {
+        if (actionEnum.equals(ActionEnum.MOVE))
+            return true;
         return false;
-    }
-
-    @Override
-    public Predicate<Player> and(Predicate<? super Player> other) {
-        return null;
-    }
-
-    @Override
-    public Predicate<Player> or(Predicate<? super Player> other) {
-        return null;
     }
 }
 

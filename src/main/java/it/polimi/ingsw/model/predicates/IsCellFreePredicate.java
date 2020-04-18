@@ -15,4 +15,5 @@ public class IsCellFreePredicate implements BiPredicate<FieldCell, GameWorker> {
         private Integer deltaHeight(FieldCell destinationCell, GameWorker gameWorker) {
             return destinationCell.getHeight() - gameWorker.getCell().getHeight();
         }
+
 }

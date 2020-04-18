@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Player implements Serializable {
@@ -29,7 +30,7 @@ public class Player implements Serializable {
     //Predicates
     private transient Map<String, BiPredicate> predicateMap = new HashMap<>();
 
-    private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate());
+    private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(1));
     private transient BiPredicate<FieldCell, GameWorker> buildPredicate = new IsCellFreePredicate();
     private transient BlockPredicate blockPredicate = new BlockPredicate(3);
     private transient BiPredicate<ActionEnum, Player> actionPredicate;
