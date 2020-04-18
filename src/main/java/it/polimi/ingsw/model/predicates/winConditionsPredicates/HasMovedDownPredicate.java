@@ -9,7 +9,7 @@ public class HasMovedDownPredicate implements BiPredicate<Game, GameWorker> {
     private Integer minimumDescent; // do we need getter and setter?
 
     public  void HasMovedDownPredicate(Integer n){
-        this.minimumDescent = n;
+        minimumDescent = n;
     }
     @Override
     public boolean test(Game game, GameWorker gameWorker) {

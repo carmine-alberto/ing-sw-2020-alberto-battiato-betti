@@ -6,16 +6,15 @@ import it.polimi.ingsw.model.Player;
 import java.util.function.BiPredicate;
 
 public class BlockPredicate implements BiPredicate<Player, Constructible> {
-    Integer minimumHeight = 3;
+    Integer minimumHeight;
+
+    public BlockPredicate(Integer min){
+        minimumHeight = min;
+    }
     @Override
     public boolean test(Player player, Constructible constructible) {
         Integer height = player.getPlayerState().getSelectedCell().getHeight();
         return ((constructible.equals(Constructible.BLOCK) && height < 3) || (constructible.equals(constructible.DOME) && height >= minimumHeight));
-    }
-
-    @Override
-    public BiPredicate<Player, Constructible> and(BiPredicate<? super Player, ? super Constructible> other) {
-        return null;
     }
 
     public void setMinimumHeight(Integer minimumHeight) {

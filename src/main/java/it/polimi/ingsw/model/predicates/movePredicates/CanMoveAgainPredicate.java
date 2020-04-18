@@ -13,9 +13,4 @@ public class CanMoveAgainPredicate implements BiPredicate<FieldCell, GameWorker>
     }
 
     public void setFlag (boolean flag){ canMoveAgain = flag; }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> and(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return null;
-    }
 }

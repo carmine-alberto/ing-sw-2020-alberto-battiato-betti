@@ -10,9 +10,4 @@ public class NotOnPerimeterPredicate implements BiPredicate<FieldCell, GameWorke
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
         return !fieldCell.isOnPerimeter();
     }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> and(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return null;
-    }
 }

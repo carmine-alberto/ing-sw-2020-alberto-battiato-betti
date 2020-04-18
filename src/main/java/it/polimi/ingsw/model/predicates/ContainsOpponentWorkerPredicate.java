@@ -13,19 +13,4 @@ public class ContainsOpponentWorkerPredicate implements BiPredicate<FieldCell, G
             return false;
         return !opponentWorker.getOwner().equals(gameWorker.getOwner());
     }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> and(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return null;
-    }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> negate() {
-        return null;
-    }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> or(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return null;
-    }
 }

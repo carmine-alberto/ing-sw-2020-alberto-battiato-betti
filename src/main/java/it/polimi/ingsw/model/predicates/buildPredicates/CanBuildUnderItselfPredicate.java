@@ -5,10 +5,11 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
-public class NotInOldBuildPositionPredicate implements BiPredicate<FieldCell, GameWorker> {
-    // TODO evaluate only latest positions
+public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, GameWorker> {
+
     @Override
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
-        return !gameWorker.getOldBuildPositions().contains(fieldCell);
+        return !(fieldCell.getHeight() > 2) && fieldCell.equals(gameWorker.getCell());
     }
+
 }

@@ -28,7 +28,8 @@ public class ChooseActionPhase extends TurnPhase {
 
         availableActions = availableActions
                 .stream()
-                .filter(actionEnum -> turnPlayer.getActionPredicate().test(turnPlayer))
+                .filter(action -> turnPlayer.getActionPredicate().test(action, turnPlayer))
+                //.filter(actionEnum -> turnPlayer.getActionPredicate().test(turnPlayer))
                 .collect(Collectors.toList());
 
         if (availableActions.size() > 1) {

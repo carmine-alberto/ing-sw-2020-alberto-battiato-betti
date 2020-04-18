@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.GameWorker;
 import java.util.function.BiPredicate;
 
 public class IsDeltaHeightLessThanPredicate implements BiPredicate<FieldCell, GameWorker> {
-
+    // volendo, si può definire un parametro Delta per permettere un "salto" più alto, per estensibilità del gioco
     @Override
     public boolean test(FieldCell destinationCell, GameWorker gameWorker) {
         return deltaHeight(destinationCell, gameWorker) <= 1;
@@ -15,25 +15,4 @@ public class IsDeltaHeightLessThanPredicate implements BiPredicate<FieldCell, Ga
     private Integer deltaHeight(FieldCell destinationCell, GameWorker gameWorker) {
         return destinationCell.getHeight() - gameWorker.getCell().getHeight();
     }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> and(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return new BiPredicate<>() {
-            @Override
-            public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
-                return this.test(fieldCell, gameWorker) && other.test(fieldCell, gameWorker);
-            }
-        };
-    }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> negate() {
-        return null;
-    }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> or(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return null;
-    }
-
 }

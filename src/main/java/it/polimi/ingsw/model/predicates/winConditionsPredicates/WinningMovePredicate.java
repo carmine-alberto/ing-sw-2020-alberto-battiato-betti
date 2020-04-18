@@ -12,23 +12,8 @@ public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
     }
 
     private boolean movedFromLevel2ToLevel3(Game game, GameWorker gameWorker) {
-        return gameWorker.getCell().getHeight() == 2
+        return gameWorker != null && gameWorker.getCell().getHeight() == 2
                             &&
                game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight() == 3;
-    }
-
-    @Override
-    public BiPredicate<Game, GameWorker> and(BiPredicate<? super Game, ? super GameWorker> other) { //TODO Implement method
-        return null;
-    }
-
-    @Override
-    public BiPredicate<Game, GameWorker> negate() {
-        return null;
-    }
-
-    @Override
-    public BiPredicate<Game, GameWorker> or(BiPredicate<? super Game, ? super GameWorker> other) {
-        return null;
     }
 }

@@ -17,9 +17,4 @@ public class CanMoveBackPredicate implements BiPredicate<FieldCell, GameWorker> 
 
         return gameWorker.getOwner().getCurrentGame().getCell(fieldCell.getPosX() + gapX, fieldCell.getPosY() + gapY).isFree();
     }
-
-    @Override
-    public BiPredicate<FieldCell, GameWorker> and(BiPredicate<? super FieldCell, ? super GameWorker> other) {
-        return null;
-    }
 }
