@@ -3,18 +3,18 @@
     <god>
         <name>Apollo</name>
         <movePredicates>
-            <and>
+            <and>and(
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <args>
+                    <args>arg(
                         <arg>1</arg>
-                    </args>
+                    )</args>
                 </movePredicate>
-                <or>
+                <or>or(
                     <movePredicate>ContainsOpponentWorkerPredicate</movePredicate>
                     <movePredicate>IsCellFreePredicate</movePredicate>
-                </or>
-            </and>
+                )</or>
+            )</and>
         </movePredicates>
         <moveStrategy>MoveWithSwap</moveStrategy>
     </god>
@@ -26,15 +26,15 @@
             <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>ChooseActionPhase</phase>
-            <phases>
+            <phases>choose1(
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
-            <phases>
+            )</phases>
+            <phases>choose2(
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
+            )</phases>
         </phases>
         <movePredicates>
             <movePredicate>NotInOldMovePositionPredicate</movePredicate>
@@ -45,9 +45,9 @@
         <name>Athena</name>
         <moveStrategy>
             <name>MoveAndSet</name>
-            <args>
+            <args>arg(
                 <arg>CantMoveUpPredicate</arg>
-            </args>
+            )</args>
         </moveStrategy>
     </god>
 
@@ -55,9 +55,9 @@
         <name>Atlas</name>
         <constructiblePredicates>
             <name>BlockPredicate</name>
-            <args>
+            <args>arg(
                 <arg>0</arg>
-            </args>
+            )</args>
         </constructiblePredicates>
     </god>
 
@@ -70,10 +70,10 @@
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
-            <phases>
+            <phases>choose1(
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
+            )</phases>
         </phases>
         <buildPredicates>
             <buildPredicate>
@@ -91,38 +91,38 @@
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
-            <phases>
+            <phases>choose1(
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
+            )</phases>
         </phases>
         <buildPredicates>
-            <not>
+            <not>not(
                 <buildPredicate>
                     <name>NotInOldBuildPositionPredicate</name>
                 </buildPredicate>
-            </not>
+            )</not>
         </buildPredicates>
     </god>
 
     <god>
         <name>Minotaur</name>
         <movePredicates>
-            <and>
+            <and>and(
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <args>
+                    <args>arg(
                         <arg>1</arg>
-                    </args>
+                    )</args>
                 </movePredicate>
-                <or>
-                    <and>
+                <or>or(
+                    <and>and(
                         <movePredicate>ContainsOpponentWorkerPredicate</movePredicate>
                         <movePredicate>CanMoveBackPredicate</movePredicate>
-                    </and>
+                    )</and>
                     <movePredicate>IsCellFreePredicate</movePredicate>
-                </or>
-            </and>
+                )</or>
+            )</and>
         </movePredicates>
         <moveStrategy>MoveAndShiftBack</moveStrategy>
     </god>
@@ -130,14 +130,14 @@
     <god>
         <name>Pan</name>
         <winConditions>
-            <or>
+            <or>or(
                 <winCondition>
                     <name>HasMovedDownPredicate</name>
-                    <args>
+                    <args>arg(
                         <arg>2</arg>
-                    </args>
+                    )</args>
                 </winCondition>
-            </or>
+            )</or>
         </winConditions>
     </god>
 
@@ -146,7 +146,7 @@
         <phases>
             <phase>ChooseWorkerPhase</phase>
             <phase>ChooseActionPhase</phase>
-            <phases>
+            <phases>choose1(
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
                 <phase>
@@ -162,12 +162,12 @@
                 </phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
-            <phases>
+            )</phases>
+            <phases>choose2(
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
+            )</phases>
         </phases>
     </god>
 
@@ -176,45 +176,44 @@
         <phases>
             <phase>ChooseWorkerPhase</phase>
             <phase>ChooseActionPhase</phase>
-            <phases>
+            <phases>choose1(
                 <!-- <phase>DISPLACE</phase> -->
                 <phase>ChooseActionPhase</phase>
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
-            <phases>
+            )</phases>
+            <phases>choose2(
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
-            <phase>ChooseBlockPhase</phase>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
+            )</phases>
         </phases>
     </god>
 
     <god>
         <name>Chronus</name>
         <winConditions>
-            <or>
+            <or>or(
                 <winCondition>
                     <name>CompleteTowersPredicate</name>
-                    <args>
+                    <args>arg(
                         <arg>5</arg>
-                    </args>
+                    )</args>
                 </winCondition>
-            </or>
+            )</or>
         </winConditions>
     </god>
 
     <god>
         <name>Hera</name>
         <winConditions>
-            <and>
+            <and>and(
                 <winCondition>
                     <name>NotOnPerimeterPredicate</name>
-                    <application>opponents</application>
+                    <application>on (opponents)</application>    <!-- todo va aggiunto anche a tutti gli altri?-->
                 </winCondition>
-            </and>
+            )</and>
         </winConditions>
     </god>
 
@@ -227,7 +226,7 @@
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
-            <phases>
+            <phases>choose1(
                 <phase>BuildPhase</phase>
                 <buildPredicates>
                     <and>
@@ -237,18 +236,18 @@
                     </and>
                 </buildPredicates>
                 <phase>ChooseBlockPhase</phase>
-            </phases>
+            )</phases>
         </phases>
     </god>
 
     <god>
         <name>Zeus</name>
         <buildPredicates>
-            <or>
+            <or>or(
                 <buildPredicate>
                     <name>CanBuildUnderItselfPredicate</name>
                 </buildPredicate>
-            </or>
+            )</or>
         </buildPredicates>
     </god>
     

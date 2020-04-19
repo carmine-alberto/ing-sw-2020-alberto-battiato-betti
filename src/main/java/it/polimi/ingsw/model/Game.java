@@ -126,42 +126,7 @@ public class Game extends Observable<Event> {
         godPowers = new ArrayList<>(List.of("Apollo", "Artemis", "Athena", "Atlas", "Hephaestus", "Demeter", "Minotaur", "Pan"));
         //TODO Read available godPowers from a file
         // ("file:" + System.getProperty("user.dir") + File.separator + "resources" + File.separator + "copertina_santorini_2016.jpg")
-       /* try {
 
-            File xmlFile = new File("/home/batjacopo/IdeaProjects/ing-sw-2020-alberto-battiato-betti/pom.xml");
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(xmlFile);
-
-            doc.getDocumentElement().normalize();
-
-            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
-            NodeList nList = doc.getElementsByTagName("staff");
-
-            System.out.println("----------------------------");
-
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                Node nNode = nList.item(temp);
-
-                System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                    Element eElement = (Element) nNode;
-
-                    System.out.println("Staff id : " + eElement.getAttribute("id"));
-                    System.out.println("First Name : " + eElement.getElementsByTagName("firstname").item(0).getTextContent());
-                    System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
-                    System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
-                    System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
-
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
 
