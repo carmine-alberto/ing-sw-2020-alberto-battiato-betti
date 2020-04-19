@@ -2,7 +2,6 @@
 
     <god>
         <name>Apollo</name>
-        <actionPredicates></actionPredicates>
         <movePredicates>
             <and>
                 <movePredicate>
@@ -17,11 +16,7 @@
                 </or>
             </and>
         </movePredicates>
-        <buildPredicates></buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
-        <winConditions></winConditions>
         <moveStrategy>MoveWithSwap</moveStrategy>
-        <buildStrategy></buildStrategy>
     </god>
 
     <god>
@@ -41,22 +36,13 @@
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <actionPredicates></actionPredicates>
         <movePredicates>
             <movePredicate>NotInOldMovePositionPredicate</movePredicate>
         </movePredicates>
-        <buildPredicates></buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
-        <winConditions></winConditions>
     </god>
 
     <god>
         <name>Athena</name>
-        <actionPredicates></actionPredicates>
-        <movePredicates></movePredicates>
-        <buildPredicates></buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
-        <winConditions></winConditions>
         <moveStrategy>
             <name>MoveAndSet</name>
             <args>
@@ -67,16 +53,12 @@
 
     <god>
         <name>Atlas</name>
-        <actionPredicates></actionPredicates>
-        <movePredicates></movePredicates>
-        <buildPredicates></buildPredicates>
         <constructiblePredicates>
             <name>BlockPredicate</name>
             <args>
                 <arg>0</arg>
             </args>
         </constructiblePredicates>
-        <winConditions></winConditions>
     </god>
 
     <god>
@@ -93,15 +75,11 @@
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <actionPredicates></actionPredicates>
-        <movePredicates></movePredicates>
         <buildPredicates>
             <buildPredicate>
                 <name>NotInOldBuildPositionPredicate</name>
             </buildPredicate>
         </buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
-        <winConditions></winConditions>
     </god>
 
     <god>
@@ -118,8 +96,6 @@
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <actionPredicates></actionPredicates>
-        <movePredicates></movePredicates>
         <buildPredicates>
             <not>
                 <buildPredicate>
@@ -127,13 +103,10 @@
                 </buildPredicate>
             </not>
         </buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
-        <winConditions></winConditions>
     </god>
 
     <god>
         <name>Minotaur</name>
-        <actionPredicates></actionPredicates>
         <movePredicates>
             <and>
                 <movePredicate>
@@ -151,28 +124,21 @@
                 </or>
             </and>
         </movePredicates>
-        <buildPredicates></buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
-        <winConditions></winConditions>
         <moveStrategy>MoveAndShiftBack</moveStrategy>
-        <buildStrategy></buildStrategy>
     </god>
 
     <god>
         <name>Pan</name>
-        <actionPredicates></actionPredicates>
-        <movePredicates></movePredicates>
-        <buildPredicates></buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
         <winConditions>
-            <winCondition>
-                <name>HasMovedDownPredicate</name>
-                <args>
-                    <arg>2</arg>
-                </args>
-            </winCondition>
+            <or>
+                <winCondition>
+                    <name>HasMovedDownPredicate</name>
+                    <args>
+                        <arg>2</arg>
+                    </args>
+                </winCondition>
+            </or>
         </winConditions>
-        <buildStrategy></buildStrategy>
     </god>
 
     <god>
@@ -203,13 +169,87 @@
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <actionPredicates></actionPredicates>
-        <movePredicates></movePredicates>
-        <buildPredicates></buildPredicates>
-        <constructiblePredicates></constructiblePredicates>
-        <winConditions></winConditions>
-        <moveStrategy></moveStrategy>
-        <buildStrategy></buildStrategy>
     </god>
 
+    <god>
+        <name>Charon</name>
+        <phases>
+            <phase>ChooseWorkerPhase</phase>
+            <phase>ChooseActionPhase</phase>
+            <phases>
+                <!-- <phase>DISPLACE</phase> -->
+                <phase>ChooseActionPhase</phase>
+                <phase>MovePhase</phase>
+                <phase>BuildPhase</phase>
+                <phase>ChooseBlockPhase</phase>
+            </phases>
+            <phases>
+                <phase>MovePhase</phase>
+                <phase>BuildPhase</phase>
+            <phase>ChooseBlockPhase</phase>
+                <phase>ChooseBlockPhase</phase>
+            </phases>
+        </phases>
+    </god>
+
+    <god>
+        <name>Chronus</name>
+        <winConditions>
+            <or>
+                <winCondition>
+                    <name>CompleteTowersPredicate</name>
+                    <args>
+                        <arg>5</arg>
+                    </args>
+                </winCondition>
+            </or>
+        </winConditions>
+    </god>
+
+    <god>
+        <name>Hera</name>
+        <winConditions>
+            <and>
+                <winCondition>
+                    <name>NotOnPerimeterPredicate</name>
+                    <application>opponents</application>
+                </winCondition>
+            </and>
+        </winConditions>
+    </god>
+
+    <god>
+        <name>Hestia</name>
+        <phases>
+            <phase>ChooseWorkerPhase</phase>
+            <phase>ChooseActionPhase</phase>
+            <phase>MovePhase</phase>
+            <phase>BuildPhase</phase>
+            <phase>ChooseBlockPhase</phase>
+            <phase>ChooseActionPhase</phase>
+            <phases>
+                <phase>BuildPhase</phase>
+                <buildPredicates>
+                    <and>
+                        <buildPredicate>
+                            <name>NotOnPerimeterPredicate</name>
+                        </buildPredicate>
+                    </and>
+                </buildPredicates>
+                <phase>ChooseBlockPhase</phase>
+            </phases>
+        </phases>
+    </god>
+
+    <god>
+        <name>Zeus</name>
+        <buildPredicates>
+            <or>
+                <buildPredicate>
+                    <name>CanBuildUnderItselfPredicate</name>
+                </buildPredicate>
+            </or>
+        </buildPredicates>
+    </god>
+    
 </gods>
