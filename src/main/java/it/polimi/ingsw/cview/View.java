@@ -55,7 +55,6 @@ public abstract class  View {
             } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace(); //TODO Handle exception properly
             }
-            System.out.println("viewstate set: " + this.getClass());
             client.getViewState().render();
         });
     }

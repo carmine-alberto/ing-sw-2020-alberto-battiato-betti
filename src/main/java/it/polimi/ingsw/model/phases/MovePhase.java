@@ -4,26 +4,33 @@ import it.polimi.ingsw.controller.events.AvailableCellsUpdate;
 import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class MovePhase extends TurnPhase {
-    List<FieldCell> availableCells = new ArrayList<>();
+    private List<FieldCell> availableCells = new ArrayList<>();
+    private BiPredicate<FieldCell, GameWorker> movePredicate;
     Player turnPlayer;
 
-    public MovePhase(Game currentGame) {
-        super(currentGame);
+    public MovePhase(Game currentGame, BiPredicate phasePredicate) {
+        super(currentGame, phasePredicate);
+        movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(1)); //TODO Initialize in PhaseBuilder
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new BuildPhase(currentGame);
+        nextPhase = new BuildPhase(currentGame, null); //TODO Refactor
         turnPlayer = currentGame.getTurnPlayer();
+
 
         availableCells = turnPlayer
                 .getPlayerState()
@@ -31,8 +38,8 @@ public class MovePhase extends TurnPhase {
                 .getCell()
                 .getAdjacentCells()
                 .stream()
-                .filter(adjacentCell -> turnPlayer
-                        .getMovePredicate()
+                .filter(adjacentCell ->
+                        movePredicate
                         .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker()))
                 .collect(Collectors.toList());
 

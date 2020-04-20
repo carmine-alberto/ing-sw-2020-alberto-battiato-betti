@@ -4,26 +4,31 @@ import it.polimi.ingsw.controller.events.AvailableCellsUpdate;
 import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class BuildPhase extends TurnPhase {
     List<FieldCell> availableCells = new ArrayList<>();
+    private BiPredicate<FieldCell, GameWorker> restrictions;
     Player turnPlayer;
 
 
-    public BuildPhase(Game currentGame) {
-        super(currentGame);
+    public BuildPhase(Game currentGame, BiPredicate phasePredicate) {
+        super(currentGame, phasePredicate);
+        restrictions = new IsCellFreePredicate();
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new ChooseBlockPhase(currentGame);
+        nextPhase = new ChooseBlockPhase(currentGame, null);
         turnPlayer = currentGame.getTurnPlayer();
 
         List<FieldCell> adjacentCellsPlusSelf = turnPlayer
@@ -35,8 +40,8 @@ public class BuildPhase extends TurnPhase {
 
         availableCells = adjacentCellsPlusSelf
                 .stream()
-                .filter(adjacentCell -> turnPlayer
-                        .getBuildPredicate()
+                .filter(adjacentCell ->
+                        restrictions
                         .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker())
                 )
                 .collect(Collectors.toList());

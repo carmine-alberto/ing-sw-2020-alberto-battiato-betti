@@ -28,12 +28,6 @@ public class Player implements Serializable {
     private transient PlayerState playerState;
 
     //Predicates
-    private transient Map<String, BiPredicate> predicateMap = new HashMap<>();
-
-    private transient BiPredicate<FieldCell, GameWorker> movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(1));
-    private transient BiPredicate<FieldCell, GameWorker> buildPredicate = new IsCellFreePredicate();
-    private transient BlockPredicate blockPredicate = new BlockPredicate(3);
-    private transient BiPredicate<ActionEnum, Player> actionPredicate;
     private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
 
     public Player(String nickname){
@@ -46,36 +40,8 @@ public class Player implements Serializable {
         this.playerView = playerView;
         this.playerState = new PlayerState(this);
         this.isWinner = false;
-        actionPredicate = new ActionPredicate(true, false, false); //TODO remove and set when reading from file
-        this.predicateMap.put("Action" , actionPredicate);
-
-        //((ActionPredicate)this.predicateMap.get("Action")).setCanBuild(true);
     }
 
-
-    public BiPredicate<FieldCell, GameWorker> getMovePredicate() {
-        return movePredicate;
-    }
-
-    public BiPredicate<FieldCell, GameWorker> getBuildPredicate() {
-        return buildPredicate;
-    }
-
-    public BiPredicate<Player, Constructible> getBlockPredicate() {
-        return blockPredicate;
-    }
-
-    public void setBlockPredicate(Integer height) {
-        this.blockPredicate.setMinimumHeight(height);
-    }
-
-    public BiPredicate<ActionEnum, Player> getActionPredicate() {
-        return actionPredicate;
-    }
-
-    public void setActionPredicate(BiPredicate<ActionEnum, Player> actionPredicate) {
-        this.actionPredicate = actionPredicate;
-    }
 
     public BiPredicate<Game, GameWorker> getWinConditions() {
         return winConditions;

@@ -4,28 +4,32 @@ import it.polimi.ingsw.controller.events.AvailableChoicesUpdate;
 import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class ChooseBlockPhase extends TurnPhase {
     Player turnPlayer;
+    private BlockPredicate blockPredicate;
     List<Constructible> availableBlocks = new ArrayList<>(EnumSet.allOf(Constructible.class));
 
-    public ChooseBlockPhase(Game currentGame) {
-        super(currentGame);
+    public ChooseBlockPhase(Game currentGame, BiPredicate phasePredicate) {
+        super(currentGame, phasePredicate);
+        blockPredicate = new BlockPredicate(3);
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new ChooseWorkerPhase(currentGame);
+        nextPhase = new ChooseWorkerPhase(currentGame, null);
         turnPlayer = currentGame.getTurnPlayer();
 
         availableBlocks = availableBlocks
                 .stream()
-                .filter(block -> turnPlayer.getBlockPredicate().test(turnPlayer, block))
+                .filter(block -> blockPredicate.test(turnPlayer, block))
                 .collect(Collectors.toList());
 
         if (availableBlocks.size() > 1) {

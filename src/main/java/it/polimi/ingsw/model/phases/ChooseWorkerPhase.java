@@ -6,16 +6,18 @@ import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
+import java.util.function.BiPredicate;
+
 
 public class ChooseWorkerPhase extends TurnPhase {
 
-    public ChooseWorkerPhase(Game currentGame) {
-        super(currentGame);
+    public ChooseWorkerPhase(Game currentGame, BiPredicate phasePredicate) {
+        super(currentGame, phasePredicate);
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new ChooseActionPhase(currentGame);
+        nextPhase = new ChooseActionPhase(currentGame, null); //TODO Refactor
         currentGame.notifyTurnPlayer(new PhaseUpdate("Select the desired worker"));
     }
 
@@ -26,8 +28,6 @@ public class ChooseWorkerPhase extends TurnPhase {
         GameWorker selectedWorker = extractWorkerFromCoordinates(arg);
         currentGame.getTurnPlayer().getPlayerState().setSelectedWorker(selectedWorker);
     }
-
-
 
 
     private GameWorker extractWorkerFromCoordinates(String coordinates) throws InvalidSelectionException {

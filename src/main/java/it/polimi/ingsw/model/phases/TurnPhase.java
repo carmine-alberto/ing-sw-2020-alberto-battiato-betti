@@ -10,15 +10,18 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import javafx.scene.Node;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 
 public abstract class TurnPhase {
     protected TurnPhase nextPhase;
     protected Game currentGame;
+    protected BiPredicate phasePredicate;
 
-    public TurnPhase(Game currentGame) {
+    public TurnPhase(Game currentGame, BiPredicate phasePredicate) {
         this.currentGame = currentGame;
+        this.phasePredicate = phasePredicate;
     }
 
     public abstract void stateInit();
@@ -52,7 +55,7 @@ public abstract class TurnPhase {
 
     protected void removeTurnPlayerFromGame() {
         currentGame.removeTurnPlayer();
-        setNextPhase(new ChooseWorkerPhase(currentGame));
+        setNextPhase(new ChooseWorkerPhase(currentGame, null));
         currentGame.setNextTurnPlayer();
         currentGame.endPhase();
     }

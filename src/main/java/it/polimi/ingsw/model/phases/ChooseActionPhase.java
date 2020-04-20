@@ -1,35 +1,37 @@
 package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.controller.events.AvailableChoicesUpdate;
-import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.ActionEnum;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+import it.polimi.ingsw.model.predicates.actionPredicates.ActionPredicate;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class ChooseActionPhase extends TurnPhase {
     List<ActionEnum> availableActions;
+    private BiPredicate<ActionEnum, Player> actionPredicate;
     Player turnPlayer;
 
-    public ChooseActionPhase(Game currentGame) {
-        super(currentGame);
+    public ChooseActionPhase(Game currentGame, BiPredicate phasePredicate) {
+        super(currentGame, phasePredicate);
         availableActions = new ArrayList(EnumSet.allOf(ActionEnum.class));
+        actionPredicate = new ActionPredicate(true, false, false); //TODO remove and set when reading from file
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new MovePhase(currentGame);
+        nextPhase = new MovePhase(currentGame, null);
         turnPlayer = currentGame.getTurnPlayer();
 
         availableActions = availableActions
                 .stream()
-                .filter(action -> turnPlayer.getActionPredicate().test(action, turnPlayer))
-                //.filter(actionEnum -> turnPlayer.getActionPredicate().test(turnPlayer))
+                .filter(action -> actionPredicate.test(action, turnPlayer))
                 .collect(Collectors.toList());
 
         if (availableActions.size() > 1) {
@@ -65,7 +67,7 @@ public class ChooseActionPhase extends TurnPhase {
     public void stateEnd() {
         switch (turnPlayer.getPlayerState().getSelectedAction()) {
             case BUILD:
-                nextPhase = new BuildPhase(currentGame);
+                nextPhase = new BuildPhase(currentGame, null); //TODO Refactor object creation
                 break;
             case DISPLACE: //TODO implementare lo switch del giocatore avversario
                 break;
