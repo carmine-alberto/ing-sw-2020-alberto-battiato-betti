@@ -127,7 +127,6 @@ public class Game extends Observable<Event> {
         this.godPowers = godPowers;
     }
 
-
     public void notifyObservers(Event e) {
         this.notify(e);
     }

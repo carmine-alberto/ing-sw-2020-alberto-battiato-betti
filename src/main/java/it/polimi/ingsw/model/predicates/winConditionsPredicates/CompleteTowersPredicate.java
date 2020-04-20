@@ -13,6 +13,13 @@ public class CompleteTowersPredicate implements BiPredicate<Game, GameWorker> {
     }
     @Override
     public boolean test(Game game, GameWorker gameWorker) {
-        return false; // la soluzione più efficiente sarebbe creare una variabile in game che tiene conto del numero di torri complete, l'alternativa è chiamare una funzione che scorra le celle per calcolare il numero ma sembra più onerosa
+        Integer cont = 0;
+
+        for (Integer i = 0; i < 5; i++)
+            for (Integer j = 0; i < 5 && cont < n; i++)
+                if (game.getCell(i , j).isComplete())
+                    cont++;
+
+        return (cont >= n);
     }
 }
