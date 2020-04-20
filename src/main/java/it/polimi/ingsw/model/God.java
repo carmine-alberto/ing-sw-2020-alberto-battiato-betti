@@ -65,17 +65,14 @@ public class God {
      * refNode must be saved upon reading "phases" and restored upon exit;
      * then, second branch is read, and so on
      */
-    class GodBuilder {
+    static class GodBuilder {
         private God tempGod;
         private Node refNode;
         private Node currNode;
 
 
-        public GodBuilder() {
-            tempGod = new God();
-            tempGod.phasesTree = new Node(null, null, null); //ROOT - Modified by the GodBuilder
-            refNode = tempGod.phasesTree;
-            currNode = tempGod.phasesTree;
+        GodBuilder() {
+            reset();
         }
 
         public GodBuilder name(String name) {
@@ -105,9 +102,18 @@ public class God {
             tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
             tempGod.currentPhaseNode = tempGod.phasesTree;                      //We're assuming it's the only one, since every turn starts with WorkerSelection
             God completeGod = tempGod;
-            tempGod = new God();
+            reset();
 
             return completeGod;
         }
+
+        public void reset() {
+            tempGod = new God();
+            tempGod.phasesTree = new Node(null, null, null); //ROOT - Modified by the GodBuilder
+            refNode = tempGod.phasesTree;
+            currNode = tempGod.phasesTree;
+        }
     }
+
+
 }

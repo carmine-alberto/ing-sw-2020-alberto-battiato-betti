@@ -8,8 +8,9 @@ import java.util.function.BiPredicate;
 public class CanMoveBackPredicate implements BiPredicate<FieldCell, GameWorker> {
 
     @Override
-    public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
-        if (fieldCell.isOnPerimeter())
+    public boolean test(/*Object arg*/FieldCell fieldCell, GameWorker gameWorker) {
+//        FieldCell cellToFilter = (FieldCell) arg;
+        if (fieldCell.isOnPerimeter()) //TODO Cazziare Bat
                 return false;
 
         Integer gapX = fieldCell.getPosX() - gameWorker.getCell().getPosX();

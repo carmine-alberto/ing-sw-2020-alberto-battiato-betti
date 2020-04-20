@@ -16,6 +16,8 @@ public class Parser {
     }
 
     private static void read() {
+        God.GodBuilder builder = new God.GodBuilder();
+
         try {
 
             File xmlFile = new File(System.getProperty("user.dir") + File.separator + "resources" + File.separator + "godpowers.xml");

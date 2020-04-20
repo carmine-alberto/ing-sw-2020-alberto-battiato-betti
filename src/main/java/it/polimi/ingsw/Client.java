@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.clientView.LoginView;
 import it.polimi.ingsw.model.FieldCell;
+import it.polimi.ingsw.model.God;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -26,6 +27,7 @@ public class Client extends Application {
         System.out.println( "Ce la faremo!");
 
         launch();
+
     }
 
     @Override
