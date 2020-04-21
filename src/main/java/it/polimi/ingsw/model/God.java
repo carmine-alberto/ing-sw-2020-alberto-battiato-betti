@@ -11,14 +11,17 @@ import java.util.function.BiPredicate;
 public class God {
 
     private String name;
-    private BiPredicate winConditionPredicate;
+    private BiPredicate<Game, GameWorker> winConditionPredicate;
+    private Boolean onOpponents;
+
     private Action moveStrategy;
     private Action buildStrategy;
-    private Node phasesTree;
-    private Node currentPhaseNode;
+    private Node phasesTree; //Pointing to root, ALWAYS
+    private Node currentPhaseNode; //Pointing to the current phase
 
     private God() {
         winConditionPredicate = new WinningMovePredicate();
+        onOpponents = false;
     }
 
     public TurnPhase nextPhase(Game currentGame, String userSelection) {
@@ -60,6 +63,15 @@ public class God {
         currentPhaseNode = phasesTree;
     }
 
+    public void assignWinConditionPredicate(Player assignee) { //TODO This method should be called when all players have selected their own god
+        if (onOpponents)
+            assignee
+                    .getOpponents()
+                    .forEach(player -> player.setWinConditions(player.getWinConditions().and(winConditionPredicate))); //TODO Is it always "and"?
+        else
+            assignee.setWinConditions(assignee.getWinConditions().and(winConditionPredicate));
+    }
+
     /**
      * The tree is built in DFS-like order: first whole branch is read from file,
      * refNode must be saved upon reading "phases" and restored upon exit;
@@ -98,6 +110,26 @@ public class God {
             return this;
         }
 
+        public GodBuilder setOnOpponents() {
+            this.tempGod.onOpponents = true;
+            return this;
+        }
+
+        public GodBuilder winConditionPredicate(BiPredicate<Game, GameWorker> winConditionPredicate) {
+            this.tempGod.winConditionPredicate = winConditionPredicate;
+            return this;
+        }
+
+        public GodBuilder moveStrategy(Action moveStrategy) {
+            this.tempGod.moveStrategy = moveStrategy;
+            return this;
+        }
+
+        public GodBuilder buildStrategy(Action buildStrategy) {
+            this.tempGod.buildStrategy = buildStrategy;
+            return this;
+        }
+
         public God getCompleteGod() {
             tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
             tempGod.currentPhaseNode = tempGod.phasesTree;                      //We're assuming it's the only one, since every turn starts with WorkerSelection
@@ -107,6 +139,8 @@ public class God {
             return completeGod;
         }
 
+
+
         public void reset() {
             tempGod = new God();
             tempGod.phasesTree = new Node(null, null, null); //ROOT - Modified by the GodBuilder
@@ -114,6 +148,7 @@ public class God {
             currNode = tempGod.phasesTree;
         }
     }
+
 
 
 }

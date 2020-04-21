@@ -199,7 +199,7 @@
             <and>
                 <winCondition>
                     <name>NotOnPerimeterPredicate</name>
-                    <application>opponents</application>    <!-- todo va aggiunto anche a tutti gli altri?-->
+                    <application>opponents</application>    <!-- todo va aggiunto anche a tutti gli altri? -->
                 </winCondition>
             </and>
         </winConditions>

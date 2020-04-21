@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.function.BiPredicate;
 
 public class Parser {
 
@@ -39,19 +40,19 @@ public class Parser {
         }
     }
 
-    private static void visitNode(Node node, Integer level) {
+    private static void visitNode(Node node, Integer level/*, BiPredicate tempPredicate*/) {
         NodeList nList = node.getChildNodes();
 
         for (Integer i = 0; i < nList.getLength(); i++) {
-            if (nList.item(i).getNodeValue() == null) {
+            if (nList.item(i).getNodeValue() == null) {         //CHILD NODE HAS NO TEXT (e.g. <and></and>)
                 System.out.println(numOfTabs(level) + "<" + nList.item(i).getNodeName() + ">");
                 visitNode(nList.item(i), level + 1);
             }
-            else
+            else                                                //CHILD NODE HAS TEXT (e.g. <movePredicate>text</movePredicate>)
                 System.out.println(numOfTabs(level) + nList.item(i).getTextContent());
         }
     }
-
+    
     private static String numOfTabs(Integer level) {
         StringBuilder tabs = new StringBuilder();
 
