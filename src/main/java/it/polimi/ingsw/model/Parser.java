@@ -17,60 +17,65 @@ public class Parser {
 
     private static void read() {
         God.GodBuilder builder = new God.GodBuilder();
+        //TODO Add setters for the remaining God attributes in GodBuilder
 
         try {
-
-            File xmlFile = new File(System.getProperty("user.dir") + File.separator + "resources" + File.separator + "godpowers.xml");
+            File xmlFile = new File(System.getProperty("user.dir") + File.separator + "resources" + File.separator + "godPowers.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(xmlFile);
 
             doc.getDocumentElement().normalize();
+            stripSpace(doc)
+            ;
+            System.out.println("Root element :" + doc.getDocumentElement());
 
-            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
-            NodeList nList = doc.getElementsByTagName("god");
+            visitNode(doc, 0);
 
             System.out.println("----------------------------");
 
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                Node nNode = nList.item(temp);
-                Element god = (Element) nNode;
-                System.out.println("\ncurrent element :" + nNode.getNodeName());
-
-                //if (nNode.getNodeType() == Node.ELEMENT_NODE)
-                NodeList nodes = god.getChildNodes();
-
-
-                Node node = nodes.item(0).getNextSibling();
-                for(int i = 0; i < nodes.getLength(); i = i + 2){
-                /*    node = nodes.item(i + 1).getNextSibling();
-                    if(node.getNodeName() != "#text")
-                        System.out.println(node.getNodeName());
-                  */  node = nodes.item(i).getNextSibling();
-                    if(node != null) {
-                        System.out.println(node.getNodeName() + ":" + node.getTextContent());
-                        if (node.getFirstChild() != null && !node.getFirstChild().getNodeValue().equals(node.getTextContent()))
-                            System.out.println(node.getFirstChild().getNodeValue());
-                    }
-                }
-                System.out.println(";\n");
-/*
-                Node node1 =nodes.item(0).getNextSibling();
-                if(node1 != null) {
-                    System.out.println(node1.getNodeName() + ":" + node1.getTextContent() + "\n");
-                    Node node2 = nodes.item(2).getNextSibling();
-                    if(node2 != null){
-                        System.out.println(node2.getNodeName() + ":" + node2.getTextContent() + "\n");
-                        Node node3 = nodes.item(4).getNextSibling();
-                        if(node3 != null)
-                            System.out.println(node1.getNodeName() + ":" + node1.getTextContent());
-                    }
-                }else System.out.println(";\n");*/
-            }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void visitNode(Node node, Integer level) {
+        NodeList nList = node.getChildNodes();
+
+        for (Integer i = 0; i < nList.getLength(); i++) {
+            if (nList.item(i).getNodeValue() == null) {
+                System.out.println(numOfTabs(level) + "<" + nList.item(i).getNodeName() + ">");
+                visitNode(nList.item(i), level + 1);
+            }
+            else
+                System.out.println(numOfTabs(level) + nList.item(i).getTextContent());
+        }
+    }
+
+    private static String numOfTabs(Integer level) {
+        StringBuilder tabs = new StringBuilder();
+
+        for (Integer i = 0; i < level; i++)
+            tabs.append('\t');
+
+        return tabs.toString();
+
+    }
+
+    private static void stripSpace(Node node){
+        Node child = node.getFirstChild();
+
+        while(child!=null) {
+            // save the sibling of the node that will
+            // perhaps be removed and set to null
+            Node c = child.getNextSibling();
+            if ((child.getNodeType()==Node.TEXT_NODE && child.getNodeValue().trim().length()==0)
+                    ||
+                    ((child.getNodeType()!=Node.TEXT_NODE) && (child.getNodeType()!=Node.ELEMENT_NODE)))
+                node.removeChild(child);
+            else // process children recursively
+                stripSpace(child);
+            child = c;
         }
     }
 
@@ -94,5 +99,7 @@ public class Parser {
                 break;
         }
     }
+
+
 }
 
