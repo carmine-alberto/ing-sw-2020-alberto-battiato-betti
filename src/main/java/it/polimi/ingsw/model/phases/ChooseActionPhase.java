@@ -21,12 +21,11 @@ public class ChooseActionPhase extends TurnPhase {
     public ChooseActionPhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame, phasePredicate);
         availableActions = new ArrayList(EnumSet.allOf(ActionEnum.class));
-        actionPredicate = new ActionPredicate(true, false, false); //TODO remove and set when reading from file
+        actionPredicate = phasePredicate;
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new MovePhase(currentGame, null);
         turnPlayer = currentGame.getTurnPlayer();
 
         availableActions = availableActions
@@ -41,8 +40,7 @@ public class ChooseActionPhase extends TurnPhase {
         }
         else
             try {
-                run(availableActions.get(0).toString());
-                currentGame.endPhase();
+                currentGame.runPhase(availableActions.get(0).toString());
             } catch (Exception e) {
                 //Never thrown since the passed string is well-formatted
             }
@@ -62,18 +60,5 @@ public class ChooseActionPhase extends TurnPhase {
             return;
         throw new InvalidSelectionException("The specified action is not available, try with a different one");
     }
-
-    @Override
-    public void stateEnd() {
-        switch (turnPlayer.getPlayerState().getSelectedAction()) {
-            case BUILD:
-                nextPhase = new BuildPhase(currentGame, null); //TODO Refactor object creation
-                break;
-            case DISPLACE: //TODO implementare lo switch del giocatore avversario
-                break;
-            case MOVE: break;
-        }
-    }
-
 
 }

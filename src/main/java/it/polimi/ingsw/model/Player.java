@@ -24,6 +24,7 @@ public class Player implements Serializable {
     private transient VirtualView playerView;
     private List<GameWorker> workers;
     private String selectedGodPower; //TODO Refactor into proper type
+    private God selectedGod;
 
     private transient PlayerState playerState;
 
@@ -112,12 +113,23 @@ public class Player implements Serializable {
         return selectedGodPower;
     }
 
-    public void setSelectedGodPower(String selectedGodPower) {
-        this.selectedGodPower = selectedGodPower;
-    }
-
-
     public PlayerState getPlayerState() {
         return this.playerState;
+    }
+
+    public God getSelectedGod() {
+        return selectedGod;
+    }
+
+    void setSelectedGod(God selectedGod) {
+        this.selectedGod = selectedGod;
+    }
+
+    /**
+     * Setting the worker "position" attribute to null is pointless;
+     * it's never used if a worker is removed from the board
+     */
+    public void removeWorkersFromBoard() {
+        workers.forEach(worker -> worker.getCell().setOccupyingWorker(null));
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,7 @@ class PlayerTest {
             firstOpponents.add(third);
             secondOpponents.add(first);
             secondOpponents.add(third);
-        } catch (AlreadyExistingNameException e) {
+        } catch (InvalidSelectionException e) {
             e.printStackTrace();
         }
     }

@@ -30,6 +30,7 @@ public abstract class TurnPhase {
 
     public void stateEnd() {
         currentGame.getPlayers().forEach(player -> checkIsWinner(player));
+        currentGame.getTurnPlayer().getSelectedGod().setNextPhase(currentGame);
         //TODO Invio notifica
 
     }
@@ -55,9 +56,6 @@ public abstract class TurnPhase {
 
     protected void removeTurnPlayerFromGame() {
         currentGame.removeTurnPlayer();
-        setNextPhase(new ChooseWorkerPhase(currentGame, null));
-        currentGame.setNextTurnPlayer();
-        currentGame.endPhase();
     }
 
     protected List<String> stringify(List<?> availableEnumItems) {

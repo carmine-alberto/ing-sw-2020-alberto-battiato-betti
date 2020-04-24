@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.cview.serverView.VirtualChallengerSelectionView;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class LoginController extends ControllerState {
             mainController.controllerState = new ChallengerSelectionController(mainController);
 
             System.out.println(mainController.getCurrentGame().getPlayers().stream().map(player -> player.getNickname()).collect(Collectors.toList())); //TODO Remove random print
-        } catch (AlreadyExistingNameException e) {
+        } catch (InvalidSelectionException e) {
             //This catch will never be run: the first player launching the client can't choose an already-existing name
         }
     }

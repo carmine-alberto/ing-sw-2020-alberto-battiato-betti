@@ -34,8 +34,7 @@ public class GodPowerController extends ControllerState {
                 .sendToClient(new SelectedGodsEvent(mainController
                         .getCurrentGame()
                         .getGodPowers()
-                        .stream()
-                        .collect(Collectors.toList()))); //This may be moved into the model: the game changes (god powers are added) and a notification is sent - Downsides: what if the gods are set before other clients are connected?
+                )); //This may be moved into the model: the game changes (god powers are added) and a notification is sent - Downsides: what if the gods are set before other clients are connected?
     }
 
 
@@ -45,13 +44,14 @@ public class GodPowerController extends ControllerState {
         Player choosingPlayer = currentGame.getPlayers().get(choosingPlayerIndex);
 
         if (godPowersList.contains(event.selectedGod)) {
-            choosingPlayer.setSelectedGodPower(event.selectedGod);
-            godPowersList.remove(event.selectedGod);
+            currentGame.assignSelectedGodPowerToPlayer(event.selectedGod, choosingPlayer);
+            currentGame.removeGodPowerFromAvailableGods(event.selectedGod);
+            godPowersList.remove(event.selectedGod);    //Looks redundant? Necessary for the below code to work (if condition evaluates to true)
             choosingPlayer.getPlayerView().changeView(new VirtualWaitingView());
             choosingPlayerIndex++;
             if (choosingPlayerIndex % currentGame.NUM_OF_PLAYERS == 0) {
-                currentGame.getPlayers().get(0).setSelectedGodPower(godPowersList.get(0));
-                godPowersList.clear();
+                currentGame.assignSelectedGodPowerToPlayer(godPowersList.get(0), currentGame.getPlayers().get(0));
+                currentGame.removeGodPowerFromAvailableGods(godPowersList.get(0));
                 moveToNextState();
             } else {
                 choosingPlayer = currentGame.getPlayers().get(choosingPlayerIndex);

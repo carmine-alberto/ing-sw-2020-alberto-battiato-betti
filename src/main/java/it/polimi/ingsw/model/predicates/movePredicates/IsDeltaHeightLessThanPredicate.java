@@ -14,7 +14,7 @@ public class IsDeltaHeightLessThanPredicate implements BiPredicate<FieldCell, Ga
 
     @Override
     public boolean test(FieldCell destinationCell, GameWorker gameWorker) {
-        return deltaHeight(destinationCell, gameWorker) <= delta;
+        return deltaHeight(destinationCell, gameWorker) < delta;
     }
 
     private Integer deltaHeight(FieldCell destinationCell, GameWorker gameWorker) {

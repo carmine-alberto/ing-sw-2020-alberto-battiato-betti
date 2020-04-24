@@ -29,7 +29,6 @@ public class GamePhasesController extends ControllerState {
 
             if (turnPlayer.getPlayerView().equals(view)) {
                 currentGame.runPhase(event.inputString);
-                currentGame.endPhase();
             }
             else
                 view.showMessage("It's not your turn!");

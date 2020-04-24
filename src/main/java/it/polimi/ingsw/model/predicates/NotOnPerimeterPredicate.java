@@ -10,4 +10,6 @@ public class NotOnPerimeterPredicate implements BiPredicate<FieldCell, GameWorke
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
         return !fieldCell.isOnPerimeter();
     }
+
+    //TODO Create predicate to check whether a player with Hera as God Power exists (if that player loses, it will be removed from the players and that predicate should return false)
 }

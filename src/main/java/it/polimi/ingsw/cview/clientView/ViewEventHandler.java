@@ -112,4 +112,14 @@ public class ViewEventHandler implements Runnable {
         client.getViewState().render();
 
     }
+
+    public void handle(PlayerLostUpdate update) {
+        client.getViewState().showMessage(update.losingPlayerNickname + " has no available moves and was removed from the game");
+    }
+
+    public void handle(GameEndUpdate update) {
+        client.getViewState().showMessage("The game is over. " +
+                                            update.winnerNickname + " is the winner!");
+        client.getViewState().terminate();
+    }
 }

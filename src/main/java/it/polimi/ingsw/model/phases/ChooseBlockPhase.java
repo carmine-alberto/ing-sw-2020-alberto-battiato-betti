@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 
 public class ChooseBlockPhase extends TurnPhase {
     Player turnPlayer;
-    private BlockPredicate blockPredicate;
+    private BiPredicate<Player, Constructible> blockPredicate;
     List<Constructible> availableBlocks = new ArrayList<>(EnumSet.allOf(Constructible.class));
 
     public ChooseBlockPhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame, phasePredicate);
-        blockPredicate = new BlockPredicate(3);
+        blockPredicate = phasePredicate;
     }
 
     @Override
@@ -39,8 +39,7 @@ public class ChooseBlockPhase extends TurnPhase {
         }
         else
             try {
-                run(availableBlocks.get(0).toString());
-                currentGame.endPhase();
+                currentGame.runPhase(availableBlocks.get(0).toString());
             } catch (Exception e) {
                 //Never thrown since the passed string is well-formatted
             }
@@ -53,21 +52,12 @@ public class ChooseBlockPhase extends TurnPhase {
 
         Constructible selectedConstructible = Constructible.valueOf(arg);
 
-        turnPlayerState.setSelectedConstructible(availableBlocks.get(0));
+        turnPlayerState.setSelectedConstructible(selectedConstructible);
 
         turnPlayerState.getSelectedWorker().build(turnPlayerState.getSelectedCell(), turnPlayerState.getSelectedConstructible());
         turnPlayerState.getSelectedWorker().getOldBuildPositions().add(turnPlayerState.getSelectedCell()); //TODO Should we do this here or in build?
 
         checkWinConditions();
-    }
-
-    @Override
-    public void stateEnd() {
-        super.stateEnd();
-        turnPlayer.getPlayerState().reset();
-        currentGame.notifyTurnPlayer(new PhaseUpdate("Your turn is over"));
-        currentGame.setNextTurnPlayer();
-        //TODO empty whatever structure needs to be emptied (e.g. OldMovePositions)
     }
 
     private void parseArg(String arg) throws InvalidSelectionException {

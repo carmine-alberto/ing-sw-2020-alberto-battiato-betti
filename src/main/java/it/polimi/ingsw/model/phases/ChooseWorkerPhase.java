@@ -17,7 +17,6 @@ public class ChooseWorkerPhase extends TurnPhase {
 
     @Override
     public void stateInit() {
-        nextPhase = new ChooseActionPhase(currentGame, null); //TODO Refactor
         currentGame.notifyTurnPlayer(new PhaseUpdate("Select the desired worker"));
     }
 

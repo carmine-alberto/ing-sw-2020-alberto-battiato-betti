@@ -23,14 +23,12 @@ public class MovePhase extends TurnPhase {
 
     public MovePhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame, phasePredicate);
-        movePredicate = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(1)); //TODO Initialize in PhaseBuilder
+        movePredicate = phasePredicate; //TODO We're actually assigning the predicate 2 times - this could be avoided using the inherited phasePredicate (valid for every phase atm)
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new BuildPhase(currentGame, null); //TODO Refactor
         turnPlayer = currentGame.getTurnPlayer();
-
 
         availableCells = turnPlayer
                 .getPlayerState()

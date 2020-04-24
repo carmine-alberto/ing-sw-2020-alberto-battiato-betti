@@ -52,7 +52,7 @@ public class Parser {
                 System.out.println(numOfTabs(level) + nList.item(i).getTextContent());
         }
     }
-    
+
     private static String numOfTabs(Integer level) {
         StringBuilder tabs = new StringBuilder();
 

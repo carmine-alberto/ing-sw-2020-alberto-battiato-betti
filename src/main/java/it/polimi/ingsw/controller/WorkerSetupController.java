@@ -33,7 +33,7 @@ public class WorkerSetupController extends ControllerState {
             turnPlayer.setColour(workerSelectionEvent.selectedColor); //TODO Check colour is not already selected
 
             for (Integer i = 0; i < 2; i++) {
-                playerWorkers.add(new GameWorker(new Move(), new Build(), mainController.getCurrentGame(), turnPlayer));
+                playerWorkers.add(new GameWorker(mainController.getCurrentGame(), turnPlayer));
                 playerWorkers.get(i).setPosition(mainController.getCurrentGame().getCell(workerSelectionEvent.xCoordinates.get(i) - 1, //TODO Check bounds: exceptions or checks?
                         workerSelectionEvent.yCoordinates.get(i) - 1));
             }

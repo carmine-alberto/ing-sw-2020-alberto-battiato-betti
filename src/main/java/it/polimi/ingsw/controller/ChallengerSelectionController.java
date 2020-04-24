@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 import it.polimi.ingsw.cview.serverView.VirtualWaitingView;
 import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class ChallengerSelectionController extends ControllerState {
             }
             if (currentGame.getPlayers().size() == currentGame.NUM_OF_PLAYERS)
                 moveToNextState(currentGame);
-        } catch (AlreadyExistingNameException e) {
+        } catch (InvalidSelectionException e) {
             senderView.showMessage(e.getMessage());
             senderView.terminate();
         }
@@ -58,7 +59,6 @@ public class ChallengerSelectionController extends ControllerState {
             moveToNextState(mainController.getCurrentGame());
         }
 
-        //TODO Add selected God Powers to the game
     }
 
     private void moveToNextState(Game currentGame) {

@@ -16,9 +16,15 @@ public class GameWorker implements Serializable  {
     private transient List<FieldCell> oldMovePositions = new ArrayList<>();
     private transient List<FieldCell> oldBuildPositions= new ArrayList<>();
 
-    public GameWorker() {};
+    public GameWorker(Game currentGame, Player owner) {
+        this.currentGame = currentGame;
+        this.owner = owner;
+        this.moveStrategy = owner.getSelectedGod().getMoveStrategy();
+        this.buildStrategy = owner.getSelectedGod().getBuildStrategy();
 
-    public GameWorker(Action moveStrategy, Action buildStrategy, Game currentGame, Player owner) {
+    };
+
+    public GameWorker(Action moveStrategy, Action buildStrategy, Game currentGame, Player owner) { //TODO Refactor tests and remove this constructor
         this.moveStrategy = moveStrategy;
         this.buildStrategy = buildStrategy;
         this.currentGame = currentGame;

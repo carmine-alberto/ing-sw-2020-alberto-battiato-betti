@@ -17,18 +17,17 @@ import java.util.stream.Collectors;
 
 public class BuildPhase extends TurnPhase {
     List<FieldCell> availableCells = new ArrayList<>();
-    private BiPredicate<FieldCell, GameWorker> restrictions;
+    private BiPredicate<FieldCell, GameWorker> buildPredicate;
     Player turnPlayer;
 
 
     public BuildPhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame, phasePredicate);
-        restrictions = new IsCellFreePredicate();
+        buildPredicate = phasePredicate;
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new ChooseBlockPhase(currentGame, null);
         turnPlayer = currentGame.getTurnPlayer();
 
         List<FieldCell> adjacentCellsPlusSelf = turnPlayer
@@ -41,7 +40,7 @@ public class BuildPhase extends TurnPhase {
         availableCells = adjacentCellsPlusSelf
                 .stream()
                 .filter(adjacentCell ->
-                        restrictions
+                        buildPredicate
                         .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker())
                 )
                 .collect(Collectors.toList());
@@ -64,11 +63,4 @@ public class BuildPhase extends TurnPhase {
         turnPlayer.getPlayerState().setSelectedCell(selectedCell);
     }
 
-
-
-
-    @Override
-    public void stateEnd() {
-
-    }
 }

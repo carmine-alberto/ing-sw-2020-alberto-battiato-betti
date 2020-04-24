@@ -6,30 +6,32 @@ import it.polimi.ingsw.model.phases.Node;
 import it.polimi.ingsw.model.phases.TurnPhase;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.function.BiPredicate;
 
-public class God {
+public class God implements Serializable {
 
     private String name;
-    private BiPredicate<Game, GameWorker> winConditionPredicate;
-    private Boolean onOpponents;
+    private transient BiPredicate<Game, GameWorker> winConditionPredicate;
+    private transient Boolean onOpponents;
 
-    private Action moveStrategy;
-    private Action buildStrategy;
-    private Node phasesTree; //Pointing to root, ALWAYS
-    private Node currentPhaseNode; //Pointing to the current phase
+    private transient Action moveStrategy;
+    private transient Action buildStrategy;
+    private transient Node phasesTree; //Pointing to root, ALWAYS
+    private transient Node currentPhaseNode; //Pointing to the current phase
 
     private God() {
         winConditionPredicate = new WinningMovePredicate();
         onOpponents = false;
     }
 
-    public TurnPhase nextPhase(Game currentGame, String userSelection) {
+    public TurnPhase getNextPhase(Game currentGame) {
         try {
-            currentPhaseNode = setNextNode(currentGame);
             String nextPhase = currentPhaseNode.getPhase();
-            BiPredicate phasePredicate = phasesTree.getPhasePredicate();
-            TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases" + nextPhase)
+            BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate();
+
+            TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases." + nextPhase)
                     .getConstructors()[0]
                     .newInstance(currentGame, phasePredicate);
 
@@ -46,21 +48,29 @@ public class God {
      * @return
      * @param currentGame
      */
-    private Node setNextNode(Game currentGame) {
+    public void setNextPhase(Game currentGame) {
         if (currentPhaseNode.getChildren().size() > 1) {
             String selectedPhase = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();
-            return currentPhaseNode
+            currentPhaseNode = currentPhaseNode
                     .getChildren()
                     .stream()
-                    .filter(node -> node.getPhase().toUpperCase().contains(selectedPhase.toUpperCase()))
+                    .filter(node -> node.getPhase().toUpperCase().startsWith(selectedPhase.toUpperCase()))
                     .findFirst()
                     .get();
+            return;
         }
-        return currentPhaseNode.getChildren().get(0);
+        else if (currentPhaseNode.getChildren().size() == 1)
+            currentPhaseNode =  currentPhaseNode.getChildren().get(0);
+        else //Leaf Node - we are in the EndPhase
+            reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
     }
 
     public void reset() {
         currentPhaseNode = phasesTree;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void assignWinConditionPredicate(Player assignee) { //TODO This method should be called when all players have selected their own god
@@ -70,6 +80,14 @@ public class God {
                     .forEach(player -> player.setWinConditions(player.getWinConditions().and(winConditionPredicate))); //TODO Is it always "and"?
         else
             assignee.setWinConditions(assignee.getWinConditions().and(winConditionPredicate));
+    }
+
+    public Action getMoveStrategy() {
+        return this.moveStrategy;
+    }
+
+    public Action getBuildStrategy() {
+        return this.buildStrategy;
     }
 
     /**
