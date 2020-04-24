@@ -50,11 +50,11 @@ public class God implements Serializable {
      */
     public void setNextPhase(Game currentGame) {
         if (currentPhaseNode.getChildren().size() > 1) {
-            String selectedPhase = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();
+            String selectedAction = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();
             currentPhaseNode = currentPhaseNode
                     .getChildren()
                     .stream()
-                    .filter(node -> node.getPhase().toUpperCase().startsWith(selectedPhase.toUpperCase()))
+                    .filter(node -> node.getPhase().toUpperCase().startsWith(selectedAction.toUpperCase()))
                     .findFirst()
                     .get();
             return;
@@ -119,7 +119,7 @@ public class God implements Serializable {
         }
 
         public GodBuilder saveRefNode() {
-            refNode = tempGod.phasesTree;
+            refNode = currNode;
             return this;
         }
 

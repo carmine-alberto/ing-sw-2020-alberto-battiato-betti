@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import it.polimi.ingsw.model.phases.TurnPhase;
 import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.actionPredicates.CanBuildPredicate;
 import it.polimi.ingsw.model.predicates.actionPredicates.CanMovePredicate;
 import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
 import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
@@ -62,8 +63,13 @@ public class Game extends Observable<Event> {
                 godBuilder
                 .name("Default" + i)
                 .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
-                .addPhase("ChooseActionPhase", new CanMovePredicate())
+                .addPhase("ChooseActionPhase", new CanMovePredicate().or(new CanBuildPredicate()))
+                .saveRefNode()
                 .addPhase("MovePhase", new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2)))
+                .addPhase("BuildPhase", new IsCellFreePredicate())
+                .addPhase("ChooseBlockPhase", new BlockPredicate(3))
+                .addPhase("EndPhase", (arg1, arg2) -> true)
+                .restoreRefNode()
                 .addPhase("BuildPhase", new IsCellFreePredicate())
                 .addPhase("ChooseBlockPhase", new BlockPredicate(3))
                 .addPhase("EndPhase", (arg1, arg2) -> true)

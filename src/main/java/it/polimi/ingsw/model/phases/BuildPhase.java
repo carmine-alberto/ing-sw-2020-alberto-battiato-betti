@@ -32,10 +32,11 @@ public class BuildPhase extends TurnPhase {
 
         List<FieldCell> adjacentCellsPlusSelf = turnPlayer
                 .getPlayerState()
-                .getSelectedCell()
+                .getSelectedWorker()
+                .getCell()
                 .getAdjacentCells();
 
-        adjacentCellsPlusSelf.add(turnPlayer.getPlayerState().getSelectedCell());  //Passing adjacent cells + the cell I'm on, for Zeus
+        adjacentCellsPlusSelf.add(turnPlayer.getPlayerState().getSelectedWorker().getCell());  //Passing adjacent cells + the cell I'm on, for Zeus
 
         availableCells = adjacentCellsPlusSelf
                 .stream()
