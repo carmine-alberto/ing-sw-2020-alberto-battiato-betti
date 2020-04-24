@@ -48,10 +48,11 @@ public class BuildPhase extends TurnPhase {
 
         if (availableCells.isEmpty())  //TODO Currently, the player loses even if the second worker can build. Should we rollback to the ChooseWorkerPhase()?
             removeTurnPlayerFromGame();
+        else {
+            currentGame.notifyTurnPlayer(new PhaseUpdate("Select the cell where you want to build"));
 
-        currentGame.notifyTurnPlayer(new PhaseUpdate("Select the cell where you want to build"));
-
-        currentGame.notifyTurnPlayer(new AvailableCellsUpdate(availableCells));
+            currentGame.notifyTurnPlayer(new AvailableCellsUpdate(availableCells));
+        }
     }
 
     @Override

@@ -43,11 +43,11 @@ public class MovePhase extends TurnPhase {
 
         if (availableCells.isEmpty()) //TODO Currently, the player loses even if the second worker can move. Should we add a check and let him select the remaining one?
            removeTurnPlayerFromGame();
+        else {
+            currentGame.notifyTurnPlayer(new PhaseUpdate("Select the destination cell"));
 
-
-        currentGame.notifyTurnPlayer(new PhaseUpdate("Select the destination cell"));
-
-        currentGame.notifyTurnPlayer(new AvailableCellsUpdate(availableCells));
+            currentGame.notifyTurnPlayer(new AvailableCellsUpdate(availableCells));
+        }
     }
 
     /**

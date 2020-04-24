@@ -119,7 +119,10 @@ public class Game extends Observable<Event> {
     }
 
     public void removeTurnPlayer() {
-        players.remove(turnPlayer);
+        Player playerToRemove = turnPlayer;
+
+        setNextTurnPlayer();
+        players.remove(playerToRemove);
 
         if (players.size() == 1) {
             players.get(0).setIsWinner(true);
@@ -127,11 +130,8 @@ public class Game extends Observable<Event> {
 
             return;
         }
-        turnPlayer.removeWorkersFromBoard();
-        notifyObservers(new PlayerLostUpdate(turnPlayer.getNickname()));
-
-        currentPlayerIndex--; //Used to handle third to first player case
-        setNextTurnPlayer();
+        playerToRemove.removeWorkersFromBoard();
+        notifyObservers(new PlayerLostUpdate(playerToRemove.getNickname()));
 
         turnPhase = turnPlayer.getSelectedGod().getNextPhase(this);
         turnPhase.stateInit();
