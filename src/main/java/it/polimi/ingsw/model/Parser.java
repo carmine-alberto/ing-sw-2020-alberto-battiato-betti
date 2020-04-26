@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.predicates.movePredicates.MovePredicate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -17,7 +16,7 @@ public class Parser {
     }
 
     private static void read() {
-        God.GodBuilder builder = new God.GodBuilder();
+        God.PhaseBuilder builder = new God.PhaseBuilder();
         //TODO Add setters for the remaining God attributes in GodBuilder
 
         try {
@@ -31,7 +30,8 @@ public class Parser {
             ;
             System.out.println("Root element :" + doc.getDocumentElement());
 
-            visitNoder(doc, builder);
+            printNode(doc, 0);
+            //visitNode(doc, builder);
 
             System.out.println("----------------------------");
 
@@ -40,7 +40,22 @@ public class Parser {
         }
     }
 
-    private static void visitNoder(Node node, God.GodBuilder god/*, BiPredicate tempPredicate*/) {
+    private static void printNode(Node node, Integer level/*, BiPredicate tempPredicate*/) {
+        NodeList nList = node.getChildNodes();
+        for (Integer i = 0; i < nList.getLength(); i++) {
+            if (nList.item(i).getNodeValue() == null) {         //CHILD NODE HAS NO TEXT (e.g. <and></and>)
+                System.out.println(numOfTabs(level) + "<" + nList.item(i).getNodeName() + ">");
+                printNode(nList.item(i), level + 1);
+                System.out.println(numOfTabs(level) + "FINE<" + nList.item(i).getNodeName() + ">");
+
+            }
+            else                                                //CHILD NODE HAS TEXT (e.g. <movePredicate>text</movePredicate>)
+                System.out.println(numOfTabs(level) + nList.item(i).getTextContent());
+        }
+    }
+
+
+    private static void visitNode(Node node, God.PhaseBuilder god/*, BiPredicate tempPredicate*/) {
         NodeList nList = node.getChildNodes();
 
 
@@ -57,7 +72,7 @@ public class Parser {
         }
     }
 
-    private static void readNode(Node node, God.GodBuilder god) {
+    private static void readNode(Node node, God.PhaseBuilder god) {
         String string = "";
 
         switch (node.getNodeName()) {
@@ -90,11 +105,11 @@ public class Parser {
 
     }
 
-    private static void buildPhases(Node item, God.GodBuilder god) {
+    private static void buildPhases(Node item, God.PhaseBuilder god) {
         //Ci pensa bat LOL
     }
 
-    private static String readMovePredicates(Node node, God.GodBuilder god, String string) {
+    private static String readMovePredicates(Node node, God.PhaseBuilder god, String string) {
         NodeList nList = node.getChildNodes();
 
 
@@ -124,10 +139,10 @@ public class Parser {
         return string;
     }
 
-    private static void readOr(Node node, God.GodBuilder god, String string) {
+    private static void readOr(Node node, God.PhaseBuilder god, String string) {
     }
 
-    private static void readAnd(Node node, God.GodBuilder god, String string) {
+    private static void readAnd(Node node, God.PhaseBuilder god, String string) {
 
         NodeList nList = node.getChildNodes();
 

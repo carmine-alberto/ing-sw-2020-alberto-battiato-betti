@@ -15,16 +15,18 @@ import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredi
 import java.io.Serializable;
 import java.util.function.BiPredicate;
 
+import java.util.LinkedList;
+
 public class God implements Serializable {
 
     private String name;
     private transient BiPredicate<Game, GameWorker> winConditionPredicate;
     private transient Boolean onOpponents;
 
-    private Action moveStrategy;
-    private Action buildStrategy;
-    private Node phasesTree; //Pointing to root, ALWAYS
-    private Node currentPhaseNode; //Pointing to the current phase
+    private transient Action moveStrategy;
+    private transient Action buildStrategy;
+    private transient Node phasesTree; //Pointing to root, ALWAYS
+    private transient Node currentPhaseNode; //Pointing to the current phase
 
     private transient BiPredicate<FieldCell, GameWorker> buildPredicates;
     private transient BiPredicate<ActionEnum, Player> actionPredicate;
@@ -42,12 +44,13 @@ public class God implements Serializable {
         onOpponents = false;
     }
 
-    public TurnPhase nextPhase(Game currentGame, String userSelection) {
+
+    public TurnPhase getNextPhase(Game currentGame)  {
         try {
-            currentPhaseNode = setNextNode(currentGame);
             String nextPhase = currentPhaseNode.getPhase();
-            BiPredicate phasePredicate = phasesTree.getPhasePredicate();
-            TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases" + nextPhase)
+            BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate();
+
+            TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases." + nextPhase)
                     .getConstructors()[0]
                     .newInstance(currentGame, phasePredicate);
 
@@ -59,30 +62,38 @@ public class God implements Serializable {
     }
 
 
-
     /**
      * Assumption: the only node with more than 1 child is the ChooseActionPhase node
      * if this assumption holds, the method works
      * @return
      * @param currentGame
      */
-    private Node setNextNode(Game currentGame) {
+    public void setNextPhase(Game currentGame) {
         if (currentPhaseNode.getChildren().size() > 1) {
-            String selectedPhase = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();
-            return currentPhaseNode
+            String selectedAction = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();
+
+            currentPhaseNode = currentPhaseNode
                     .getChildren()
                     .stream()
-                    .filter(node -> node.getPhase().toUpperCase().contains(selectedPhase.toUpperCase()))
+                    .filter(node -> node.getPhase().toUpperCase().startsWith(selectedAction.toUpperCase()))
                     .findFirst()
                     .get();
+            return;
         }
-        return currentPhaseNode.getChildren().get(0);
+        else if (currentPhaseNode.getChildren().size() == 1)
+            currentPhaseNode =  currentPhaseNode.getChildren().get(0);
+        else //Leaf Node - we are in the EndPhase
+            reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
+
     }
 
     public void reset() {
         currentPhaseNode = phasesTree;
     }
 
+    public String getName() {
+        return name;
+    }
     public void addBuildPredicates(Player assignee){
     }
 
@@ -95,27 +106,36 @@ public class God implements Serializable {
             assignee.setWinConditions(assignee.getWinConditions().and(winConditionPredicate));
     }
 
+    public Action getMoveStrategy() {
+        return this.moveStrategy;
+    }
+
+    public Action getBuildStrategy() {
+        return this.buildStrategy;
+    }
+
+
     /**
      * The tree is built in DFS-like order: first whole branch is read from file,
      * refNode must be saved upon reading "phases" and restored upon exit;
      * then, second branch is read, and so on
      */
-    static class GodBuilder {
+    static class PhaseBuilder {
         private God tempGod;
         private Node refNode;
         private Node currNode;
 
 
-        GodBuilder() {
+        PhaseBuilder() {
             reset();
         }
 
-        public GodBuilder name(String name) {
+        public PhaseBuilder name(String name) {
             tempGod.name = name;
             return this;
         }
 
-        public GodBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
+        public PhaseBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
             Node newNode = new Node(currNode, phaseName, phasePredicate);
             currNode.addChild(newNode);
             currNode = newNode;
@@ -123,32 +143,38 @@ public class God implements Serializable {
             return this;
         }
 
-        public GodBuilder saveRefNode() {
+        public PhaseBuilder saveRefNode() {
+            refNode = currNode;
             refNode = tempGod.phasesTree;
             return this;
         }
 
-        public GodBuilder restoreRefNode() {
+        public PhaseBuilder restoreRefNode() {
             currNode = refNode;
             return this;
         }
 
-        public GodBuilder setOnOpponents() {
+        public PhaseBuilder moveStrategy(Action moveStrategy) {
+            this.tempGod.moveStrategy = moveStrategy;
+            return this;
+        }
+
+        public PhaseBuilder setOnOpponents() {
             this.tempGod.onOpponents = true;
             return this;
         }
 
-        public GodBuilder winConditionPredicate(BiPredicate<Game, GameWorker> winConditionPredicate) {
+        public PhaseBuilder winConditionPredicate(BiPredicate<Game, GameWorker> winConditionPredicate) {
             this.tempGod.winConditionPredicate = winConditionPredicate;
             return this;
         }
 
-        public GodBuilder movePredicate(String string){
+        public PhaseBuilder movePredicate(String string){
             //todo farlo
             return null;
         }
 
-        public GodBuilder moveStrategy(String moveStrategy) {
+        public PhaseBuilder moveStrategy(String moveStrategy) {
             if (moveStrategy.equals("moveAndShiftBack")) {
                 this.tempGod.moveStrategy = new MoveAndShiftBack();
                 return this;
@@ -157,7 +183,7 @@ public class God implements Serializable {
             return this;
         }
 
-        public GodBuilder buildStrategy(Action buildStrategy) {
+        public PhaseBuilder buildStrategy(Action buildStrategy) {
             this.tempGod.buildStrategy = buildStrategy;
             return this;
         }

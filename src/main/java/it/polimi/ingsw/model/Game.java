@@ -8,7 +8,6 @@ import it.polimi.ingsw.controller.events.PlayerLostUpdate;
 import it.polimi.ingsw.cview.serverView.VirtualBoardView;
 import it.polimi.ingsw.model.actions.Build;
 import it.polimi.ingsw.model.actions.Move;
-import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import it.polimi.ingsw.model.phases.TurnPhase;
@@ -55,12 +54,12 @@ public class Game extends Observable<Event> {
     }
 
     private List<God> buildDefaultGods() {
-        God.GodBuilder godBuilder = new God.GodBuilder();
+        God.PhaseBuilder phaseBuilder = new God.PhaseBuilder();
         List<God> godsToReturn = new ArrayList<>();
 
         for (Integer i = 0; i < 3; i++)
             godsToReturn.add(
-                godBuilder
+                phaseBuilder
                 .name("Default" + i)
                 .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
                 .addPhase("ChooseActionPhase", new CanMovePredicate().or(new CanBuildPredicate()))
