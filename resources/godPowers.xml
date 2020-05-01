@@ -5,9 +5,7 @@
             <and>
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <args>
-                        <arg>1</arg>
-                    </args>
+                    <arg>1</arg>
                 </movePredicate>
                 <or>
                     <movePredicate>ContainsOpponentWorkerPredicate</movePredicate>
@@ -42,18 +40,14 @@
         <name>Athena</name>
         <moveStrategy>
             <name>MoveAndSet</name>
-            <args>
-                <arg>CantMoveUpPredicate</arg>
-            </args>
+            <arg>CantMoveUpPredicate</arg>
         </moveStrategy>
     </god>
     <god>
         <name>Atlas</name>
         <constructiblePredicates>
             <name>BlockPredicate</name>
-            <args>
-                <arg>0</arg>
-            </args>
+            <arg>0</arg>
         </constructiblePredicates>
     </god>
     <god>
@@ -71,9 +65,7 @@
             </phases>
         </phases>
         <buildPredicates>
-            <buildPredicate>
-                <name>NotInOldBuildPositionPredicate</name>
-            </buildPredicate>
+            <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
         </buildPredicates>
     </god>
     <god>
@@ -92,9 +84,7 @@
         </phases>
         <buildPredicates>
             <not>
-                <buildPredicate>
-                    <name>NotInOldBuildPositionPredicate</name>
-                </buildPredicate>
+                <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
             </not>
         </buildPredicates>
     </god>
@@ -104,9 +94,7 @@
             <and>
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <args>
-                        <arg>1</arg>
-                    </args>
+                    <arg>1</arg>
                 </movePredicate>
                 <or>
                     <and>
@@ -123,11 +111,10 @@
         <name>Pan</name>
         <winConditions>
             <or>
+                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>HasMovedDownPredicate</name>
-                    <args>
-                        <arg>2</arg>
-                    </args>
+                    <arg>2</arg>
                 </winCondition>
             </or>
         </winConditions>
@@ -145,9 +132,7 @@
                     <movePredicates>
                         <movePredicate>
                             <name>IsDeltaHeightLessThanPredicate</name>
-                            <args>
-                                <arg>0</arg>
-                            </args>
+                            <arg>0</arg>
                         </movePredicate>
                     </movePredicates>
                 </phase>
@@ -184,11 +169,10 @@
         <name>Chronus</name>
         <winConditions>
             <or>
+                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>CompleteTowersPredicate</name>
-                    <args>
-                        <arg>5</arg>
-                    </args>
+                    <arg>5</arg>
                 </winCondition>
             </or>
         </winConditions>
@@ -197,9 +181,10 @@
         <name>Hera</name>
         <winConditions>
             <and>
+                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>NotOnPerimeterPredicate</name>
-                    <application>opponents</application>    <!-- todo va aggiunto anche a tutti gli altri? -->
+                    <application>opponents</application>
                 </winCondition>
             </and>
         </winConditions>
@@ -217,9 +202,8 @@
                 <phase>BuildPhase</phase>
                 <buildPredicates>
                     <and>
-                        <buildPredicate>
-                            <name>NotOnPerimeterPredicate</name>
-                        </buildPredicate>
+                        <buildPredicate>IsCellFreePredicate</buildPredicate>
+                        <buildPredicate>NotOnPerimeterPredicate></buildPredicate>
                     </and>
                 </buildPredicates>
                 <phase>ChooseBlockPhase</phase>
@@ -230,9 +214,8 @@
         <name>Zeus</name>
         <buildPredicates>
             <or>
-                <buildPredicate>
-                    <name>CanBuildUnderItselfPredicate</name>
-                </buildPredicate>
+                <buildPredicate>IsCellFreePredicate</buildPredicate>
+                <buildPredicate>CanBuildUnderItselfPredicate</buildPredicate>
             </or>
         </buildPredicates>
     </god>

@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
-import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
 
 import java.util.ArrayList;
 import java.util.List;

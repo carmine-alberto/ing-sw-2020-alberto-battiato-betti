@@ -2,20 +2,14 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.model.actions.Action;
-import it.polimi.ingsw.model.actions.moveStrategies.MoveAndShiftBack;
-import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSwap;
 import it.polimi.ingsw.model.phases.Node;
 import it.polimi.ingsw.model.phases.TurnPhase;
-import it.polimi.ingsw.model.predicates.actionPredicates.ActionPredicate;
-import it.polimi.ingsw.model.predicates.buildPredicates.BuildPredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.BuildAndMovePredicate;
 import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
-import it.polimi.ingsw.model.predicates.movePredicates.MovePredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.io.Serializable;
 import java.util.function.BiPredicate;
-
-import java.util.LinkedList;
 
 public class God implements Serializable {
 
@@ -29,17 +23,15 @@ public class God implements Serializable {
     private transient Node currentPhaseNode; //Pointing to the current phase
 
     private transient BiPredicate<FieldCell, GameWorker> buildPredicates;
-    private transient BiPredicate<ActionEnum, Player> actionPredicate;
     private transient BiPredicate<Player, Constructible> constructiblePredicates;
     private transient BiPredicate<FieldCell, GameWorker> movePredicates;
 
     private God() {
 
         winConditionPredicate = new WinningMovePredicate();
-        buildPredicates = new BuildPredicate();
-        actionPredicate = new ActionPredicate(true, true, false);
+        buildPredicates = new BuildAndMovePredicate();
         constructiblePredicates = new BlockPredicate(3);
-        movePredicates = new MovePredicate();
+        movePredicates = new BuildAndMovePredicate();
 
         onOpponents = false;
     }
@@ -94,6 +86,7 @@ public class God implements Serializable {
     public String getName() {
         return name;
     }
+
     public void addBuildPredicates(Player assignee){
     }
 
@@ -103,7 +96,7 @@ public class God implements Serializable {
                     .getOpponents()
                     .forEach(player -> player.setWinConditions(player.getWinConditions().and(winConditionPredicate))); //TODO Is it always "and"?
         else
-            assignee.setWinConditions(assignee.getWinConditions().and(winConditionPredicate));
+            assignee.setWinConditions(assignee.getWinConditions().or(winConditionPredicate));
     }
 
     public Action getMoveStrategy() {
@@ -114,28 +107,40 @@ public class God implements Serializable {
         return this.buildStrategy;
     }
 
+    public BiPredicate<FieldCell, GameWorker> getBuildPredicates() {
+        return buildPredicates;
+    }
+
+    public BiPredicate<Player, Constructible> getConstructiblePredicates() {
+        return constructiblePredicates;
+    }
+
+    public BiPredicate<FieldCell, GameWorker> getMovePredicates() {
+        return movePredicates;
+    }
+
 
     /**
      * The tree is built in DFS-like order: first whole branch is read from file,
      * refNode must be saved upon reading "phases" and restored upon exit;
      * then, second branch is read, and so on
      */
-    static class PhaseBuilder {
+    static class GodBuilder {
         private God tempGod;
         private Node refNode;
         private Node currNode;
 
 
-        PhaseBuilder() {
+        GodBuilder() {
             reset();
         }
 
-        public PhaseBuilder name(String name) {
+        public GodBuilder name(String name) {
             tempGod.name = name;
             return this;
         }
 
-        public PhaseBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
+        public GodBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
             Node newNode = new Node(currNode, phaseName, phasePredicate);
             currNode.addChild(newNode);
             currNode = newNode;
@@ -143,47 +148,43 @@ public class God implements Serializable {
             return this;
         }
 
-        public PhaseBuilder saveRefNode() {
+        public GodBuilder saveRefNode() {
             refNode = currNode;
             refNode = tempGod.phasesTree;
             return this;
         }
 
-        public PhaseBuilder restoreRefNode() {
+        public GodBuilder restoreRefNode() {
             currNode = refNode;
             return this;
         }
 
-        public PhaseBuilder moveStrategy(Action moveStrategy) {
-            this.tempGod.moveStrategy = moveStrategy;
-            return this;
-        }
-
-        public PhaseBuilder setOnOpponents() {
+        public GodBuilder setOnOpponents() {
             this.tempGod.onOpponents = true;
             return this;
         }
 
-        public PhaseBuilder winConditionPredicate(BiPredicate<Game, GameWorker> winConditionPredicate) {
+        public GodBuilder winConditionPredicate(BiPredicate<Game, GameWorker> winConditionPredicate) {
             this.tempGod.winConditionPredicate = winConditionPredicate;
             return this;
         }
 
-        public PhaseBuilder movePredicate(String string){
-            //todo farlo
+        public GodBuilder movePredicate(BiPredicate<FieldCell, GameWorker> movePredicate){
+            this.tempGod.movePredicates = movePredicate;
             return null;
         }
 
-        public PhaseBuilder moveStrategy(String moveStrategy) {
-            if (moveStrategy.equals("moveAndShiftBack")) {
-                this.tempGod.moveStrategy = new MoveAndShiftBack();
-                return this;
-            }
-            this.tempGod.moveStrategy = new MoveAndSwap();
+        public GodBuilder buildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate){
+            this.tempGod.movePredicates = buildPredicate;
+            return null;
+        }
+
+        public GodBuilder moveStrategy(Action moveStrategy) {
+            this.tempGod.moveStrategy = moveStrategy;
             return this;
         }
 
-        public PhaseBuilder buildStrategy(Action buildStrategy) {
+        public GodBuilder buildStrategy(Action buildStrategy) {
             this.tempGod.buildStrategy = buildStrategy;
             return this;
         }

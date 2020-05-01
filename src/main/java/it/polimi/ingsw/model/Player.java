@@ -1,19 +1,12 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
-import it.polimi.ingsw.model.predicates.actionPredicates.ActionPredicate;
-import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
-import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Player implements Serializable {

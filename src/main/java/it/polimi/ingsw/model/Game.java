@@ -11,11 +11,11 @@ import it.polimi.ingsw.model.actions.Move;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import it.polimi.ingsw.model.phases.TurnPhase;
-import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
-import it.polimi.ingsw.model.predicates.actionPredicates.CanBuildPredicate;
-import it.polimi.ingsw.model.predicates.actionPredicates.CanMovePredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
 import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
-import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
@@ -54,12 +54,12 @@ public class Game extends Observable<Event> {
     }
 
     private List<God> buildDefaultGods() {
-        God.PhaseBuilder phaseBuilder = new God.PhaseBuilder();
+        God.GodBuilder godBuilder = new God.GodBuilder();
         List<God> godsToReturn = new ArrayList<>();
 
         for (Integer i = 0; i < 3; i++)
             godsToReturn.add(
-                phaseBuilder
+                godBuilder
                 .name("Default" + i)
                 .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
                 .addPhase("ChooseActionPhase", new CanMovePredicate().or(new CanBuildPredicate()))
