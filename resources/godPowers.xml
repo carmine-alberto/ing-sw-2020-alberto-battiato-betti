@@ -15,6 +15,7 @@
         </movePredicates>
         <moveStrategy>MoveWithSwap</moveStrategy>
     </god>
+
     <god>
         <name>Artemis</name>
         <phases>
@@ -36,13 +37,21 @@
             <movePredicate>NotInOldMovePositionPredicate</movePredicate>
         </movePredicates>
     </god>
+
     <god>
         <name>Athena</name>
         <moveStrategy>
             <name>MoveAndSet</name>
-            <arg>CantMoveUpPredicate</arg>
+            <arg>
+                <movepredicates>
+                        <negate>
+                            <movepredicate>CanMoveUpPredicate</movepredicate>
+                        </negate>
+                </movepredicates>
+            </arg>
         </moveStrategy>
     </god>
+
     <god>
         <name>Atlas</name>
         <constructiblePredicates>
@@ -50,6 +59,7 @@
             <arg>0</arg>
         </constructiblePredicates>
     </god>
+
     <god>
         <name>Demetra</name>
         <phases>
@@ -68,6 +78,7 @@
             <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
         </buildPredicates>
     </god>
+
     <god>
         <name>Ephestus</name>
         <phases>
@@ -83,11 +94,12 @@
             </phases>
         </phases>
         <buildPredicates>
-            <not>
+            <negate>
                 <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
-            </not>
+            </negate>
         </buildPredicates>
     </god>
+
     <god>
         <name>Minotaur</name>
         <movePredicates>
@@ -107,18 +119,20 @@
         </movePredicates>
         <moveStrategy>MoveAndShiftBack</moveStrategy>
     </god>
+
     <god>
         <name>Pan</name>
         <winConditions>
             <or>
-                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>HasMovedDownPredicate</name>
                     <arg>2</arg>
                 </winCondition>
+                <winCondition>WinningMovePredicate</winCondition>
             </or>
         </winConditions>
     </god>
+
     <god>
         <name>Prometheus</name>
         <phases>
@@ -146,6 +160,7 @@
             </phases>
         </phases>
     </god>
+
     <god>
         <name>Charon</name>
         <phases>
@@ -165,6 +180,7 @@
             </phases>
         </phases>
     </god>
+
     <god>
         <name>Chronus</name>
         <winConditions>
@@ -177,6 +193,7 @@
             </or>
         </winConditions>
     </god>
+
     <god>
         <name>Hera</name>
         <winConditions>
@@ -189,6 +206,7 @@
             </and>
         </winConditions>
     </god>
+
     <god>
         <name>Hestia</name>
         <phases>
@@ -210,6 +228,7 @@
             </phases>
         </phases>
     </god>
+
     <god>
         <name>Zeus</name>
         <buildPredicates>

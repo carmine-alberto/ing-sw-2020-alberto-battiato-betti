@@ -171,15 +171,21 @@ public class God implements Serializable {
 
         public GodBuilder movePredicate(BiPredicate<FieldCell, GameWorker> movePredicate){
             this.tempGod.movePredicates = movePredicate;
-            return null;
+            return this;
         }
 
         public GodBuilder buildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate){
             this.tempGod.movePredicates = buildPredicate;
-            return null;
+            return this;
         }
 
-        public GodBuilder moveStrategy(Action moveStrategy) {
+        public GodBuilder constructiblePredicate(BiPredicate<Player, Constructible> constructibleBiPredicate){
+            this.tempGod.constructiblePredicates =  constructibleBiPredicate;
+            return this;
+
+        }
+
+        public GodBuilder moveStrategy(Action moveStrategy) {//todo non è meglio usare getter e setter separati ?
             this.tempGod.moveStrategy = moveStrategy;
             return this;
         }
