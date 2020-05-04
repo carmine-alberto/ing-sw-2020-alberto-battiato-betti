@@ -20,7 +20,6 @@ import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPred
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

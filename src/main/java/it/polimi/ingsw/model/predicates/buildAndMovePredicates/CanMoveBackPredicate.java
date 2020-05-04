@@ -10,7 +10,7 @@ public class CanMoveBackPredicate implements BiPredicate<FieldCell, GameWorker> 
     @Override
     public boolean test(/*Object arg*/FieldCell fieldCell, GameWorker gameWorker) {
 //        FieldCell cellToFilter = (FieldCell) arg;
-        if (fieldCell.isOnPerimeter())
+        if (fieldCell.isOnPerimeter() && !gameWorker.getCell().isOnPerimeter())
                 return false;
 
         Integer gapX = fieldCell.getPosX() - gameWorker.getCell().getPosX();

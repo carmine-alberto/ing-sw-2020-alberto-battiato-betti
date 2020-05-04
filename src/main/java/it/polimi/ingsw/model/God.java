@@ -40,8 +40,8 @@ public class God implements Serializable {
     public TurnPhase getNextPhase(Game currentGame)  {
         try {
             String nextPhase = currentPhaseNode.getPhase();
-            BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate();
-
+            BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate(); // TODO fix
+            // l'idea è, di usare, per le fasi standard, i predicati presenti nel god, facendo un controllo sul phasePredicate. se è diverso da null va usato quest'ultimo
             TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases." + nextPhase)
                     .getConstructors()[0]
                     .newInstance(currentGame, phasePredicate);
@@ -82,10 +82,14 @@ public class God implements Serializable {
     public void reset() {
         currentPhaseNode = phasesTree;
     }
-
+    /**
+    * @param
+    * @return String
+    */
     public String getName() {
         return name;
     }
+
 
     public void assignWinConditionPredicate(Player assignee) { //TODO This method should be called when all players have selected their own god
         if (onOpponents)
@@ -94,6 +98,10 @@ public class God implements Serializable {
                     .forEach(player -> player.setWinConditions(player.getWinConditions().and(winConditionPredicate))); //TODO Is it always "and"?
         else
             assignee.setWinConditions(assignee.getWinConditions().or(winConditionPredicate));
+    }
+
+    public void setMovePredicates(BiPredicate<FieldCell, GameWorker> movePredicates) {
+        this.movePredicates = movePredicates;
     }
 
     public Action getMoveStrategy() {
@@ -200,6 +208,8 @@ public class God implements Serializable {
 
             return completeGod;
         }
+
+
 
         public void reset() {
             tempGod = new God();

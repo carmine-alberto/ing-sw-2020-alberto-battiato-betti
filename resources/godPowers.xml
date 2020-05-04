@@ -1,4 +1,5 @@
 <gods>
+
     <god>
         <name>Apollo</name>
         <movePredicates>
@@ -24,7 +25,21 @@
             <phase>MovePhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <phase>MovePhase</phase>
+                <phase>
+                    <name>MovePhase</name>
+                    <movePredicates>
+                        <and>
+                            <and>
+                                <movePredicate>
+                                    <name>IsDeltaHeightLessThanPredicate</name>
+                                    <arg>1</arg>
+                                </movePredicate>
+                                <movePredicate>IsCellFreePredicate</movePredicate>
+                            </and>
+                            <movePredicate>NotInOldMovePositionPredicate</movePredicate>
+                        </and>
+                    </movePredicates>
+                </phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
             </phases>
@@ -33,9 +48,6 @@
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <movePredicates>
-            <movePredicate>NotInOldMovePositionPredicate</movePredicate>
-        </movePredicates>
     </god>
 
     <god>
@@ -70,13 +82,18 @@
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <phase>BuildPhase</phase>
+                <phase>
+                    <name>BuildPhase</name>
+                    <buildPredicates>
+                        <and>
+                            <buildPredicate>IsCellFreePredicate</buildPredicate>
+                            <movePredicate>NotInOldMovePositionPredicate</movePredicate>
+                        </and>
+                    </buildPredicates>
+                </phase>
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <buildPredicates>
-            <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
-        </buildPredicates>
     </god>
 
     <god>
@@ -89,15 +106,20 @@
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <phase>BuildPhase</phase>
+                <phase>
+                    <name>BuildPhase</name>
+                    <buildPredicates>
+                        <and>
+                            <movePredicate>IsCellFreePredicate</movePredicate>
+                            <negate>
+                                <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
+                            </negate>
+                        </and>
+                    </buildPredicates>
+                </phase>
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <buildPredicates>
-            <negate>
-                <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
-            </negate>
-        </buildPredicates>
     </god>
 
     <god>
@@ -124,11 +146,11 @@
         <name>Pan</name>
         <winConditions>
             <or>
+                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>HasMovedDownPredicate</name>
                     <arg>2</arg>
                 </winCondition>
-                <winCondition>WinningMovePredicate</winCondition>
             </or>
         </winConditions>
     </god>
@@ -144,10 +166,13 @@
                 <phase>
                     <name>MovePhase</name>
                     <movePredicates>
-                        <movePredicate>
-                            <name>IsDeltaHeightLessThanPredicate</name>
-                            <arg>0</arg>
-                        </movePredicate>
+                        <and>
+                            <movePredicate>
+                                <name>IsDeltaHeightLessThanPredicate</name>
+                                <arg>0</arg>
+                            </movePredicate>
+                            <movePredicate>IsCellFreePredicate</movePredicate>
+                        </and>
                     </movePredicates>
                 </phase>
                 <phase>BuildPhase</phase>
@@ -201,7 +226,7 @@
                 <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>NotOnPerimeterPredicate</name>
-                    <application>opponents</application>
+                    <application>opponents</application>    <!-- todo scambiare col nodo sopra (?) -->
                 </winCondition>
             </and>
         </winConditions>
@@ -238,4 +263,5 @@
             </or>
         </buildPredicates>
     </god>
+
 </gods>
