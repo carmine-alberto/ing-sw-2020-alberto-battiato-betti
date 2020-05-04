@@ -59,7 +59,7 @@ public class Parser {
         }
     }
 
-    public static boolean isNumeric(String strNum) {
+    private static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
         }
@@ -116,7 +116,7 @@ public class Parser {
                     buildPhases(node, god);
                     break;
                 case "winConditions":
-                    BiPredicate<Game, GameWorker> winConditionPredicate = readWinCondition(node);
+                    BiPredicate<Game, GameWorker> winConditionPredicate = readWinCondition(node, god);
                     god.winConditionPredicate(winConditionPredicate);
                     break;
                 case "constructiblePredicates":
@@ -150,21 +150,26 @@ public class Parser {
         }
     }
 
-    private static BiPredicate<Game, GameWorker> readWinCondition(Node node) { //also sets if is OnOpponents
+    private static BiPredicate<Game, GameWorker> readWinCondition(Node node, God.GodBuilder god) { //also sets if is OnOpponents
         Node child = node.getFirstChild();
 
         switch (child.getNodeName()){
             case "or":
-                return readWinConj(child, "or");
+                return readWinConj(child, "or", god);
             case "and":
-                return readWinConj(child, "and");
+                return readWinConj(child, "and", god);
             case "winCondition":
                 try{
                     if(child.getFirstChild() != null && child.getFirstChild().getNodeName().equals("name")) {
-                    Integer val = Integer.parseInt(child.getFirstChild().getNextSibling().getNodeValue());
-                        return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getFirstChild().getFirstChild().getNodeValue())
-                                .getConstructors()[0]
-                                .newInstance(val);
+                        if(child.getFirstChild().getNextSibling().getNodeName().equals("application"))
+                            god.setOnOpponents();
+                        else
+                            if(child.getFirstChild().getNextSibling().getNextSibling() != null && child.getFirstChild().getNextSibling().getNextSibling().getNodeName().equals("application"))
+                                god.setOnOpponents();
+                            Integer val = Integer.parseInt(child.getFirstChild().getNextSibling().getNodeValue());
+                            return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getFirstChild().getFirstChild().getNodeValue())
+                                    .getConstructors()[0]
+                                    .newInstance(val);
                     }
                     return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getFirstChild().getFirstChild().getNodeValue())
                             .getConstructors()[0]
@@ -194,7 +199,7 @@ public class Parser {
         return null;
     }
 
-    private static BiPredicate<Game, GameWorker> readWinConj(Node node, String type) {
+    private static BiPredicate<Game, GameWorker> readWinConj(Node node, String type, God.GodBuilder god) {
         NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case
         BiPredicate<Game, GameWorker> firstPredicate = null;
         BiPredicate<Game, GameWorker> secondPredicate = null;
@@ -209,22 +214,21 @@ public class Parser {
                     case "winCondition":
                         //partly redundant
                         if (i == 0)
-                            firstPredicate = readWinCondition(nList.item(i));
+                            firstPredicate = readWinCondition(nList.item(i), god);
                         else
-                            secondPredicate = readWinCondition(nList.item(i));
-
+                            secondPredicate = readWinCondition(nList.item(i), god);
                         break;
                     case "and":
                         if (i == 0)
-                            firstPredicate =  readWinConj(nList.item(i), "and");
+                            firstPredicate =  readWinConj(nList.item(i), "and", god);
                         else
-                            secondPredicate = readWinConj(nList.item(i), "and");
+                            secondPredicate = readWinConj(nList.item(i), "and", god);
                         break;
                     case "or":
                         if (i == 0)
-                            firstPredicate =  readWinConj(nList.item(i), "or");
+                            firstPredicate =  readWinConj(nList.item(i), "or", god);
                         else
-                            secondPredicate = readWinConj(nList.item(i), "or");
+                            secondPredicate = readWinConj(nList.item(i), "or", god);
                         break;
                 }
             }

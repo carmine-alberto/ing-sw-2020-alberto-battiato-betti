@@ -87,9 +87,6 @@ public class God implements Serializable {
         return name;
     }
 
-    public void addBuildPredicates(Player assignee){
-    }
-
     public void assignWinConditionPredicate(Player assignee) { //TODO This method should be called when all players have selected their own god
         if (onOpponents)
             assignee
@@ -203,8 +200,6 @@ public class God implements Serializable {
 
             return completeGod;
         }
-
-
 
         public void reset() {
             tempGod = new God();
