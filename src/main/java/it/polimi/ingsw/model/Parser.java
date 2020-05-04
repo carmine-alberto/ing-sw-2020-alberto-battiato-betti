@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 
 
@@ -32,8 +33,7 @@ public class Parser {
             Document doc = dBuilder.parse(xmlFile);
 
             doc.getDocumentElement().normalize();
-            stripSpace(doc)
-            ;
+            stripSpace(doc);
             System.out.println("Root element :" + doc.getDocumentElement());
 
             //printNode(doc, 0);
@@ -53,8 +53,7 @@ public class Parser {
                 System.out.println(numOfTabs(level) + "<" + nList.item(i).getNodeName() + ">");
                 printNode(nList.item(i), level + 1);
                 System.out.println(numOfTabs(level) + "FINE<" + nList.item(i).getNodeName() + ">");
-            }
-            else                                                 //CHILD NODE HAS TEXT (e.g. <movePredicate>text</movePredicate>)
+            } else                                                 //CHILD NODE HAS TEXT (e.g. <movePredicate>text</movePredicate>)
                 System.out.println(numOfTabs(level) + "NOT NULL: " + nList.item(i).getTextContent());
         }
     }
@@ -74,7 +73,7 @@ public class Parser {
     private static void visitNode(Node node, God.GodBuilder god/*, BiPredicate tempPredicate*/) {
         Node child = node.getFirstChild();
 
-        if(child.getNodeName().equals("gods")) { //some "useless" controls just to check if the xml was formatted correctly
+        if (child.getNodeName().equals("gods")) { //some "useless" controls just to check if the xml was formatted correctly
             NodeList nList = child.getChildNodes();
             for (int i = 0; i < nList.getLength(); i++)
                 if (nList.item(i).getNodeValue() == null)
@@ -87,7 +86,7 @@ public class Parser {
     private static void readNode(Node node, God.GodBuilder god) {
         NodeList nList = node.getChildNodes();
 
-        for(int i = 0; i < nList.getLength(); i++) {
+        for (int i = 0; i < nList.getLength(); i++) {
             //if (nList.item(i).getNodeValue() == null)
             node = nList.item(i);
             switch (node.getNodeName()) {
@@ -135,9 +134,9 @@ public class Parser {
 
        /* if (child.getNodeValue() == null) usless
             return readConstructiblePredicate(child);*/
-        try{
-            if (child.getNextSibling() != null )
-                if(isNumeric(child.getNextSibling().getFirstChild().getTextContent()))
+        try {
+            if (child.getNextSibling() != null)
+                if (isNumeric(child.getNextSibling().getFirstChild().getTextContent()))
                     return (BiPredicate<Player, Constructible>) Class.forName("it.polimi.ingsw.model.predicates.constructiblePredicates." + child.getTextContent())
                             .getConstructors()[0]
                             .newInstance(Integer.parseInt(child.getNextSibling().getFirstChild().getTextContent()));
@@ -153,15 +152,15 @@ public class Parser {
     private static BiPredicate<Game, GameWorker> readWinCondition(Node node) { //also sets if is OnOpponents
         Node child = node.getFirstChild();
 
-        switch (child.getNodeName()){
+        switch (child.getNodeName()) {
             case "or":
                 return readWinConj(child, "or");
             case "and":
                 return readWinConj(child, "and");
             case "winCondition":
-                try{
-                    if(child.getFirstChild() != null && child.getFirstChild().getNodeName().equals("name")) {
-                    Integer val = Integer.parseInt(child.getFirstChild().getNextSibling().getNodeValue());
+                try {
+                    if (child.getFirstChild() != null && child.getFirstChild().getNodeName().equals("name")) {
+                        Integer val = Integer.parseInt(child.getFirstChild().getNextSibling().getNodeValue());
                         return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getFirstChild().getFirstChild().getNodeValue())
                                 .getConstructors()[0]
                                 .newInstance(val);
@@ -199,7 +198,7 @@ public class Parser {
         BiPredicate<Game, GameWorker> firstPredicate = null;
         BiPredicate<Game, GameWorker> secondPredicate = null;
 
-        for(int i = 0; i < nList.getLength(); i++) {
+        for (int i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {
                 switch (nList.item(i).getNodeName()) {
                     case "name":
@@ -216,20 +215,20 @@ public class Parser {
                         break;
                     case "and":
                         if (i == 0)
-                            firstPredicate =  readWinConj(nList.item(i), "and");
+                            firstPredicate = readWinConj(nList.item(i), "and");
                         else
                             secondPredicate = readWinConj(nList.item(i), "and");
                         break;
                     case "or":
                         if (i == 0)
-                            firstPredicate =  readWinConj(nList.item(i), "or");
+                            firstPredicate = readWinConj(nList.item(i), "or");
                         else
                             secondPredicate = readWinConj(nList.item(i), "or");
                         break;
                 }
             }
         }
-        if(firstPredicate != null && secondPredicate != null) {
+        if (firstPredicate != null && secondPredicate != null) {
             if (type.equals("and"))
                 return firstPredicate.and(secondPredicate);
             return firstPredicate.or(secondPredicate);
@@ -241,25 +240,21 @@ public class Parser {
         Node child = node.getFirstChild();
 
         //if (child.getNodeValue() != null)
-            switch (child.getTextContent()){
-                case "MoveAndShiftBack":
-                    return new MoveAndShiftBack();
-                case "MoveWithSwap":
-                    return new MoveAndSwap();
-                case "MoveAndSet": //note: move and set can only be provided with a move or build predicate
-                    if(child.getNextSibling() != null && child.getNextSibling().getNodeValue() != null)
-                        if(child.getNextSibling().getTextContent().equals("arg")) {
-                            BiPredicate<FieldCell, GameWorker> predicate;
-                            predicate = readBuildAndMovePredicates(node, null);
-                        }
-                    /*return new MoveAndSet(predicate); todo: togliere questo commento(il codice va bene ma ancora la move and set non è stata costuita
-                     */
-            }
+        switch (child.getTextContent()) {
+            case "MoveAndShiftBack":
+                return new MoveAndShiftBack();
+            case "MoveWithSwap":
+                return new MoveAndSwap();
+            case "MoveAndSet": //note: move and set can only be provided with a move or build predicate
+                if (child.getNextSibling() != null && child.getNextSibling().getNodeValue() != null)
+                    if (child.getNextSibling().getTextContent().equals("arg")) {
+                        BiPredicate<FieldCell, GameWorker> predicate;
+                        predicate = readBuildAndMovePredicates(node, null);
+                    }
+                /*return new MoveAndSet(predicate); todo: togliere questo commento(il codice va bene ma ancora la move and set non è stata costuita
+                 */
+        }
         return null;
-    }
-
-    private static void buildPhases(Node item, God.GodBuilder god) {
-        //Ci pensa bat LOL
     }
 
     private static BiPredicate<FieldCell, GameWorker> readBuildAndMovePredicates(Node node, Integer arg) {
@@ -297,15 +292,16 @@ public class Parser {
                         buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), null).negate();
                         break;
                 }
-            } else{ //gestisco caso base leggo il predicate con la reflection
+            } else { //gestisco caso base leggo il predicate con la reflection
                 try {
-                    if(arg == null)
+                    if (arg == null)
                         buildAndMovePredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildAndMovePredicates." + nList.item(i).getTextContent())
                                 .getConstructors()[0]
                                 .newInstance();
-                    else buildAndMovePredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildAndMovePredicates." + nList.item(i).getTextContent())
-                            .getConstructors()[0]
-                            .newInstance(arg);
+                    else
+                        buildAndMovePredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildAndMovePredicates." + nList.item(i).getTextContent())
+                                .getConstructors()[0]
+                                .newInstance(arg);
                 } catch (Exception e) {
                     e.printStackTrace(); //TODO Handle exception properly
                 }
@@ -319,13 +315,13 @@ public class Parser {
         BiPredicate<FieldCell, GameWorker> firstPredicate = null;
         BiPredicate<FieldCell, GameWorker> secondPredicate = null;
 
-        for(int i = 0; i < nList.getLength(); i++) {
+        for (int i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {
                 switch (nList.item(i).getNodeName()) {
                     case "name":
-                        if (isNumeric(nList.item(i + 1).getChildNodes().item(0).getTextContent())){
+                        if (isNumeric(nList.item(i + 1).getChildNodes().item(0).getTextContent())) {
                             int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(0).getTextContent());
-                            if(i == 0)
+                            if (i == 0)
                                 firstPredicate = readBuildAndMovePredicates(nList.item(i), val);
                             else
                                 secondPredicate = readBuildAndMovePredicates(nList.item(i), val);
@@ -348,76 +344,120 @@ public class Parser {
                         break;
                     case "and":
                         if (i == 0)
-                            firstPredicate =  readConj(nList.item(i), "and");
+                            firstPredicate = readConj(nList.item(i), "and");
                         else
                             secondPredicate = readConj(nList.item(i), "and");
                         break;
                     case "or":
                         if (i == 0)
-                            firstPredicate =  readConj(nList.item(i), "or");
+                            firstPredicate = readConj(nList.item(i), "or");
                         else
                             secondPredicate = readConj(nList.item(i), "or");
                         break;
                 }
             }
         }
-        if(firstPredicate != null && secondPredicate != null) {
+        if (firstPredicate != null && secondPredicate != null) {
             if (type.equals("and"))
                 return firstPredicate.and(secondPredicate);
             return firstPredicate.or(secondPredicate);
         }
         return null;
     }
-/*
-    private static BiPredicate<FieldCell, GameWorker> readBuildPredicates(Node node, God.GodBuilder god, Integer arg) {
-        NodeList nList = node.getChildNodes();
-        BiPredicate<FieldCell, GameWorker> buildPredicate = new BuildAndMovePredicate();
 
-        for (Integer i = 0; i < nList.getLength(); i++) {
-            if (nList.item(i).getNodeValue() == null) {
-                switch (nList.item(i).getNodeName()) {
-                    case "name":
-                        if (isNumeric(nList.item(i + 1).getChildNodes().item(0).getTextContent())) {
-                            int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(0).getTextContent());
-                            buildPredicate = readBuildPredicates(nList.item(i), god, val);
-                        } else
-                            buildPredicate = readBuildPredicates(nList.item(i), god, null);
-                        break;
-                 case "buildPredicate":
-                        readBuildPredicates(nList.item(i), god, null);
-                        break;
-                    case "and":
-                        buildPredicate = readBuildPredicates(nList.item(i).getChildNodes().item(0), god, null)
-                                .and(readBuildPredicates(nList.item(i).getChildNodes().item(1), god, null));
-                        break;
-                    case "or":
-                        buildPredicate = readBuildPredicates(nList.item(i).getChildNodes().item(0), god, null)
-                                .or(readBuildPredicates(nList.item(i).getChildNodes().item(1), god, null));
-                        break;
-                }
-            } else{
-                try {
-                    if(arg == null)
-                        buildPredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildPredicates." + nList.item(i).getTextContent())
+    /*
+        private static BiPredicate<FieldCell, GameWorker> readBuildPredicates(Node node, God.GodBuilder god, Integer arg) {
+            NodeList nList = node.getChildNodes();
+            BiPredicate<FieldCell, GameWorker> buildPredicate = new BuildAndMovePredicate();
+
+            for (Integer i = 0; i < nList.getLength(); i++) {
+                if (nList.item(i).getNodeValue() == null) {
+                    switch (nList.item(i).getNodeName()) {
+                        case "name":
+                            if (isNumeric(nList.item(i + 1).getChildNodes().item(0).getTextContent())) {
+                                int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(0).getTextContent());
+                                buildPredicate = readBuildPredicates(nList.item(i), god, val);
+                            } else
+                                buildPredicate = readBuildPredicates(nList.item(i), god, null);
+                            break;
+                     case "buildPredicate":
+                            readBuildPredicates(nList.item(i), god, null);
+                            break;
+                        case "and":
+                            buildPredicate = readBuildPredicates(nList.item(i).getChildNodes().item(0), god, null)
+                                    .and(readBuildPredicates(nList.item(i).getChildNodes().item(1), god, null));
+                            break;
+                        case "or":
+                            buildPredicate = readBuildPredicates(nList.item(i).getChildNodes().item(0), god, null)
+                                    .or(readBuildPredicates(nList.item(i).getChildNodes().item(1), god, null));
+                            break;
+                    }
+                } else{
+                    try {
+                        if(arg == null)
+                            buildPredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildPredicates." + nList.item(i).getTextContent())
+                                    .getConstructors()[0]
+                                    .newInstance();
+                        else buildPredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildPredicates." + nList.item(i).getTextContent())
                                 .getConstructors()[0]
-                                .newInstance();
-                    else buildPredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildPredicates." + nList.item(i).getTextContent())
-                            .getConstructors()[0]
-                            .newInstance(arg);
-                } catch (Exception e) {
-                    e.printStackTrace(); //TODO Handle exception properly
+                                .newInstance(arg);
+                    } catch (Exception e) {
+                        e.printStackTrace(); //TODO Handle exception properly
+                    }
                 }
             }
+            return buildPredicate;
         }
-        return buildPredicate;
-    }
-*/
+    */
     private static String readName(Node item) {
         Node node = item.getFirstChild();
 
         if (node.getNodeValue() != null)
             return node.getTextContent();
         return null;
+    }
+
+    private static void buildPhases(Node item, God.GodBuilder god) {
+        NodeList nList = item.getChildNodes();
+
+
+        for (Integer i = 0; i < nList.getLength(); i++) {
+            Node node = nList.item(i);
+            if (node.getNodeValue() == null) {
+                switch (node.getNodeName()) {
+                    case "phases": {    //new branch
+                        god.saveRefNode();
+                        buildPhases(node, god);
+                        god.restoreRefNode();
+                        break;
+                    }
+                    case "name": {  //phase introduces a new predicate
+                        readPredicate(node, god);
+                        i = nList.getLength();  // We arleady read the siblings above
+                        break;
+                    }
+                    default:    //<phase>
+                        buildPhases(node, god);   //normal phase
+                }
+            } else {                                           //reading the text (di sopra o di sotto?)
+                god.addPhase(node.getTextContent(), null);
+            }
+        }
+    }
+
+    private static void readPredicate(Node item, God.GodBuilder god) {
+        String name = Objects.requireNonNull(readName(item));
+        switch (name) {
+            case "ChooseBlock": {
+                BiPredicate<Player, Constructible> predicate = readConstructiblePredicate(item.getNextSibling());
+                god.addPhase(name, predicate);
+                break;
+            }
+            default:    //build or move predicate
+                BiPredicate<FieldCell, GameWorker> predicate = readBuildAndMovePredicates(item.getNextSibling(), null);
+                god.addPhase(name, predicate);
+        }
+        // can't use a reflection on calling those functions
     }
 
     private static String numOfTabs(Integer level) {
@@ -447,4 +487,3 @@ public class Parser {
         }
     }
 }
-
