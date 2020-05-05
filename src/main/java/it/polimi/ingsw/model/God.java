@@ -2,10 +2,16 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.model.actions.Action;
+import it.polimi.ingsw.model.actions.Build;
+import it.polimi.ingsw.model.actions.Move;
 import it.polimi.ingsw.model.phases.Node;
 import it.polimi.ingsw.model.phases.TurnPhase;
-import it.polimi.ingsw.model.predicates.buildAndMovePredicates.BuildAndMovePredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
+import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.io.Serializable;
@@ -25,14 +31,16 @@ public class God implements Serializable {
     private transient BiPredicate<FieldCell, GameWorker> buildPredicates;
     private transient BiPredicate<Player, Constructible> constructiblePredicates;
     private transient BiPredicate<FieldCell, GameWorker> movePredicates;
+    private transient BiPredicate<ActionEnum, Player> actionPredicates;
 
     private God() {
-
         winConditionPredicate = new WinningMovePredicate();
-        buildPredicates = new BuildAndMovePredicate();
+        buildPredicates = new IsCellFreePredicate();
         constructiblePredicates = new BlockPredicate(3);
-        movePredicates = new BuildAndMovePredicate();
-
+        movePredicates = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2));
+        actionPredicates = new CanMovePredicate();
+        buildStrategy = new Build();
+        moveStrategy = new Move();
         onOpponents = false;
     }
 
@@ -187,11 +195,15 @@ public class God implements Serializable {
         public GodBuilder constructiblePredicate(BiPredicate<Player, Constructible> constructibleBiPredicate){
             this.tempGod.constructiblePredicates =  constructibleBiPredicate;
             return this;
-
         }
 
         public GodBuilder moveStrategy(Action moveStrategy) {//todo non è meglio usare getter e setter separati ?
             this.tempGod.moveStrategy = moveStrategy;
+            return this;
+        }
+
+        public GodBuilder actionPredicate(BiPredicate<ActionEnum, Player> actionEnumBiPredicate){
+            this.tempGod.actionPredicates = actionEnumBiPredicate;
             return this;
         }
 
@@ -201,14 +213,29 @@ public class God implements Serializable {
         }
 
         public God getCompleteGod() {
-            tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
-            tempGod.currentPhaseNode = tempGod.phasesTree;                      //We're assuming it's the only one, since every turn starts with WorkerSelection
+            if(tempGod.phasesTree.getChildren().size() > 0){
+                tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
+                tempGod.currentPhaseNode = tempGod.phasesTree;
+            }              //We're assuming it's the only one, since every turn starts with WorkerSelection
+            else
+                setBasePhases();
             God completeGod = tempGod;
             reset();
 
             return completeGod;
         }
 
+        private void setBasePhases() {
+
+            this
+                    .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
+                    .addPhase("ChooseActionPhase", new CanMovePredicate().or(new CanBuildPredicate()))
+                    .addPhase("MovePhase", new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2)))
+                    .addPhase("BuildPhase", new IsCellFreePredicate())
+                    .addPhase("ChooseBlockPhase", new BlockPredicate(3))
+                    .addPhase("EndPhase", (arg1, arg2) -> true);
+
+        }
 
 
         public void reset() {

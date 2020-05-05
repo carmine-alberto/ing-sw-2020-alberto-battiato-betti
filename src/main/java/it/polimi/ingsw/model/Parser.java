@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.actions.Action;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndShiftBack;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSwap;
-import it.polimi.ingsw.model.predicates.buildAndMovePredicates.BuildAndMovePredicate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -12,17 +11,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiPredicate;
 
 
 public class Parser {
 
-    public static void main(String[] args) {
-        read();
-    }
+    private List<God> godsList = new ArrayList<God>();
 
-    private static void read() {
+    private void read() {
         God.GodBuilder builder = new God.GodBuilder();
         // Add setters for the remaining God attributes in GodBuilder (SHOULD BE DONE)
 
@@ -46,7 +44,7 @@ public class Parser {
         }
     }
 
-    private static void printNode(Node node, Integer level/*, BiPredicate tempPredicate*/) {
+    private void printNode(Node node, Integer level/*, BiPredicate tempPredicate*/) {
         NodeList nList = node.getChildNodes();
         for (Integer i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {         //CHILD NODE HAS NO TEXT (e.g. <and></and>)
@@ -58,7 +56,7 @@ public class Parser {
         }
     }
 
-    private static boolean isNumeric(String strNum) {
+    private boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
         }
@@ -70,20 +68,22 @@ public class Parser {
         return true;
     }
 
-    private static void visitNode(Node node, God.GodBuilder god/*, BiPredicate tempPredicate*/) {
+    private void visitNode(Node node, God.GodBuilder god/*, BiPredicate tempPredicate*/) {
         Node child = node.getFirstChild();
 
         if (child.getNodeName().equals("gods")) { //some "useless" controls just to check if the xml was formatted correctly
             NodeList nList = child.getChildNodes();
             for (int i = 0; i < nList.getLength(); i++)
                 if (nList.item(i).getNodeValue() == null)
-                    if (nList.item(i).getNodeName().equals("god")) //sto leggendo un god
+                    if (nList.item(i).getNodeName().equals("god")){ //sto leggendo un god
                         readNode(nList.item(i), god);
+                        godsList.add(god.getCompleteGod());
+                    }
             // non dovrei fare God.GodBuilder builder = new God.GodBuilder(); per creare un nuovo god ?
         }
     }
 
-    private static void readNode(Node node, God.GodBuilder god) {
+    private void readNode(Node node, God.GodBuilder god) {
         NodeList nList = node.getChildNodes();
 
         for (int i = 0; i < nList.getLength(); i++) {
@@ -129,7 +129,7 @@ public class Parser {
     }
 
     //we assume constructiblePredicates can be fitted with an arg and it is always an int
-    private static BiPredicate<Player, Constructible> readConstructiblePredicate(Node node) {
+    private BiPredicate<Player, Constructible> readConstructiblePredicate(Node node) {
         Node child = node.getFirstChild();
 
        /* if (child.getNodeValue() == null) usless
@@ -149,7 +149,7 @@ public class Parser {
         }
     }
 
-    private static BiPredicate<Game, GameWorker> readWinCondition(Node node, God.GodBuilder god) { //also sets if is OnOpponents
+    private BiPredicate<Game, GameWorker> readWinCondition(Node node, God.GodBuilder god) { //also sets if is OnOpponents
         Node child = node.getFirstChild();
 
         switch (child.getNodeName()) {
@@ -194,11 +194,11 @@ public class Parser {
             e.printStackTrace(); //TODO Handle exception properly
         }*/
 
-        System.out.println("non so, fa return null...");
+        //System.out.println("non so, fa return null...");
         return null;
     }
 
-    private static BiPredicate<Game, GameWorker> readWinConj(Node node, String type, God.GodBuilder god) {
+    private BiPredicate<Game, GameWorker> readWinConj(Node node, String type, God.GodBuilder god) {
         NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case
         BiPredicate<Game, GameWorker> firstPredicate = null;
         BiPredicate<Game, GameWorker> secondPredicate = null;
@@ -240,7 +240,7 @@ public class Parser {
         return null;
     }
 
-    private static Action readStrategy(Node node) {
+    private Action readStrategy(Node node) {
         Node child = node.getFirstChild();
 
         //if (child.getNodeValue() != null)
@@ -261,9 +261,9 @@ public class Parser {
         return null;
     }
 
-    private static BiPredicate<FieldCell, GameWorker> readBuildAndMovePredicates(Node node, Integer arg) {
+    private BiPredicate<FieldCell, GameWorker> readBuildAndMovePredicates(Node node, Integer arg) {
         NodeList nList = node.getChildNodes();
-        BiPredicate<FieldCell, GameWorker> buildAndMovePredicate = new BuildAndMovePredicate();
+        BiPredicate<FieldCell, GameWorker> buildAndMovePredicate = null;
 
         for (int i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {
@@ -314,7 +314,7 @@ public class Parser {
         return buildAndMovePredicate;
     }
 
-    private static BiPredicate<FieldCell, GameWorker> readConj(Node node, String type) {
+    private BiPredicate<FieldCell, GameWorker> readConj(Node node, String type) {
         NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case
         BiPredicate<FieldCell, GameWorker> firstPredicate = null;
         BiPredicate<FieldCell, GameWorker> secondPredicate = null;
@@ -413,7 +413,7 @@ public class Parser {
             return buildPredicate;
         }
     */
-    private static String readName(Node item) {
+    private String readName(Node item) {
         Node node = item.getFirstChild();
 
         if (node.getNodeValue() != null)
@@ -421,7 +421,7 @@ public class Parser {
         return null;
     }
 
-    private static void buildPhases(Node item, God.GodBuilder god) {
+    private void buildPhases(Node item, God.GodBuilder god) {
         NodeList nList = item.getChildNodes();
 
 
@@ -449,8 +449,8 @@ public class Parser {
         }
     }
 
-    private static void readPredicate(Node item, God.GodBuilder god) {
-        String name = Objects.requireNonNull(readName(item));
+    private void readPredicate(Node item, God.GodBuilder god) {
+        String name = readName(item);
         switch (name) {
             case "ChooseBlock": {
                 BiPredicate<Player, Constructible> predicate = readConstructiblePredicate(item.getNextSibling());
@@ -464,7 +464,7 @@ public class Parser {
         // can't use a reflection on calling those functions
     }
 
-    private static String numOfTabs(Integer level) {
+    private String numOfTabs(Integer level) {
         StringBuilder tabs = new StringBuilder();
 
         for (Integer i = 0; i < level; i++)
@@ -474,7 +474,7 @@ public class Parser {
 
     }
 
-    private static void stripSpace(Node node) {
+    private void stripSpace(Node node) {
         Node child = node.getFirstChild();
 
         while (child != null) {
@@ -489,5 +489,10 @@ public class Parser {
                 stripSpace(child);
             child = c;
         }
+    }
+
+    public List<God> getGodsList() {
+        read();
+        return this.godsList;
     }
 }

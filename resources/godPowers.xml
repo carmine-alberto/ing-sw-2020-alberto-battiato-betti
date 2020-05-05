@@ -6,7 +6,7 @@
             <and>
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <arg>1</arg>
+                    <arg>2</arg>
                 </movePredicate>
                 <or>
                     <movePredicate>ContainsOpponentWorkerPredicate</movePredicate>
@@ -32,7 +32,7 @@
                             <and>
                                 <movePredicate>
                                     <name>IsDeltaHeightLessThanPredicate</name>
-                                    <arg>1</arg>
+                                    <arg>2</arg>
                                 </movePredicate>
                                 <movePredicate>IsCellFreePredicate</movePredicate>
                             </and>
@@ -128,7 +128,7 @@
             <and>
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <arg>1</arg>
+                    <arg>2</arg>
                 </movePredicate>
                 <or>
                     <and>
@@ -169,7 +169,7 @@
                         <and>
                             <movePredicate>
                                 <name>IsDeltaHeightLessThanPredicate</name>
-                                <arg>0</arg>
+                                <arg>1</arg>
                             </movePredicate>
                             <movePredicate>IsCellFreePredicate</movePredicate>
                         </and>
