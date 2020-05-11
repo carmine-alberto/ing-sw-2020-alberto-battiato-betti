@@ -96,7 +96,7 @@ public class BoardView extends View {
                 board.getChildren().add(cell);
             }
 
-        Label selectedGodPower = new Label("Your selected God Power is: ");
+        Label selectedGodPower = new Label("Your selected God Power is:");
 
         VBox interfaceBox = new VBox(20, board, selectedGodPower);
         if (!hideColorPickerBox)

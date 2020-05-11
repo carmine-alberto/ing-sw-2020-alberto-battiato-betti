@@ -19,7 +19,7 @@ public class MovePhase extends TurnPhase {
     private BiPredicate<FieldCell, GameWorker> movePredicate;
     Player turnPlayer;
 
-    public MovePhase(Game currentGame, BiPredicate phasePredicate) {
+   public MovePhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame, phasePredicate);
         movePredicate = phasePredicate; //TODO We're actually assigning the predicate 2 times - this could be avoided using the inherited phasePredicate (valid for every phase atm)
     }

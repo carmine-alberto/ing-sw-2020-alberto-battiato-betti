@@ -24,15 +24,15 @@ public class MoveAndSet extends Move implements Action {
     @Override
     public void run(FieldCell cell, GameWorker gw) {
 
-        if (cell.getHeight() - gw.getCell().getHeight() <= 1)
+        if (cell.getHeight() - gw.getCell().getHeight() <= 1)   // if gw doesn't move up...
             restorePredicates();
-        else    // if gw moves up...
+        else
             setPredicates(gw);
 
         super.run(cell, gw);
     }
 
-    private void setPredicates(GameWorker gw) {   //this is working only for opponent workers now
+    private void setPredicates(GameWorker gw) {   //this is working only for opponent workers at the moment
 
         if (!opponents.isEmpty())
             setup(gw);

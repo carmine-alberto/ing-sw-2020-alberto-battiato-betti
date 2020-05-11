@@ -1,13 +1,10 @@
 package it.polimi.ingsw.model.phases;
 
-import it.polimi.ingsw.cview.clientView.BoardView;
-import it.polimi.ingsw.model.ActionEnum;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
-import javafx.scene.Node;
 
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -18,6 +15,10 @@ public abstract class TurnPhase {
     protected TurnPhase nextPhase;
     protected Game currentGame;
     protected BiPredicate phasePredicate;
+
+    public TurnPhase(Game currentGame){
+        this.currentGame = currentGame;
+    }
 
     public TurnPhase(Game currentGame, BiPredicate phasePredicate) {
         this.currentGame = currentGame;

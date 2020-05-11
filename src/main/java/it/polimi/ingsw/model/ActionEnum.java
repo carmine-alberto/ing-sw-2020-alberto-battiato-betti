@@ -1,5 +1,5 @@
 package it.polimi.ingsw.model;
 
 public enum ActionEnum {
-    MOVE, BUILD, DISPLACE;
+    MOVE, BUILD, DISPLACE, STOP;
 }

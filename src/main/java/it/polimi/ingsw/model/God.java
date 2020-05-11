@@ -6,12 +6,10 @@ import it.polimi.ingsw.model.actions.Build;
 import it.polimi.ingsw.model.actions.Move;
 import it.polimi.ingsw.model.phases.Node;
 import it.polimi.ingsw.model.phases.TurnPhase;
-import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
 import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
 import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
 import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
-import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.io.Serializable;
@@ -78,13 +76,13 @@ public class God implements Serializable {
                     .filter(node -> node.getPhase().toUpperCase().startsWith(selectedAction.toUpperCase()))
                     .findFirst()
                     .get();
-            return;
         }
         else if (currentPhaseNode.getChildren().size() == 1)
             currentPhaseNode =  currentPhaseNode.getChildren().get(0);
-        else //Leaf Node - we are in the EndPhase
-            reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
+        else { //Leaf Node - we are in the EndPhase
 
+            reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
+        }
     }
 
     public void reset() {
@@ -132,7 +130,6 @@ public class God implements Serializable {
         return movePredicates;
     }
 
-
     /**
      * The tree is built in DFS-like order: first whole branch is read from file,
      * refNode must be saved upon reading "phases" and restored upon exit;
@@ -154,6 +151,9 @@ public class God implements Serializable {
         }
 
         public GodBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
+            if (phasePredicate == null)
+                    phasePredicate = getPhasePredicate(phaseName);
+
             Node newNode = new Node(currNode, phaseName, phasePredicate);
             currNode.addChild(newNode);
             currNode = newNode;
@@ -161,9 +161,19 @@ public class God implements Serializable {
             return this;
         }
 
+        private BiPredicate getPhasePredicate(String name) {
+            return switch (name) {
+                case "ChooseActionPhase" -> tempGod.actionPredicates;
+                case "MovePhase" -> tempGod.movePredicates;
+                case "BuildPhase" -> tempGod.buildPredicates;
+                case "ChooseBlockPhase" -> tempGod.constructiblePredicates;
+                default -> (arg1, arg2) -> true;
+            };
+
+        }
+
         public GodBuilder saveRefNode() {
             refNode = currNode;
-            refNode = tempGod.phasesTree;
             return this;
         }
 
@@ -229,14 +239,13 @@ public class God implements Serializable {
 
             this
                     .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
-                    .addPhase("ChooseActionPhase", new CanMovePredicate().or(new CanBuildPredicate()))
-                    .addPhase("MovePhase", new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2)))
-                    .addPhase("BuildPhase", new IsCellFreePredicate())
-                    .addPhase("ChooseBlockPhase", new BlockPredicate(3))
+                    .addPhase("ChooseActionPhase", tempGod.actionPredicates)
+                    .addPhase("MovePhase", tempGod.movePredicates)
+                    .addPhase("BuildPhase", tempGod.buildPredicates)
+                    .addPhase("ChooseBlockPhase", tempGod.constructiblePredicates)
                     .addPhase("EndPhase", (arg1, arg2) -> true);
 
         }
-
 
         public void reset() {
             tempGod = new God();

@@ -3,6 +3,10 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.actions.Action;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndShiftBack;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSwap;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanDisplacePredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanStopPredicate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -424,7 +428,6 @@ public class Parser {
     private void buildPhases(Node item, God.GodBuilder god) {
         NodeList nList = item.getChildNodes();
 
-
         for (Integer i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
             if (node.getNodeValue() == null) {
@@ -432,36 +435,64 @@ public class Parser {
                     case "phases": {    //new branch
                         god.saveRefNode();
                         buildPhases(node, god);
+                        god.addPhase("EndPhase", (arg1, arg2) -> true);
                         god.restoreRefNode();
                         break;
                     }
                     case "name": {  //phase introduces a new predicate
-                        readPredicate(node, god);
+                       readPredicate(node, god);
                         i = nList.getLength();  // We arleady read the siblings above
                         break;
-                    }
+                }
                     default:    //<phase>
                         buildPhases(node, god);   //normal phase
+                        break;
                 }
-            } else {                                           //reading the text (di sopra o di sotto?)
-                god.addPhase(node.getTextContent(), null);
+            } else {//reading the text (di sopra o di sotto?)
+                String phaseName = node.getTextContent();
+                BiPredicate phasePredicate = null;
+                if (phaseName.equals("ChooseActionPhase"))
+                    phasePredicate = getActionPredicate(item.getNextSibling());
+                god.addPhase(node.getTextContent(), phasePredicate);
             }
         }
     }
 
+   private BiPredicate getActionPredicate(Node item){
+       Node node = item.getFirstChild();
+       String firstPhase;
+       String secondPhase = "End";
+
+        if (item.getNextSibling() != null)
+            secondPhase = readName(item.getNextSibling().getFirstChild());
+
+        if (node.getFirstChild().getNodeValue() == null)    //when the phase introduces a new predicate
+            node = node.getFirstChild();
+
+        firstPhase = readName(node);
+
+        return StringToPredicate(firstPhase).or(StringToPredicate(secondPhase));
+
+    }
+
+    private BiPredicate StringToPredicate(String phaseName){
+        return switch (phaseName){
+            case ("MovePhase") -> new CanMovePredicate();
+            case ("BuildPhase") -> new CanBuildPredicate();
+            case ("Displace") -> new CanDisplacePredicate();
+            default -> new CanStopPredicate();
+        };
+    }
     private void readPredicate(Node item, God.GodBuilder god) {
         String name = readName(item);
-        switch (name) {
-            case "ChooseBlock": {
-                BiPredicate<Player, Constructible> predicate = readConstructiblePredicate(item.getNextSibling());
-                god.addPhase(name, predicate);
-                break;
-            }
-            default:    //build or move predicate
-                BiPredicate<FieldCell, GameWorker> predicate = readBuildAndMovePredicates(item.getNextSibling(), null);
-                god.addPhase(name, predicate);
-        }
-        // can't use a reflection on calling those functions
+        String predicateName = item.getNextSibling().getNodeName();
+        BiPredicate predicate;
+        if (predicateName.startsWith("constructible"))
+            predicate = readConstructiblePredicate(item.getNextSibling());
+        else   //build or move predicate //do we need adding action and winconditionPredicate?
+            predicate = readBuildAndMovePredicates(item.getNextSibling(), null);
+
+        god.addPhase(name, predicate);
     }
 
     private String numOfTabs(Integer level) {

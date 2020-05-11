@@ -21,7 +21,6 @@
         <name>Artemis</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
@@ -76,7 +75,6 @@
         <name>Demetra</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
@@ -100,7 +98,6 @@
         <name>Ephestus</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
@@ -193,7 +190,6 @@
             <phase>ChooseActionPhase</phase>
             <phases>
                 <!-- <phase>DISPLACE</phase> -->
-                <phase>ChooseActionPhase</phase>
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
@@ -236,7 +232,6 @@
         <name>Hestia</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
