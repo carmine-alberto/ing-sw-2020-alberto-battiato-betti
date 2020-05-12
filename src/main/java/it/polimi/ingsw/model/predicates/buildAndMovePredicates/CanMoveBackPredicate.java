@@ -13,6 +13,9 @@ public class CanMoveBackPredicate implements BiPredicate<FieldCell, GameWorker> 
         if (fieldCell.isOnPerimeter() && !gameWorker.getCell().isOnPerimeter())
                 return false;
 
+        if(fieldCell.isFree())
+            return true;
+
         Integer gapX = fieldCell.getPosX() - gameWorker.getCell().getPosX();
         Integer gapY = fieldCell.getPosY() - gameWorker.getCell().getPosY();
 

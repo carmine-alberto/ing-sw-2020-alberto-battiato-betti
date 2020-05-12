@@ -94,10 +94,11 @@ public class Game extends Observable<Event> {
 
     public void addPlayer(Player player) throws InvalidSelectionException {
        for (Player tmp : players)
-                if (tmp.getNickname().equals(player.getNickname()))
-                    throw new InvalidSelectionException("Nickname already in use");
-            players.add(player);
+           if (tmp.getNickname().equals(player.getNickname()))
+               throw new InvalidSelectionException("Nickname already in use");
 
+       player.setCurrentGame(this);
+       players.add(player);
     }
 
     /**

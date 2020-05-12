@@ -96,7 +96,7 @@ public class BoardView extends View {
                 board.getChildren().add(cell);
             }
 
-        Label selectedGodPower = new Label("Your selected God Power is:");
+        Label selectedGodPower = new Label("Your selected God Power is: ");
 
         VBox interfaceBox = new VBox(20, board, selectedGodPower);
         if (!hideColorPickerBox)
@@ -158,7 +158,7 @@ public class BoardView extends View {
             baseWidth *= 0.8;
         }
 
-        if (fieldCell.isComplete()) {
+        if(fieldCell.getHasDome()){
             Circle dome = new Circle(baseWidth/2, Color.BLUE);
             cell.getChildren().add(dome);
             cell.setAlignment(dome, Pos.CENTER);

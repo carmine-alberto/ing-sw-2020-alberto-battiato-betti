@@ -14,7 +14,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -48,7 +47,8 @@ public class Parser {
         }
     }
 
-    private void printNode(Node node, Integer level/*, BiPredicate tempPredicate*/) {
+    //used fot debugging purposes only
+    private void printNode(Node node, Integer level) {
         NodeList nList = node.getChildNodes();
         for (Integer i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {         //CHILD NODE HAS NO TEXT (e.g. <and></and>)
@@ -72,7 +72,7 @@ public class Parser {
         return true;
     }
 
-    private void visitNode(Node node, God.GodBuilder god/*, BiPredicate tempPredicate*/) {
+    private void visitNode(Node node, God.GodBuilder god) {
         Node child = node.getFirstChild();
 
         if (child.getNodeName().equals("gods")) { //some "useless" controls just to check if the xml was formatted correctly
@@ -119,7 +119,7 @@ public class Parser {
                     buildPhases(node, god);
                     break;
                 case "winConditions":
-                    BiPredicate<Game, GameWorker> winConditionPredicate = readWinCondition(node, god);
+                    BiPredicate<Game, GameWorker> winConditionPredicate = readWinCondition(node, god, null);
                     god.winConditionPredicate(winConditionPredicate);
                     break;
                 case "constructiblePredicates":
@@ -153,116 +153,56 @@ public class Parser {
         }
     }
 
-    private BiPredicate<Game, GameWorker> readWinCondition(Node node, God.GodBuilder god) { //also sets if is OnOpponents
-        Node child = node.getFirstChild();
-
-        switch (child.getNodeName()) {
-            case "or":
-                return readWinConj(child, "or", god);
-            case "and":
-                return readWinConj(child, "and", god);
-            case "winCondition":
-                try{
-                    if(child.getFirstChild() != null && child.getFirstChild().getNodeName().equals("name")) {
-                        if(child.getFirstChild().getNextSibling().getNodeName().equals("application"))
-                            god.setOnOpponents();
-                        else
-                            if(child.getFirstChild().getNextSibling().getNextSibling() != null && child.getFirstChild().getNextSibling().getNextSibling().getNodeName().equals("application"))
-                                god.setOnOpponents();
-                            Integer val = Integer.parseInt(child.getFirstChild().getNextSibling().getNodeValue());
-                            return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getFirstChild().getFirstChild().getNodeValue())
-                                    .getConstructors()[0]
-                                    .newInstance(val);
-                    }
-                    return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getFirstChild().getFirstChild().getNodeValue())
-                            .getConstructors()[0]
-                            .newInstance();
-                } catch (InstantiationException | InvocationTargetException | ClassNotFoundException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-        }
-        /*
-        if (child.getNodeValue() == null)
-            return readWinCondition(child, null);
-        try{
-            if (child.getNextSibling() != null && child.getNextSibling().getFirstChild().getNodeValue().equals("arg")) {
-                if(isNumeric(child.getNextSibling().getFirstChild().getTextContent()))
-                 return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getTextContent())
-                         .getConstructors()[0]
-                         .newInstance(node.getChildNodes().item(1));
-            }
-            return (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + child.getTextContent())
-                    .getConstructors()[0]
-                    .newInstance();
-        } catch (Exception e) {
-            e.printStackTrace(); //TODO Handle exception properly
-        }*/
-
-        //System.out.println("non so, fa return null...");
-        return null;
-    }
-
-    private BiPredicate<Game, GameWorker> readWinConj(Node node, String type, God.GodBuilder god) {
-        NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case
-        BiPredicate<Game, GameWorker> firstPredicate = null;
-        BiPredicate<Game, GameWorker> secondPredicate = null;
+    private BiPredicate<Game, GameWorker> readWinCondition(Node node, God.GodBuilder god, Integer arg) {
+        NodeList nList = node.getChildNodes();
+        BiPredicate<Game, GameWorker> winConditionPredicate = null;
 
         for (int i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {
                 switch (nList.item(i).getNodeName()) {
                     case "name":
-                    /*case "args":      //   QUESTO è CONTENUTO IN NAME(QUANDO C'è C'è SEMPRE ANCHE ARGS)
-                           movePredicate = readMovePredicates(nList.item(i), god, )
-                     */
+                        if (isNumeric(nList.item(i + 1).getChildNodes().item(0).getTextContent()))/*controllo che effettivamente args ci sia */ {
+                            int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(0).getTextContent());
+                            winConditionPredicate = readWinCondition(nList.item(i), god, val);
+                        } else
+                            winConditionPredicate = readWinCondition(nList.item(i), god, null);
+                        break;
+                /*case "args":      //   QUESTO è CONTENUTO IN NAME(QUANDO C'è C'è SEMPRE ANCHE ARGS)
+                       movePredicate = readMovePredicates(nList.item(i), god, )
+                 */
                     case "winCondition":
-                        //partly redundant
-                        if (i == 0)
-                            firstPredicate = readWinCondition(nList.item(i), god);
-                        else
-                            secondPredicate = readWinCondition(nList.item(i), god);
+                        winConditionPredicate = readWinCondition(nList.item(i), god, null);
+                        break;
+                    case "application":
+                        god.setOnOpponents();
                         break;
                     case "and":
-                        if (i == 0)
-                            firstPredicate =  readWinConj(nList.item(i), "and", god);
-                        else
-                            secondPredicate = readWinConj(nList.item(i), "and", god);
+                        winConditionPredicate = readWinConj(nList.item(i), "and", god);
                         break;
                     case "or":
-                        if (i == 0)
-                            firstPredicate =  readWinConj(nList.item(i), "or", god);
-                        else
-                            secondPredicate = readWinConj(nList.item(i), "or", god);
+                        winConditionPredicate = readWinConj(nList.item(i), "or", god);
                         break;
+                    case "negate":
+                        winConditionPredicate = readWinCondition(nList.item(i), god, null).negate();
+                        break;
+                }
+            } else { //gestisco caso base leggo il predicate con la reflection
+                try {
+                    if (arg == null)
+                        winConditionPredicate = (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + nList.item(i).getTextContent())
+                                .getConstructors()[0]
+                                .newInstance();
+                    else
+                    { String tmp = nList.item(i).getTextContent();
+                        winConditionPredicate = (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + nList.item(i).getTextContent())
+                                .getConstructors()[0]
+                                .newInstance(arg);}
+                } catch (Exception e) {
+                    e.printStackTrace(); //TODO Handle exception properly
                 }
             }
         }
-        if (firstPredicate != null && secondPredicate != null) {
-            if (type.equals("and"))
-                return firstPredicate.and(secondPredicate);
-            return firstPredicate.or(secondPredicate);
-        }
-        return null;
-    }
-
-    private Action readStrategy(Node node) {
-        Node child = node.getFirstChild();
-
-        //if (child.getNodeValue() != null)
-        switch (child.getTextContent()) {
-            case "MoveAndShiftBack":
-                return new MoveAndShiftBack();
-            case "MoveWithSwap":
-                return new MoveAndSwap();
-            case "MoveAndSet": //note: move and set can only be provided with a move or build predicate
-                if (child.getNextSibling() != null && child.getNextSibling().getNodeValue() != null)
-                    if (child.getNextSibling().getTextContent().equals("arg")) {
-                        BiPredicate<FieldCell, GameWorker> predicate;
-                        predicate = readBuildAndMovePredicates(node, null);
-                    }
-                /*return new MoveAndSet(predicate); todo: togliere questo commento(il codice va bene ma ancora la move and set non è stata costuita
-                 */
-        }
-        return null;
+        return winConditionPredicate;
     }
 
     private BiPredicate<FieldCell, GameWorker> readBuildAndMovePredicates(Node node, Integer arg) {
@@ -318,6 +258,68 @@ public class Parser {
         return buildAndMovePredicate;
     }
 
+    private BiPredicate<Game, GameWorker> readWinConj(Node node, String type, God.GodBuilder god) {
+        NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case
+        BiPredicate<Game, GameWorker> firstPredicate = null;
+        BiPredicate<Game, GameWorker> secondPredicate = null;
+
+        for (int i = 0; i < nList.getLength(); i++) {
+            if (nList.item(i).getNodeValue() == null) {
+                switch (nList.item(i).getNodeName()) {
+                    case "name":
+                        break;
+                    case "winCondition":
+                        //partly redundant
+                        if (i == 0)
+                            firstPredicate = readWinCondition(nList.item(i), god, null);
+                        else
+                            secondPredicate = readWinCondition(nList.item(i), god, null);
+                        break;
+                    case "and":
+                        if (i == 0)
+                            firstPredicate =  readWinConj(nList.item(i), "and", god);
+                        else
+                            secondPredicate = readWinConj(nList.item(i), "and", god);
+                        break;
+                    case "or":
+                        if (i == 0)
+                            firstPredicate =  readWinConj(nList.item(i), "or", god);
+                        else
+                            secondPredicate = readWinConj(nList.item(i), "or", god);
+                        break;
+                }
+            }
+        }
+        if (firstPredicate != null && secondPredicate != null) {
+            if (type.equals("and"))
+                return firstPredicate.and(secondPredicate);
+            return firstPredicate.or(secondPredicate);
+        }
+        return null;
+
+    }
+
+    private Action readStrategy(Node node) {
+        Node child = node.getFirstChild();
+
+        //if (child.getNodeValue() != null)
+        switch (child.getTextContent()) {
+            case "MoveAndShiftBack":
+                return new MoveAndShiftBack();
+            case "MoveWithSwap":
+                return new MoveAndSwap();
+            case "MoveAndSet": //note: move and set can only be provided with a move or build predicate
+                if (child.getNextSibling() != null && child.getNextSibling().getNodeValue() != null)
+                    if (child.getNextSibling().getTextContent().equals("arg")) {
+                        BiPredicate<FieldCell, GameWorker> predicate;
+                        predicate = readBuildAndMovePredicates(node, null);
+                    }
+                /*return new MoveAndSet(predicate); todo: togliere questo commento(il codice va bene ma ancora la move and set non è stata costuita
+                 */
+        }
+        return null;
+    }
+
     private BiPredicate<FieldCell, GameWorker> readConj(Node node, String type) {
         NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case
         BiPredicate<FieldCell, GameWorker> firstPredicate = null;
@@ -326,7 +328,7 @@ public class Parser {
         for (int i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {
                 switch (nList.item(i).getNodeName()) {
-                    case "name":
+                    case "name": // i think it is useless but still needed for reliability
                         if (isNumeric(nList.item(i + 1).getChildNodes().item(0).getTextContent())) {
                             int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(0).getTextContent());
                             if (i == 0)
@@ -373,50 +375,6 @@ public class Parser {
         return null;
     }
 
-    /*
-        private static BiPredicate<FieldCell, GameWorker> readBuildPredicates(Node node, God.GodBuilder god, Integer arg) {
-            NodeList nList = node.getChildNodes();
-            BiPredicate<FieldCell, GameWorker> buildPredicate = new BuildAndMovePredicate();
-
-            for (Integer i = 0; i < nList.getLength(); i++) {
-                if (nList.item(i).getNodeValue() == null) {
-                    switch (nList.item(i).getNodeName()) {
-                        case "name":
-                            if (isNumeric(nList.item(i + 1).getChildNodes().item(0).getTextContent())) {
-                                int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(0).getTextContent());
-                                buildPredicate = readBuildPredicates(nList.item(i), god, val);
-                            } else
-                                buildPredicate = readBuildPredicates(nList.item(i), god, null);
-                            break;
-                     case "buildPredicate":
-                            readBuildPredicates(nList.item(i), god, null);
-                            break;
-                        case "and":
-                            buildPredicate = readBuildPredicates(nList.item(i).getChildNodes().item(0), god, null)
-                                    .and(readBuildPredicates(nList.item(i).getChildNodes().item(1), god, null));
-                            break;
-                        case "or":
-                            buildPredicate = readBuildPredicates(nList.item(i).getChildNodes().item(0), god, null)
-                                    .or(readBuildPredicates(nList.item(i).getChildNodes().item(1), god, null));
-                            break;
-                    }
-                } else{
-                    try {
-                        if(arg == null)
-                            buildPredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildPredicates." + nList.item(i).getTextContent())
-                                    .getConstructors()[0]
-                                    .newInstance();
-                        else buildPredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildPredicates." + nList.item(i).getTextContent())
-                                .getConstructors()[0]
-                                .newInstance(arg);
-                    } catch (Exception e) {
-                        e.printStackTrace(); //TODO Handle exception properly
-                    }
-                }
-            }
-            return buildPredicate;
-        }
-    */
     private String readName(Node item) {
         Node node = item.getFirstChild();
 
@@ -483,6 +441,7 @@ public class Parser {
             default -> new CanStopPredicate();
         };
     }
+
     private void readPredicate(Node item, God.GodBuilder god) {
         String name = readName(item);
         String predicateName = item.getNextSibling().getNodeName();

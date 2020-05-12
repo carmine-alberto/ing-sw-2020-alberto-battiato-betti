@@ -85,7 +85,7 @@
                     <buildPredicates>
                         <and>
                             <buildPredicate>IsCellFreePredicate</buildPredicate>
-                            <movePredicate>NotInOldMovePositionPredicate</movePredicate>
+                            <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
                         </and>
                     </buildPredicates>
                 </phase>
@@ -222,7 +222,7 @@
                 <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>NotOnPerimeterPredicate</name>
-                    <application>opponents</application>    <!-- todo scambiare col nodo sopra (?) -->
+                    <application>opponents</application>
                 </winCondition>
             </and>
         </winConditions>

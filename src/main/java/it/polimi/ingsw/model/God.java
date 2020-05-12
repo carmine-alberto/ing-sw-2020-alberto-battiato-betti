@@ -198,7 +198,7 @@ public class God implements Serializable {
         }
 
         public GodBuilder buildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate){
-            this.tempGod.movePredicates = buildPredicate;
+            this.tempGod.buildPredicates = buildPredicate;
             return this;
         }
 
@@ -223,12 +223,13 @@ public class God implements Serializable {
         }
 
         public God getCompleteGod() {
-            if(tempGod.phasesTree.getChildren().size() > 0){
-                tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
-                tempGod.currentPhaseNode = tempGod.phasesTree;
-            }              //We're assuming it's the only one, since every turn starts with WorkerSelection
-            else
+            if(tempGod.phasesTree.getChildren().size() == 0)
                 setBasePhases();
+            //We're assuming it's the only one, since every turn starts with WorkerSelection
+            tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
+            tempGod.currentPhaseNode = tempGod.phasesTree;
+
+
             God completeGod = tempGod;
             reset();
 
