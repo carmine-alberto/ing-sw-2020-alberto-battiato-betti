@@ -8,20 +8,18 @@ import it.polimi.ingsw.controller.events.PlayerLostUpdate;
 import it.polimi.ingsw.cview.serverView.VirtualBoardView;
 import it.polimi.ingsw.model.actions.Build;
 import it.polimi.ingsw.model.actions.Move;
-import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import it.polimi.ingsw.model.phases.TurnPhase;
-import it.polimi.ingsw.model.predicates.IsCellFreePredicate;
-import it.polimi.ingsw.model.predicates.actionPredicates.CanBuildPredicate;
-import it.polimi.ingsw.model.predicates.actionPredicates.CanMovePredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
 import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
-import it.polimi.ingsw.model.predicates.movePredicates.IsDeltaHeightLessThanPredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +40,9 @@ public class Game extends Observable<Event> {
     public Game() {
         players = new ArrayList<>();
 
-       /* Parser fileParser = new Parser();
-        godPowers = fileParser.getGodsList();*/
-        godPowers = buildDefaultGods();   //TODO Remove and add gods read from file
+        Parser fileParser = new Parser();
+        godPowers = fileParser.getGodsList();
+        //godPowers = buildDefaultGods();
 
 
         NUM_OF_PLAYERS = -1; //TODO Refactor into proper private variable + accessor
@@ -96,10 +94,11 @@ public class Game extends Observable<Event> {
 
     public void addPlayer(Player player) throws InvalidSelectionException {
        for (Player tmp : players)
-                if (tmp.getNickname().equals(player.getNickname()))
-                    throw new InvalidSelectionException("Nickname already in use");
-            players.add(player);
+           if (tmp.getNickname().equals(player.getNickname()))
+               throw new InvalidSelectionException("Nickname already in use");
 
+       player.setCurrentGame(this);
+       players.add(player);
     }
 
     /**
@@ -222,3 +221,4 @@ public class Game extends Observable<Event> {
         choosingPlayer.setSelectedGod(godToBeAssigned);
     }
 }
+

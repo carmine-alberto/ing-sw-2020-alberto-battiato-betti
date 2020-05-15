@@ -1,13 +1,12 @@
 <gods>
+
     <god>
         <name>Apollo</name>
         <movePredicates>
             <and>
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <args>
-                        <arg>1</arg>
-                    </args>
+                    <arg>2</arg>
                 </movePredicate>
                 <or>
                     <movePredicate>ContainsOpponentWorkerPredicate</movePredicate>
@@ -17,15 +16,29 @@
         </movePredicates>
         <moveStrategy>MoveWithSwap</moveStrategy>
     </god>
+
     <god>
         <name>Artemis</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <phase>MovePhase</phase>
+                <phase>
+                    <name>MovePhase</name>
+                    <movePredicates>
+                        <and>
+                            <and>
+                                <movePredicate>
+                                    <name>IsDeltaHeightLessThanPredicate</name>
+                                    <arg>2</arg>
+                                </movePredicate>
+                                <movePredicate>IsCellFreePredicate</movePredicate>
+                            </and>
+                            <movePredicate>NotInOldMovePositionPredicate</movePredicate>
+                        </and>
+                    </movePredicates>
+                </phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
             </phases>
@@ -34,79 +47,85 @@
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <movePredicates>
-            <movePredicate>NotInOldMovePositionPredicate</movePredicate>
-        </movePredicates>
     </god>
+
     <god>
         <name>Athena</name>
         <moveStrategy>
             <name>MoveAndSet</name>
-            <args>
-                <arg>CantMoveUpPredicate</arg>
-            </args>
+            <arg>
+                <movepredicates>
+                        <negate>
+                            <movepredicate>CanMoveUpPredicate</movepredicate>
+                        </negate>
+                </movepredicates>
+            </arg>
         </moveStrategy>
     </god>
+
     <god>
         <name>Atlas</name>
         <constructiblePredicates>
             <name>BlockPredicate</name>
-            <args>
-                <arg>0</arg>
-            </args>
+            <arg>0</arg>
         </constructiblePredicates>
     </god>
+
     <god>
         <name>Demetra</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <phase>BuildPhase</phase>
+                <phase>
+                    <name>BuildPhase</name>
+                    <buildPredicates>
+                        <and>
+                            <buildPredicate>IsCellFreePredicate</buildPredicate>
+                            <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
+                        </and>
+                    </buildPredicates>
+                </phase>
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <buildPredicates>
-            <buildPredicate>
-                <name>NotInOldBuildPositionPredicate</name>
-            </buildPredicate>
-        </buildPredicates>
     </god>
+
     <god>
         <name>Ephestus</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <phase>BuildPhase</phase>
+                <phase>
+                    <name>BuildPhase</name>
+                    <buildPredicates>
+                        <and>
+                            <movePredicate>IsCellFreePredicate</movePredicate>
+                            <negate>
+                                <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
+                            </negate>
+                        </and>
+                    </buildPredicates>
+                </phase>
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
-        <buildPredicates>
-            <not>
-                <buildPredicate>
-                    <name>NotInOldBuildPositionPredicate</name>
-                </buildPredicate>
-            </not>
-        </buildPredicates>
     </god>
+
     <god>
         <name>Minotaur</name>
         <movePredicates>
             <and>
                 <movePredicate>
                     <name>IsDeltaHeightLessThanPredicate</name>
-                    <args>
-                        <arg>1</arg>
-                    </args>
+                    <arg>2</arg>
                 </movePredicate>
                 <or>
                     <and>
@@ -119,19 +138,20 @@
         </movePredicates>
         <moveStrategy>MoveAndShiftBack</moveStrategy>
     </god>
+
     <god>
         <name>Pan</name>
         <winConditions>
             <or>
+                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>HasMovedDownPredicate</name>
-                    <args>
-                        <arg>2</arg>
-                    </args>
+                    <arg>2</arg>
                 </winCondition>
             </or>
         </winConditions>
     </god>
+
     <god>
         <name>Prometheus</name>
         <phases>
@@ -143,12 +163,13 @@
                 <phase>
                     <name>MovePhase</name>
                     <movePredicates>
-                        <movePredicate>
-                            <name>IsDeltaHeightLessThanPredicate</name>
-                            <args>
-                                <arg>0</arg>
-                            </args>
-                        </movePredicate>
+                        <and>
+                            <movePredicate>
+                                <name>IsDeltaHeightLessThanPredicate</name>
+                                <arg>1</arg>
+                            </movePredicate>
+                            <movePredicate>IsCellFreePredicate</movePredicate>
+                        </and>
                     </movePredicates>
                 </phase>
                 <phase>BuildPhase</phase>
@@ -161,6 +182,7 @@
             </phases>
         </phases>
     </god>
+
     <god>
         <name>Charon</name>
         <phases>
@@ -168,7 +190,6 @@
             <phase>ChooseActionPhase</phase>
             <phases>
                 <!-- <phase>DISPLACE</phase> -->
-                <phase>ChooseActionPhase</phase>
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
@@ -180,35 +201,37 @@
             </phases>
         </phases>
     </god>
+
     <god>
         <name>Chronus</name>
         <winConditions>
             <or>
+                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>CompleteTowersPredicate</name>
-                    <args>
-                        <arg>5</arg>
-                    </args>
+                    <arg>5</arg>
                 </winCondition>
             </or>
         </winConditions>
     </god>
+
     <god>
         <name>Hera</name>
         <winConditions>
             <and>
+                <winCondition>WinningMovePredicate</winCondition>
                 <winCondition>
                     <name>NotOnPerimeterPredicate</name>
-                    <application>opponents</application>    <!-- todo va aggiunto anche a tutti gli altri? -->
+                    <application>opponents</application>
                 </winCondition>
             </and>
         </winConditions>
     </god>
+
     <god>
         <name>Hestia</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
-            <phase>ChooseActionPhase</phase>
             <phase>MovePhase</phase>
             <phase>BuildPhase</phase>
             <phase>ChooseBlockPhase</phase>
@@ -217,23 +240,23 @@
                 <phase>BuildPhase</phase>
                 <buildPredicates>
                     <and>
-                        <buildPredicate>
-                            <name>NotOnPerimeterPredicate</name>
-                        </buildPredicate>
+                        <buildPredicate>IsCellFreePredicate</buildPredicate>
+                        <buildPredicate>NotOnPerimeterPredicate></buildPredicate>
                     </and>
                 </buildPredicates>
                 <phase>ChooseBlockPhase</phase>
             </phases>
         </phases>
     </god>
+
     <god>
         <name>Zeus</name>
         <buildPredicates>
             <or>
-                <buildPredicate>
-                    <name>CanBuildUnderItselfPredicate</name>
-                </buildPredicate>
+                <buildPredicate>IsCellFreePredicate</buildPredicate>
+                <buildPredicate>CanBuildUnderItselfPredicate</buildPredicate>
             </or>
         </buildPredicates>
     </god>
+
 </gods>

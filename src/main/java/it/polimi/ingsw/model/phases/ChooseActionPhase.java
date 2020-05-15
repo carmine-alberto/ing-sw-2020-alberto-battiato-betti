@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.ActionEnum;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
-import it.polimi.ingsw.model.predicates.actionPredicates.ActionPredicate;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

@@ -8,8 +8,8 @@ import java.util.function.BiPredicate;
 public class HasMovedDownPredicate implements BiPredicate<Game, GameWorker> {
     private Integer minimumDescent; // do we need getter and setter?
 
-    public  void HasMovedDownPredicate(Integer n){
-        minimumDescent = n;
+    public HasMovedDownPredicate(Integer n){
+        this.minimumDescent = n;
     }
     @Override
     public boolean test(Game game, GameWorker gameWorker) {

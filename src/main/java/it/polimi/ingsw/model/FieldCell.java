@@ -91,7 +91,7 @@ public class FieldCell implements Serializable {
             for (Integer j = k; j <= this.getPosY() + 1 && j < 5; j++)
                 adjacentCells.add(this.currentGame.getCell(i, j));
 
-        adjacentCells.remove(this);
+        //adjacentCells.remove(this); i actually need to consider the current cell as an adjacent if it creates other problems we'll figure it out later on
 
         return adjacentCells;
     }

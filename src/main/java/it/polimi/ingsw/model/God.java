@@ -2,12 +2,17 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.model.actions.Action;
+import it.polimi.ingsw.model.actions.Build;
+import it.polimi.ingsw.model.actions.Move;
 import it.polimi.ingsw.model.phases.Node;
 import it.polimi.ingsw.model.phases.TurnPhase;
+import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
+import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.function.BiPredicate;
 
 public class God implements Serializable {
@@ -21,16 +26,28 @@ public class God implements Serializable {
     private transient Node phasesTree; //Pointing to root, ALWAYS
     private transient Node currentPhaseNode; //Pointing to the current phase
 
+    private transient BiPredicate<FieldCell, GameWorker> buildPredicates;
+    private transient BiPredicate<Player, Constructible> constructiblePredicates;
+    private transient BiPredicate<FieldCell, GameWorker> movePredicates;
+    private transient BiPredicate<ActionEnum, Player> actionPredicates;
+
     private God() {
         winConditionPredicate = new WinningMovePredicate();
+        buildPredicates = new IsCellFreePredicate();
+        constructiblePredicates = new BlockPredicate(3);
+        movePredicates = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2));
+        actionPredicates = new CanMovePredicate();
+        buildStrategy = new Build();
+        moveStrategy = new Move();
         onOpponents = false;
     }
 
-    public TurnPhase getNextPhase(Game currentGame) {
+
+    public TurnPhase getNextPhase(Game currentGame)  {
         try {
             String nextPhase = currentPhaseNode.getPhase();
-            BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate();
-
+            BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate(); // TODO fix
+            // l'idea è, di usare, per le fasi standard, i predicati presenti nel god, facendo un controllo sul phasePredicate. se è diverso da null va usato quest'ultimo
             TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases." + nextPhase)
                     .getConstructors()[0]
                     .newInstance(currentGame, phasePredicate);
@@ -42,6 +59,7 @@ public class God implements Serializable {
         return null;
     }
 
+
     /**
      * Assumption: the only node with more than 1 child is the ChooseActionPhase node
      * if this assumption holds, the method works
@@ -51,27 +69,33 @@ public class God implements Serializable {
     public void setNextPhase(Game currentGame) {
         if (currentPhaseNode.getChildren().size() > 1) {
             String selectedAction = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();
+
             currentPhaseNode = currentPhaseNode
                     .getChildren()
                     .stream()
                     .filter(node -> node.getPhase().toUpperCase().startsWith(selectedAction.toUpperCase()))
                     .findFirst()
                     .get();
-            return;
         }
         else if (currentPhaseNode.getChildren().size() == 1)
             currentPhaseNode =  currentPhaseNode.getChildren().get(0);
-        else //Leaf Node - we are in the EndPhase
+        else { //Leaf Node - we are in the EndPhase
+
             reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
+        }
     }
 
     public void reset() {
         currentPhaseNode = phasesTree;
     }
-
+    /**
+    * @param
+    * @return String
+    */
     public String getName() {
         return name;
     }
+
 
     public void assignWinConditionPredicate(Player assignee) { //TODO This method should be called when all players have selected their own god
         if (onOpponents)
@@ -79,7 +103,11 @@ public class God implements Serializable {
                     .getOpponents()
                     .forEach(player -> player.setWinConditions(player.getWinConditions().and(winConditionPredicate))); //TODO Is it always "and"?
         else
-            assignee.setWinConditions(assignee.getWinConditions().and(winConditionPredicate));
+            assignee.setWinConditions(assignee.getWinConditions().or(winConditionPredicate));
+    }
+
+    public void setMovePredicates(BiPredicate<FieldCell, GameWorker> movePredicates) {
+        this.movePredicates = movePredicates;
     }
 
     public Action getMoveStrategy() {
@@ -88,6 +116,18 @@ public class God implements Serializable {
 
     public Action getBuildStrategy() {
         return this.buildStrategy;
+    }
+
+    public BiPredicate<FieldCell, GameWorker> getBuildPredicates() {
+        return buildPredicates;
+    }
+
+    public BiPredicate<Player, Constructible> getConstructiblePredicates() {
+        return constructiblePredicates;
+    }
+
+    public BiPredicate<FieldCell, GameWorker> getMovePredicates() {
+        return movePredicates;
     }
 
     /**
@@ -111,11 +151,25 @@ public class God implements Serializable {
         }
 
         public GodBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
+            if (phasePredicate == null)
+                    phasePredicate = getPhasePredicate(phaseName);
+
             Node newNode = new Node(currNode, phaseName, phasePredicate);
             currNode.addChild(newNode);
             currNode = newNode;
 
             return this;
+        }
+
+        private BiPredicate getPhasePredicate(String name) {
+            return switch (name) {
+                case "ChooseActionPhase" -> tempGod.actionPredicates;
+                case "MovePhase" -> tempGod.movePredicates;
+                case "BuildPhase" -> tempGod.buildPredicates;
+                case "ChooseBlockPhase" -> tempGod.constructiblePredicates;
+                default -> (arg1, arg2) -> true;
+            };
+
         }
 
         public GodBuilder saveRefNode() {
@@ -138,8 +192,28 @@ public class God implements Serializable {
             return this;
         }
 
-        public GodBuilder moveStrategy(Action moveStrategy) {
+        public GodBuilder movePredicate(BiPredicate<FieldCell, GameWorker> movePredicate){
+            this.tempGod.movePredicates = movePredicate;
+            return this;
+        }
+
+        public GodBuilder buildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate){
+            this.tempGod.buildPredicates = buildPredicate;
+            return this;
+        }
+
+        public GodBuilder constructiblePredicate(BiPredicate<Player, Constructible> constructibleBiPredicate){
+            this.tempGod.constructiblePredicates =  constructibleBiPredicate;
+            return this;
+        }
+
+        public GodBuilder moveStrategy(Action moveStrategy) {//todo non è meglio usare getter e setter separati ?
             this.tempGod.moveStrategy = moveStrategy;
+            return this;
+        }
+
+        public GodBuilder actionPredicate(BiPredicate<ActionEnum, Player> actionEnumBiPredicate){
+            this.tempGod.actionPredicates = actionEnumBiPredicate;
             return this;
         }
 
@@ -149,15 +223,30 @@ public class God implements Serializable {
         }
 
         public God getCompleteGod() {
+            if(tempGod.phasesTree.getChildren().size() == 0)
+                setBasePhases();
+            //We're assuming it's the only one, since every turn starts with WorkerSelection
             tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
-            tempGod.currentPhaseNode = tempGod.phasesTree;                      //We're assuming it's the only one, since every turn starts with WorkerSelection
+            tempGod.currentPhaseNode = tempGod.phasesTree;
+
+
             God completeGod = tempGod;
             reset();
 
             return completeGod;
         }
 
+        private void setBasePhases() {
 
+            this
+                    .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
+                    .addPhase("ChooseActionPhase", tempGod.actionPredicates)
+                    .addPhase("MovePhase", tempGod.movePredicates)
+                    .addPhase("BuildPhase", tempGod.buildPredicates)
+                    .addPhase("ChooseBlockPhase", tempGod.constructiblePredicates)
+                    .addPhase("EndPhase", (arg1, arg2) -> true);
+
+        }
 
         public void reset() {
             tempGod = new God();

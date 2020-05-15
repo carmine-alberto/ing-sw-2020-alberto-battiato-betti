@@ -18,7 +18,7 @@ public abstract class ControllerState {
         return mainController.getCurrentGame().getTurnPlayer().getPlayerView().equals(view);
     }
 
-    /*public void handle(PingEvent event, VirtualView view) {
+    /*public void handle(PingEvent event, VirtualView view) {  TODO Handle ping
         //reset timer
     }*/
 }
