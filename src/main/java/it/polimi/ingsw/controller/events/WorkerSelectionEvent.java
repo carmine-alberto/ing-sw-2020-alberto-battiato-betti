@@ -18,37 +18,12 @@ public class WorkerSelectionEvent implements Event {
     }
 
     @Override
-    public void visit(LoginController eventHandler, VirtualView view) {
-
-    }
-
-    @Override
-    public void visit(ChallengerSelectionController eventHandler, VirtualView view) {
-
-    }
-
-    @Override
-    public void visit(ChallengerSelectionController eventHandler) {
-
-    }
-
-    @Override
-    public void visit(ViewEventHandler eventHandler) {
-
-    }
-
-    @Override
-    public void visit(GodPowerController eventHandler) {
-    }
-
-    @Override
     public void visit(WorkerSetupController eventHandler, VirtualView view) {
         eventHandler.handle(this, view);
     }
 
     @Override
     public void visit(GamePhasesController eventHandler, VirtualView view) {
-        System.out.println("Inside visit GamePhasesController");
         eventHandler.handle(this, view);
     }
 }

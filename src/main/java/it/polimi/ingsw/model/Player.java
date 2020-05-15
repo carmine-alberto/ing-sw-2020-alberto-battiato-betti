@@ -29,7 +29,7 @@ public class Player implements Serializable {
     private transient PlayerState playerState;
 
     //Predicates
-    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
+    private transient BiPredicate<Game, GameWorker> winConditions;
 
     public Player(String nickname){
         this.nickname = nickname;
@@ -41,6 +41,7 @@ public class Player implements Serializable {
         this.playerView = playerView;
         this.playerState = new PlayerState(this);
         this.isWinner = false;
+        winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
     }
 
 

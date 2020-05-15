@@ -7,43 +7,13 @@ import it.polimi.ingsw.cview.serverView.VirtualView;
 public class ChangeViewEvent implements Event {
     public String viewState;
 
-    public ChangeViewEvent(String nextState) {
-        this.viewState = nextState;
-    }
-
-    @Override
-    public void visit(LoginController eventHandler, VirtualView view) {
-        return;
-    }
-
-    @Override
-    public void visit(ChallengerSelectionController eventHandler, VirtualView view) {
-
-    }
-
-    @Override
-    public void visit(ChallengerSelectionController eventHandler) {
-        return;
+    public ChangeViewEvent(String viewState) {
+        this.viewState = viewState;
     }
 
     @Override
     public void visit(ViewEventHandler eventHandler) {
         eventHandler.handle(this);
-
     }
 
-    @Override
-    public void visit(GodPowerController eventHandler) {
-
-    }
-
-    @Override
-    public void visit(WorkerSetupController eventHandler, VirtualView view) {
-
-    }
-
-    @Override
-    public void visit(GamePhasesController eventHandler, VirtualView view) {
-
-    }
 }

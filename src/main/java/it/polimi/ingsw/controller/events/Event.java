@@ -7,17 +7,31 @@ import it.polimi.ingsw.cview.serverView.VirtualView;
 import java.io.Serializable;
 
 public interface Event extends Serializable {
-    void visit(LoginController eventHandler, VirtualView view);
+    default void visit(LoginController eventHandler, VirtualView view) {
+        view.showMessage("Operation not permitted!");
+    }
 
-    void visit(ChallengerSelectionController eventHandler, VirtualView view);
+    default void visit(ChallengerSelectionController eventHandler, VirtualView view) {
+        view.showMessage("Operation not permitted!");
+    }
 
-    void visit(ChallengerSelectionController eventHandler);
+    default void visit(ChallengerSelectionController eventHandler) {
+        visit(eventHandler, null);
+    }
 
-    void visit(ViewEventHandler eventHandler);
+    default void visit(ViewEventHandler eventHandler) {
+        return;
+    } //TODO Add second parameter "view" to events
 
-    void visit(GodPowerController eventHandler);
+    default void visit(GodPowerController eventHandler) {
+        return;
+    }
 
-    void visit(WorkerSetupController eventHandler, VirtualView view);
+    default void visit(WorkerSetupController eventHandler, VirtualView view) {
+        view.showMessage("Operation not permitted!");
+    }
 
-    void visit(GamePhasesController eventHandler, VirtualView view);
+    default void visit(GamePhasesController eventHandler, VirtualView view) {
+        view.showMessage("Operation not permitted!");
+    }
 }

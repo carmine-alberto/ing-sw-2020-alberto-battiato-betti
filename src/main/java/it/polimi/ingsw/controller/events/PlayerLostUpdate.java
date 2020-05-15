@@ -11,20 +11,6 @@ public class PlayerLostUpdate implements Event {
         this.losingPlayerNickname = nickname;
     }
 
-    @Override
-    public void visit(LoginController eventHandler, VirtualView view) {
-
-    }
-
-    @Override
-    public void visit(ChallengerSelectionController eventHandler, VirtualView view) {
-
-    }
-
-    @Override
-    public void visit(ChallengerSelectionController eventHandler) {
-
-    }
 
     @Override
     public void visit(ViewEventHandler eventHandler) {
@@ -32,18 +18,4 @@ public class PlayerLostUpdate implements Event {
 
     }
 
-    @Override
-    public void visit(GodPowerController eventHandler) {
-
-    }
-
-    @Override
-    public void visit(WorkerSetupController eventHandler, VirtualView view) {
-
-    }
-
-    @Override
-    public void visit(GamePhasesController eventHandler, VirtualView view) {
-
-    }
 }

@@ -17,4 +17,8 @@ public abstract class ControllerState {
     protected Boolean isTurnPlayer(VirtualView view) {
         return mainController.getCurrentGame().getTurnPlayer().getPlayerView().equals(view);
     }
+
+    /*public void handle(PingEvent event, VirtualView view) {
+        //reset timer
+    }*/
 }

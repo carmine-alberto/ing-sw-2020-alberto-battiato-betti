@@ -39,22 +39,6 @@ public class ViewEventHandler implements Runnable {
         System.out.println(client.getViewState().getClass());
     }
 
-    public void handle(ChooseActionEvent event) {
-        client.getViewState().render();
-        client.getViewState().showMessage("Scegli quale azione eseguire");
-        //todo mandare azioni disponibili
-        System.out.println(client.getViewState().getClass());
-
-    }
-
-    public void handle(ChooseWorkerEvent event) {
-        System.out.println("We remind you that your color is");
-
-        client.getViewState().showMessage("Select the worker you want to move (enter its coordinates: (x, y))");
-        //todo mandare azioni disponibili
-        System.out.println(client.getViewState().getClass());
-    }
-
     private void accept(Event receivedEvent) {
         receivedEvent.visit(this);
     }

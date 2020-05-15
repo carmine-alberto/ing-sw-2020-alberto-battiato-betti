@@ -42,9 +42,9 @@ public class Game extends Observable<Event> {
     public Game() {
         players = new ArrayList<>();
 
-        /*Parser fileParser = new Parser();
+       /* Parser fileParser = new Parser();
         godPowers = fileParser.getGodsList();*/
-        godPowers = buildDefaultGods();
+        godPowers = buildDefaultGods();   //TODO Remove and add gods read from file
 
 
         NUM_OF_PLAYERS = -1; //TODO Refactor into proper private variable + accessor
