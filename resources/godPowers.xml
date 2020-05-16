@@ -54,11 +54,9 @@
         <moveStrategy>
             <name>MoveAndSet</name>
             <arg>
-                <movepredicates>
-                        <negate>
-                            <movepredicate>CanMoveUpPredicate</movepredicate>
-                        </negate>
-                </movepredicates>
+                <negate>
+                    <movePredicate>CanMoveUpPredicate</movePredicate>
+                </negate>
             </arg>
         </moveStrategy>
     </god>
@@ -218,13 +216,9 @@
     <god>
         <name>Hera</name>
         <winConditions>
-            <and>
-                <winCondition>WinningMovePredicate</winCondition>
-                <winCondition>
-                    <name>NotOnPerimeterPredicate</name>
-                    <application>opponents</application>
-                </winCondition>
-            </and>
+            <outerPredicates>
+                <winCondition>NotOnPerimeterPredicate</winCondition>
+            </outerPredicates>
         </winConditions>
     </god>
 

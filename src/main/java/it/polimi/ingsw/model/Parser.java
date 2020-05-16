@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.actions.Action;
+import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSet;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndShiftBack;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSwap;
 import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
@@ -35,12 +36,10 @@ public class Parser {
 
             doc.getDocumentElement().normalize();
             stripSpace(doc);
-            System.out.println("Root element :" + doc.getDocumentElement());
 
             //printNode(doc, 0);
             visitNode(doc, builder);
 
-            System.out.println("----------------------------");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,15 +118,17 @@ public class Parser {
                     buildPhases(node, god);
                     break;
                 case "winConditions":
-                    BiPredicate<Game, GameWorker> winConditionPredicate = readWinCondition(node, god, null);
-                    god.winConditionPredicate(winConditionPredicate);
+                    if(node.getFirstChild().getNodeName().equals("outerPredicates"))
+                        god.addOuterHashMap("winCondition", readWinCondition(node.getFirstChild(), god, null));
+                    else
+                    god.winConditionPredicate(readWinCondition(node, god, null));
                     break;
                 case "constructiblePredicates":
                     BiPredicate<Player, Constructible> constructiblePredicate = readConstructiblePredicate(node);
                     god.constructiblePredicate(constructiblePredicate);
                     break;
-                /*default:
-                    visitNoder(node, level + 1, god);*/
+                case "outerPredicates":
+
             }
         }
     }
@@ -309,13 +310,12 @@ public class Parser {
             case "MoveWithSwap":
                 return new MoveAndSwap();
             case "MoveAndSet": //note: move and set can only be provided with a move or build predicate
-                if (child.getNextSibling() != null && child.getNextSibling().getNodeValue() != null)
-                    if (child.getNextSibling().getTextContent().equals("arg")) {
+                //if (child.getNextSibling() != null && child.getNextSibling().getNodeValue() != null)
+                    if (child.getNextSibling().getNodeName().equals("arg")) {
                         BiPredicate<FieldCell, GameWorker> predicate;
-                        predicate = readBuildAndMovePredicates(node, null);
+                        predicate = readBuildAndMovePredicates(child.getNextSibling(), null);
+                        return new MoveAndSet(predicate);
                     }
-                /*return new MoveAndSet(predicate); todo: togliere questo commento(il codice va bene ma ancora la move and set non è stata costuita
-                 */
         }
         return null;
     }

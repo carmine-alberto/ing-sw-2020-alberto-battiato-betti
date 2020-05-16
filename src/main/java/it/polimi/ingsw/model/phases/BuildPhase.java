@@ -23,11 +23,16 @@ public class BuildPhase extends TurnPhase {
     public BuildPhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame, phasePredicate);
         buildPredicate = phasePredicate;
+        this.outerPredicate = currentGame.getTurnPlayer().getSelectedGod().getOuterPredicate("buildPredicate");
     }
 
     @Override
     public void stateInit() {
         turnPlayer = currentGame.getTurnPlayer();
+
+        if(this.outerPredicate != null)
+            buildPredicate = buildPredicate.and(outerPredicate);
+
 
         List<FieldCell> adjacentCellsPlusSelf = turnPlayer
                 .getPlayerState()
