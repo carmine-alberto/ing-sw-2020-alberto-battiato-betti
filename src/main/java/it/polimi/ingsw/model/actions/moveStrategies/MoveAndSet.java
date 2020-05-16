@@ -55,6 +55,5 @@ public class MoveAndSet extends Move implements Action {
 
         opponents.forEach(player -> oldPredicates.put(player, player.getSelectedGod().getMovePredicates()));
     }
-
 }
 

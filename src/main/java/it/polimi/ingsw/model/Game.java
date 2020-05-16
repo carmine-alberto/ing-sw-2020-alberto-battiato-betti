@@ -117,6 +117,7 @@ public class Game extends Observable<Event> {
         turnPhase.stateInit();
     }
 
+    //TODO Make sure the transition is smooth - an error seemed to be present during one of our tests
     public void removeTurnPlayer() {
         Player playerToRemove = turnPlayer;
 
