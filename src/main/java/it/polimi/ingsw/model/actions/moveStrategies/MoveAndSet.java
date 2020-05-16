@@ -24,10 +24,10 @@ public class MoveAndSet extends Move implements Action {
     @Override
     public void run(FieldCell cell, GameWorker gw) {
 
-        if (cell.getHeight() - gw.getCell().getHeight() <= 1)   // if gw doesn't move up...
-            restorePredicates();
+        if (cell.getHeight() - gw.getCell().getHeight() < 1)   // if gw doesn't move up...
+            gw.getOwner().getSelectedGod().setOuterPredicate("movePredicate", null);
         else
-            setPredicates(gw);
+            gw.getOwner().getSelectedGod().setOuterPredicate("movePredicate", predicate); //todo ci sono dei casi in cui sovrascrive (gestire and e or)
 
         super.run(cell, gw);
     }

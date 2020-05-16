@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
@@ -20,9 +21,20 @@ public class MovePhase extends TurnPhase {
     Player turnPlayer;
 
    public MovePhase(Game currentGame, BiPredicate phasePredicate) {
-        super(currentGame, phasePredicate);
-        movePredicate = phasePredicate; //TODO We're actually assigning the predicate 2 times - this could be avoided using the inherited phasePredicate (valid for every phase atm)
-    }
+       super(currentGame, phasePredicate);
+       movePredicate = phasePredicate; //TODO We're actually assigning the predicate 2 times - this could be avoided using the inherited phasePredicate (valid for every phase atm)
+       currentGame
+               .getTurnPlayer()
+               .getOpponents()
+               .stream()
+               .map(opponent -> opponent
+                       .getSelectedGod()
+                       .getOuterPredicate("movePredicate"))
+               .filter(Objects::nonNull)
+               .reduce(movePredicate, (finalPredicate, predicate) ->
+                       finalPredicate
+                       .and(predicate));
+   }
 
     @Override
     public void stateInit() {

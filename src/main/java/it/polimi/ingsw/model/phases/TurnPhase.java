@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
@@ -15,6 +16,7 @@ public abstract class TurnPhase {
     protected TurnPhase nextPhase;
     protected Game currentGame;
     protected BiPredicate phasePredicate;
+    protected BiPredicate outerPredicate;
 
     public TurnPhase(Game currentGame){
         this.currentGame = currentGame;
@@ -75,8 +77,16 @@ public abstract class TurnPhase {
     }
 
     private void checkPlayerWinConditions(Player player) {
-        if (player.getWinConditions().test(currentGame, player.getPlayerState().getSelectedWorker()))
-            player.setIsWinner(true);
+        BiPredicate <Game, GameWorker> winConditions = player.getWinConditions();
+
+        player.getOpponents().forEach(opponent -> {
+            if(opponent.getSelectedGod().getOuterPredicate("winCondition") != null) {
+                if (winConditions.and(opponent.getSelectedGod().getOuterPredicate("winCondition")).test(currentGame, player.getPlayerState().getSelectedWorker()))
+                    player.setIsWinner(true);
+            } else
+                if (winConditions.test(currentGame, player.getPlayerState().getSelectedWorker()))
+                    player.setIsWinner(true);
+        });
     }
 
     private void checkIsWinner(Player player) {
@@ -84,7 +94,6 @@ public abstract class TurnPhase {
             currentGame.endGame();
         }
     }
-
 
     public TurnPhase getNextPhase() {
         return this.nextPhase;

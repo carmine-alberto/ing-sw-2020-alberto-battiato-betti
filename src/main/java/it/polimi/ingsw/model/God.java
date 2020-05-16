@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.function.BiPredicate;
 
 public class God implements Serializable {
@@ -25,6 +26,8 @@ public class God implements Serializable {
     private transient Action buildStrategy;
     private transient Node phasesTree; //Pointing to root, ALWAYS
     private transient Node currentPhaseNode; //Pointing to the current phase
+
+    private transient HashMap<String, BiPredicate> outerPredicatesHashmap;
 
     private transient BiPredicate<FieldCell, GameWorker> buildPredicates;
     private transient BiPredicate<Player, Constructible> constructiblePredicates;
@@ -40,6 +43,7 @@ public class God implements Serializable {
         buildStrategy = new Build();
         moveStrategy = new Move();
         onOpponents = false;
+        outerPredicatesHashmap = new HashMap<>();
     }
 
 
@@ -83,6 +87,10 @@ public class God implements Serializable {
 
             reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
         }
+    }
+
+    public BiPredicate getOuterPredicate(String turnPhase){
+        return outerPredicatesHashmap.get(turnPhase);
     }
 
     public void reset() {
@@ -130,6 +138,10 @@ public class God implements Serializable {
         return movePredicates;
     }
 
+    public void setOuterPredicate(String predicate, BiPredicate biPredicate) {
+        this.outerPredicatesHashmap.put(predicate, biPredicate);
+    }
+
     /**
      * The tree is built in DFS-like order: first whole branch is read from file,
      * refNode must be saved upon reading "phases" and restored upon exit;
@@ -170,6 +182,11 @@ public class God implements Serializable {
                 default -> (arg1, arg2) -> true;
             };
 
+        }
+
+        public GodBuilder addOuterHashMap(String turnPhase, BiPredicate biPredicate){
+            tempGod.outerPredicatesHashmap.put(turnPhase, biPredicate); //todo gestire le concatenazioni con predicates multipli
+            return this;
         }
 
         public GodBuilder saveRefNode() {
