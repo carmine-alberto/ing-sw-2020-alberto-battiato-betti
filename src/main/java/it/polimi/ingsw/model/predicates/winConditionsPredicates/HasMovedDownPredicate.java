@@ -13,7 +13,7 @@ public class HasMovedDownPredicate implements BiPredicate<Game, GameWorker> {
     }
     @Override
     public boolean test(Game game, GameWorker gameWorker) {
-        return (gameWorker.getCell().getHeight() > game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight() + minimumDescent);
+        return gameWorker!= null && (gameWorker.getCell().getHeight() >= game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight() + minimumDescent);
     }
 
 }

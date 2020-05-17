@@ -357,9 +357,15 @@ public class Parser {
                         break;
                     case "or":
                         if (i == 0)
-                            firstPredicate = readConj(nList.item(i), "or");
+                                firstPredicate = readConj(nList.item(i), "or");
                         else
                             secondPredicate = readConj(nList.item(i), "or");
+                        break;
+                    case "negate":
+                        if (i == 0)
+                        firstPredicate = readBuildAndMovePredicates(nList.item(i), null).negate();
+                    else
+                        secondPredicate = readBuildAndMovePredicates(nList.item(i), null).negate();
                         break;
                 }
             }
@@ -387,18 +393,16 @@ public class Parser {
             Node node = nList.item(i);
             if (node.getNodeValue() == null) {
                 switch (node.getNodeName()) {
-                    case "phases": {    //new branch
+                    case "phases":   //new branch
                         god.saveRefNode();
                         buildPhases(node, god);
                         god.addPhase("EndPhase", (arg1, arg2) -> true);
                         god.restoreRefNode();
                         break;
-                    }
-                    case "name": {  //phase introduces a new predicate
-                       readPredicate(node, god);
+                    case "name":   //phase introduces a new predicate
+                        readPredicate(node, god);
                         i = nList.getLength();  // We arleady read the siblings above
                         break;
-                }
                     default:    //<phase>
                         buildPhases(node, god);   //normal phase
                         break;

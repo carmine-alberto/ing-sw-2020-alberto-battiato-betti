@@ -9,7 +9,7 @@ public class IsTurnPlayerPredicate  implements BiPredicate<Game, GameWorker> {
 
     @Override
     public boolean test(Game game, GameWorker gameWorker) {
-        return game.getTurnPlayer().equals(gameWorker.getOwner());
+        return gameWorker != null && game.getTurnPlayer().equals(gameWorker.getOwner());
     }
 
 }
