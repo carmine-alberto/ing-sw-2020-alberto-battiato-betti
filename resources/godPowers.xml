@@ -94,7 +94,7 @@
     </god>
 
     <god>
-        <name>Ephestus</name>
+        <name>Hephaestus</name>
         <phases>
             <phase>ChooseWorkerPhase</phase>
             <phase>MovePhase</phase>

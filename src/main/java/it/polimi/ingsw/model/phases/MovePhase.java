@@ -24,8 +24,7 @@ public class MovePhase extends TurnPhase {
 
     @Override
     public void stateInit() {
-
-        availableCells = turnPlayer
+       availableCells = turnPlayer
                 .getPlayerState()
                 .getSelectedWorker()
                 .getCell()
@@ -64,8 +63,5 @@ public class MovePhase extends TurnPhase {
 
         turnPlayer.getPlayerState().getSelectedWorker().move(selectedCell);
     }
-
-
-
 
 }
