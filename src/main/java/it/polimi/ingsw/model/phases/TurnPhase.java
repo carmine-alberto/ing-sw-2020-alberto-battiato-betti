@@ -8,23 +8,32 @@ import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 
 public abstract class TurnPhase {
-    protected TurnPhase nextPhase;
     protected Game currentGame;
+    protected Player turnPlayer;
     protected BiPredicate phasePredicate;
-    protected BiPredicate outerPredicate;
+
 
     public TurnPhase(Game currentGame){
         this.currentGame = currentGame;
+        this.turnPlayer = currentGame.getTurnPlayer();
     }
 
-    public TurnPhase(Game currentGame, BiPredicate phasePredicate) {
-        this.currentGame = currentGame;
-        this.phasePredicate = phasePredicate;
+    public TurnPhase(Game currentGame, BiPredicate phasePredicate, String predicateType) {
+        this(currentGame);
+        this.phasePredicate = turnPlayer
+            .getOpponents()
+            .stream()
+            .map(opponent -> opponent
+                    .getSelectedGod()
+                    .getOuterPredicate(predicateType))
+            .filter(Objects::nonNull)
+            .reduce(phasePredicate, BiPredicate::and);
     }
 
     public abstract void stateInit();
@@ -32,14 +41,14 @@ public abstract class TurnPhase {
     public abstract void run(String arg) throws IllegalFormatException, InvalidSelectionException;
 
     public void stateEnd() {
-        currentGame.getPlayers().forEach(player -> checkIsWinner(player));
-        currentGame.getTurnPlayer().getSelectedGod().setNextPhase(currentGame);
-        //TODO Invio notifica
+        currentGame.getPlayers().forEach(this::checkIsWinner);
+        turnPlayer.getSelectedGod().setNextPhase(currentGame);
+        //TODO Send notifications - not needed though
 
     }
 
     protected void checkWinConditions() {
-        currentGame.getPlayers().forEach(player -> checkPlayerWinConditions(player));
+        currentGame.getPlayers().forEach(this::checkPlayerWinConditions);
     }
 
     protected void parseCoordinatesArg(String arg) throws IllegalFormatException {
@@ -76,17 +85,29 @@ public abstract class TurnPhase {
 
     }
 
-    private void checkPlayerWinConditions(Player player) {
-        BiPredicate <Game, GameWorker> winConditions = player.getWinConditions();
 
-        player.getOpponents().forEach(opponent -> {
+    private void checkPlayerWinConditions(Player player) {
+        BiPredicate winConditions = player
+            .getOpponents()
+            .stream()
+            .map(opponent -> opponent
+                    .getSelectedGod()
+                    .getOuterPredicate("winCondition"))
+            .filter(Objects::nonNull)
+            .reduce(player.getWinConditions(), BiPredicate::and);
+
+        if (winConditions.test(currentGame, player.getPlayerState().getSelectedWorker()))
+            player.setIsWinner(true); //CON LAMBDA
+
+
+        /*player.getOpponents().forEach(opponent -> {
             if(opponent.getSelectedGod().getOuterPredicate("winCondition") != null) {
                 if (winConditions.and(opponent.getSelectedGod().getOuterPredicate("winCondition")).test(currentGame, player.getPlayerState().getSelectedWorker()))
                     player.setIsWinner(true);
             } else
                 if (winConditions.test(currentGame, player.getPlayerState().getSelectedWorker()))
                     player.setIsWinner(true);
-        });
+        }); SENZA LAMBDA  */
     }
 
     private void checkIsWinner(Player player) {
@@ -94,13 +115,4 @@ public abstract class TurnPhase {
             currentGame.endGame();
         }
     }
-
-    public TurnPhase getNextPhase() {
-        return this.nextPhase;
-    }
-
-    public void setNextPhase(TurnPhase nextTurnPhase) {
-        this.nextPhase = nextTurnPhase;
-    }
-
 }

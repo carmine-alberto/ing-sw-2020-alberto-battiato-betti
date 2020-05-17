@@ -12,7 +12,7 @@ import java.util.function.BiPredicate;
 public class ChooseWorkerPhase extends TurnPhase {
 
     public ChooseWorkerPhase(Game currentGame, BiPredicate phasePredicate) {
-        super(currentGame, phasePredicate);
+        super(currentGame, phasePredicate, "chooseWorkerPredicate");
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ChooseWorkerPhase extends TurnPhase {
         parseCoordinatesArg(arg);
 
         GameWorker selectedWorker = extractWorkerFromCoordinates(arg);
-        currentGame.getTurnPlayer().getPlayerState().setSelectedWorker(selectedWorker);
+        turnPlayer.getPlayerState().setSelectedWorker(selectedWorker);
     }
 
 

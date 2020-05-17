@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 
 public class MoveAndSet extends Move implements Action {
     private BiPredicate<FieldCell, GameWorker> predicate;
-    private List<Player> opponents;
-    HashMap<Player, BiPredicate<FieldCell, GameWorker>> oldPredicates;
-    //private boolean application;
-
+ 
     public MoveAndSet(BiPredicate<FieldCell, GameWorker> predicate) {
         this.predicate = predicate;
     }
@@ -30,30 +27,6 @@ public class MoveAndSet extends Move implements Action {
             gw.getOwner().getSelectedGod().setOuterPredicate("movePredicate", predicate); //todo ci sono dei casi in cui sovrascrive (gestire and e or)
 
         super.run(cell, gw);
-    }
-
-    private void setPredicates(GameWorker gw) {   //this is working only for opponent workers at the moment
-
-        if (!opponents.isEmpty())
-            setup(gw);
-
-        oldPredicates.forEach((player, predicate) -> player.getSelectedGod().setMovePredicates(this.predicate.and(predicate)));
-    }
-
-    private void restorePredicates() {
-            oldPredicates.forEach((player, predicate) -> player.getSelectedGod().setMovePredicates(predicate));
-    }
-
-    private void setup (GameWorker gw){
-        opponents = gw
-                .getOwner()
-                .getCurrentGame()
-                .getPlayers()
-                .stream()
-                .filter(player -> !player.equals(gw.getOwner()))
-                .collect(Collectors.toList());
-
-        opponents.forEach(player -> oldPredicates.put(player, player.getSelectedGod().getMovePredicates()));
     }
 }
 

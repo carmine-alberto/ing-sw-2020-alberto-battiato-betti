@@ -20,7 +20,6 @@ public class God implements Serializable {
 
     private String name;
     private transient BiPredicate<Game, GameWorker> winConditionPredicate;
-    private transient Boolean onOpponents;
 
     private transient Action moveStrategy;
     private transient Action buildStrategy;
@@ -42,7 +41,6 @@ public class God implements Serializable {
         actionPredicates = new CanMovePredicate();
         buildStrategy = new Build();
         moveStrategy = new Move();
-        onOpponents = false;
         outerPredicatesHashmap = new HashMap<>();
     }
 
@@ -89,8 +87,8 @@ public class God implements Serializable {
         }
     }
 
-    public BiPredicate getOuterPredicate(String turnPhase){
-        return outerPredicatesHashmap.get(turnPhase);
+    public BiPredicate getOuterPredicate(String predicateClass){
+        return outerPredicatesHashmap.get(predicateClass);
     }
 
     public void reset() {
@@ -104,15 +102,6 @@ public class God implements Serializable {
         return name;
     }
 
-
-    public void assignWinConditionPredicate(Player assignee) { //TODO This method should be called when all players have selected their own god
-        if (onOpponents)
-            assignee
-                    .getOpponents()
-                    .forEach(player -> player.setWinConditions(player.getWinConditions().and(winConditionPredicate))); //TODO Is it always "and"?
-        else
-            assignee.setWinConditions(assignee.getWinConditions().or(winConditionPredicate));
-    }
 
     public void setMovePredicates(BiPredicate<FieldCell, GameWorker> movePredicates) {
         this.movePredicates = movePredicates;
@@ -138,9 +127,15 @@ public class God implements Serializable {
         return movePredicates;
     }
 
+    public BiPredicate<Game, GameWorker> getWinCondition() {
+        return winConditionPredicate;
+    }
+
     public void setOuterPredicate(String predicate, BiPredicate biPredicate) {
         this.outerPredicatesHashmap.put(predicate, biPredicate);
     }
+
+
 
     /**
      * The tree is built in DFS-like order: first whole branch is read from file,
@@ -196,11 +191,6 @@ public class God implements Serializable {
 
         public GodBuilder restoreRefNode() {
             currNode = refNode;
-            return this;
-        }
-
-        public GodBuilder setOnOpponents() {
-            this.tempGod.onOpponents = true;
             return this;
         }
 

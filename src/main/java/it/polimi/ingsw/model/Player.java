@@ -38,11 +38,7 @@ public class Player implements Serializable {
 
 
     public BiPredicate<Game, GameWorker> getWinConditions() {
-        return winConditions;
-    }
-
-    public void setWinConditions(BiPredicate<Game, GameWorker> winConditions) {
-        this.winConditions = winConditions;
+        return selectedGod.getWinCondition();
     }
 
 

@@ -13,23 +13,18 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class ChooseActionPhase extends TurnPhase {
-    List<ActionEnum> availableActions;
-    private BiPredicate<ActionEnum, Player> actionPredicate;
-    Player turnPlayer;
+    private List<ActionEnum> availableActions;
 
     public ChooseActionPhase(Game currentGame, BiPredicate phasePredicate) {
-        super(currentGame, phasePredicate);
-        availableActions = new ArrayList(EnumSet.allOf(ActionEnum.class));
-        actionPredicate = phasePredicate;
+        super(currentGame, phasePredicate, "actionPredicate");
     }
 
     @Override
     public void stateInit() {
-        turnPlayer = currentGame.getTurnPlayer();
 
-        availableActions = availableActions
+        availableActions = new ArrayList<>(EnumSet.allOf(ActionEnum.class))
                 .stream()
-                .filter(action -> actionPredicate.test(action, turnPlayer))
+                .filter(action -> phasePredicate.test(action, turnPlayer))
                 .collect(Collectors.toList());
 
         if (availableActions.size() > 1) {

@@ -54,9 +54,10 @@
         <moveStrategy>
             <name>MoveAndSet</name>
             <arg>
-                <negate>
-                    <movePredicate>CanMoveUpPredicate</movePredicate>
-                </negate>
+                <movePredicate>
+                    <name>IsDeltaHeightLessThanPredicate</name>
+                    <arg>1</arg>
+                </movePredicate>
             </arg>
         </moveStrategy>
     </god>

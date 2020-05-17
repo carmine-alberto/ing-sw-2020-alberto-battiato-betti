@@ -17,28 +17,13 @@ import java.util.stream.Collectors;
 
 public class MovePhase extends TurnPhase {
     private List<FieldCell> availableCells = new ArrayList<>();
-    private BiPredicate<FieldCell, GameWorker> movePredicate;
-    Player turnPlayer;
 
    public MovePhase(Game currentGame, BiPredicate phasePredicate) {
-       super(currentGame, phasePredicate);
-       movePredicate = phasePredicate; //TODO We're actually assigning the predicate 2 times - this could be avoided using the inherited phasePredicate (valid for every phase atm)
-       currentGame
-               .getTurnPlayer()
-               .getOpponents()
-               .stream()
-               .map(opponent -> opponent
-                       .getSelectedGod()
-                       .getOuterPredicate("movePredicate"))
-               .filter(Objects::nonNull)
-               .reduce(movePredicate, (finalPredicate, predicate) ->
-                       finalPredicate
-                       .and(predicate));
+       super(currentGame, phasePredicate, "movePredicate");
    }
 
     @Override
     public void stateInit() {
-        turnPlayer = currentGame.getTurnPlayer();
 
         availableCells = turnPlayer
                 .getPlayerState()
@@ -47,7 +32,7 @@ public class MovePhase extends TurnPhase {
                 .getAdjacentCells()
                 .stream()
                 .filter(adjacentCell ->
-                        movePredicate
+                        phasePredicate
                         .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker()))
                 .collect(Collectors.toList());
 

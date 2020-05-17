@@ -12,7 +12,7 @@ public class EndPhase extends TurnPhase {
     private Player turnPlayer;
 
     public EndPhase(Game currentGame, BiPredicate phasePredicate) {
-        super(currentGame, phasePredicate);
+        super(currentGame);
     }
 
     @Override

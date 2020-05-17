@@ -15,24 +15,14 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class BuildPhase extends TurnPhase {
-    List<FieldCell> availableCells = new ArrayList<>();
-    private BiPredicate<FieldCell, GameWorker> buildPredicate;
-    Player turnPlayer;
-
+    private List<FieldCell> availableCells = new ArrayList<>();
 
     public BuildPhase(Game currentGame, BiPredicate phasePredicate) {
-        super(currentGame, phasePredicate);
-        buildPredicate = phasePredicate;
-        this.outerPredicate = currentGame.getTurnPlayer().getSelectedGod().getOuterPredicate("buildPredicate");
+        super(currentGame, phasePredicate, "buildPredicate");
     }
 
     @Override
     public void stateInit() {
-        turnPlayer = currentGame.getTurnPlayer();
-
-        if(this.outerPredicate != null)
-            buildPredicate = buildPredicate.and(outerPredicate);
-
 
         List<FieldCell> adjacentCellsPlusSelf = turnPlayer
                 .getPlayerState()
@@ -45,7 +35,7 @@ public class BuildPhase extends TurnPhase {
         availableCells = adjacentCellsPlusSelf
                 .stream()
                 .filter(adjacentCell ->
-                        buildPredicate
+                        phasePredicate
                         .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker())
                 )
                 .collect(Collectors.toList());
@@ -68,5 +58,4 @@ public class BuildPhase extends TurnPhase {
             throw new InvalidSelectionException("You can't build on the selected cell. Try with a different one");
         turnPlayer.getPlayerState().setSelectedCell(selectedCell);
     }
-
 }

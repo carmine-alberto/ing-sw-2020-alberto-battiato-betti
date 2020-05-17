@@ -13,27 +13,23 @@ import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
 public class ChooseBlockPhase extends TurnPhase {
-    Player turnPlayer;
-    private BiPredicate<Player, Constructible> blockPredicate;
-    List<Constructible> availableBlocks = new ArrayList<>(EnumSet.allOf(Constructible.class));
+    private List<Constructible> availableBlocks;
 
     public ChooseBlockPhase(Game currentGame, BiPredicate phasePredicate) {
-        super(currentGame, phasePredicate);
-        blockPredicate = phasePredicate;
+        super(currentGame, phasePredicate, "blockPredicate");
+
     }
 
     @Override
     public void stateInit() {
-        nextPhase = new ChooseWorkerPhase(currentGame, null);
-        turnPlayer = currentGame.getTurnPlayer();
 
-        availableBlocks = availableBlocks
+        availableBlocks = new ArrayList<>(EnumSet.allOf(Constructible.class))
                 .stream()
-                .filter(block -> blockPredicate.test(turnPlayer, block))
+                .filter(block -> phasePredicate.test(turnPlayer, block))
                 .collect(Collectors.toList());
 
         if (availableBlocks.size() > 1) {
-            currentGame.notifyTurnPlayer(new PhaseUpdate("Select the constructible to build"));
+            currentGame.notifyTurnPlayer(new PhaseUpdate("Select the constructible to build"));  //TODO Fix overlapping windows
 
             currentGame.notifyTurnPlayer(new AvailableChoicesUpdate(stringify(availableBlocks)));
         }

@@ -12,7 +12,7 @@ public class DisplacePhase extends TurnPhase {
     }
 
     public DisplacePhase(Game currentGame, BiPredicate phasePredicate) {
-        super(currentGame, phasePredicate);
+        super(currentGame, phasePredicate, "displacePredicate");
     }
 
     @Override

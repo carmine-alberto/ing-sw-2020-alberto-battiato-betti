@@ -112,7 +112,6 @@ public class Game extends Observable<Event> {
 
     public void initGame() {
         notifyObservers(new GameStartedEvent());
-        players.forEach(player -> player.getSelectedGod().assignWinConditionPredicate(player)); //TODO Should we do this somewhere else?
         turnPhase = turnPlayer.getSelectedGod().getNextPhase(this);
         turnPhase.stateInit();
     }

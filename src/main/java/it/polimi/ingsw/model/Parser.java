@@ -174,9 +174,6 @@ public class Parser {
                     case "winCondition":
                         winConditionPredicate = readWinCondition(nList.item(i), god, null);
                         break;
-                    case "application":
-                        god.setOnOpponents();
-                        break;
                     case "and":
                         winConditionPredicate = readWinConj(nList.item(i), "and", god);
                         break;
