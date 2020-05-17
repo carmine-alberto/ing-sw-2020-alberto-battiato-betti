@@ -9,15 +9,11 @@ import java.util.List;
 
 public class Move implements Action {
     protected Player turnPlayer;
-    protected List<GameWorker> turnPlayerWorkers;
 
     @Override
     public void run(FieldCell cell, GameWorker gw) {
             gw.getCell().setOccupyingWorker(null);
             gw.setPosition(cell);
     }
-
-    @Override
-    public void run(FieldCell cell, Constructible constructible){ return;}
 
 }

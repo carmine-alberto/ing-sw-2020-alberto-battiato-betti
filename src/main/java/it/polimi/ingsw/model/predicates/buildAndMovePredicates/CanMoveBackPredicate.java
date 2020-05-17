@@ -8,8 +8,7 @@ import java.util.function.BiPredicate;
 public class CanMoveBackPredicate implements BiPredicate<FieldCell, GameWorker> {
 
     @Override
-    public boolean test(/*Object arg*/FieldCell fieldCell, GameWorker gameWorker) {
-//        FieldCell cellToFilter = (FieldCell) arg;
+    public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
         if (fieldCell.isOnPerimeter() && !gameWorker.getCell().isOnPerimeter())
                 return false;
 

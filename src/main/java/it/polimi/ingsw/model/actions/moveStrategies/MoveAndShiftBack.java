@@ -13,8 +13,9 @@ public class MoveAndShiftBack extends Move implements Action {
             Integer gapX = cell.getPosX() - gw.getCell().getPosX();
             Integer gapY = cell.getPosY() - gw.getCell().getPosY();
             GameWorker opponentWorker = cell.getWorker();
-            FieldCell destination = opponentWorker.getOwner().getCurrentGame().getCell(opponentWorker.getCell().getPosX() + gapX, opponentWorker.getCell().getPosY() + gapY);
-            super.run(destination, opponentWorker);
+            FieldCell opponentWorkerFinalDestination = opponentWorker.getOwner().getCurrentGame().getCell(opponentWorker.getCell().getPosX() + gapX, opponentWorker.getCell().getPosY() + gapY);
+
+            super.run(opponentWorkerFinalDestination, opponentWorker);
         }
         super.run(cell, gw);
     }

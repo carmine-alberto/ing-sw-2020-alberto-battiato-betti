@@ -10,10 +10,9 @@ public class MoveAndSwap extends Move implements Action {
     @Override
     public void run(FieldCell cell, GameWorker gw) {
 
-        if (cell.isFree()) {
+        if (cell.isFree())
             super.run(cell, gw);
-        }
-        else{
+        else {
             GameWorker opponentWorker = cell.getWorker();
             FieldCell oldPos = gw.getCell();
             cell.setOccupyingWorker(null);

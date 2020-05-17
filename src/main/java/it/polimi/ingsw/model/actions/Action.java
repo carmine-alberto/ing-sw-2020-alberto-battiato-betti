@@ -5,6 +5,10 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
 
 public interface Action {
-    public void run(FieldCell cell, GameWorker gw);
-    public void run(FieldCell cell, Constructible constructible);
+    default void run(FieldCell cell, GameWorker gw) {
+        return;
+    };    //TODO Should throw an Exception
+    default void run(FieldCell cell, Constructible constructible) {
+        return;
+    };
 }

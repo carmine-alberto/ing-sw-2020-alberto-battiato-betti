@@ -8,6 +8,6 @@ import java.util.function.BiPredicate;
 public class NotOnPerimeterPredicate implements BiPredicate<Game, GameWorker> {
     @Override
     public boolean test(Game game, GameWorker gameWorker) {
-        return !gameWorker.getCell().isOnPerimeter();
+        return gameWorker != null && !gameWorker.getCell().isOnPerimeter();
     }
 }
