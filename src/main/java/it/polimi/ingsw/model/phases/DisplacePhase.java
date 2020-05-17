@@ -2,12 +2,12 @@ package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.controller.events.AvailableCellsUpdate;
 import it.polimi.ingsw.controller.events.PhaseUpdate;
-import it.polimi.ingsw.controller.events.WarningEvent;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+import it.polimi.ingsw.model.predicates.DisplacePredicate;
 import it.polimi.ingsw.model.predicates.buildAndMovePredicates.ContainsOpponentWorkerPredicate;
 
 import java.util.ArrayList;
@@ -17,10 +17,6 @@ import java.util.stream.Collectors;
 
 public class DisplacePhase extends TurnPhase {
     private List<FieldCell> availableCells = new ArrayList<>();
-
-    public DisplacePhase(Game currentGame) {
-        super(currentGame);
-    }
 
     public DisplacePhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame, new ContainsOpponentWorkerPredicate().and(new DisplacePredicate()), "displacePredicate"); //TODO We are hardcoding the predicate here - a better solution would be getting the predicate from the godPowers file, but it's pointless.
@@ -60,11 +56,11 @@ public class DisplacePhase extends TurnPhase {
     }
 
     private void displace(FieldCell selectedCell) {
-        Integer gapX = selectedCell.getPosX() - turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosX();
-        Integer gapY = selectedCell.getPosY() - turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosY();
+        Integer gapX = turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosX() - selectedCell.getPosX();
+        Integer gapY = turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosY() - selectedCell.getPosY();
         GameWorker opponentWorker = selectedCell.getWorker();
 
-        FieldCell opponentWorkerFinalDestination = currentGame.getCell(turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosX() - gapX, turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosY() - gapY);
+        FieldCell opponentWorkerFinalDestination = currentGame.getCell(turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosX() + gapX, turnPlayer.getPlayerState().getSelectedWorker().getCell().getPosY() + gapY);
 
         opponentWorker.getCell().setOccupyingWorker(null);
         opponentWorker.setPosition(opponentWorkerFinalDestination);

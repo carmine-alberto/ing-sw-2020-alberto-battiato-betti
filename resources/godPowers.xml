@@ -41,10 +41,12 @@
                 </phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
             </phases>
             <phases>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
             </phases>
         </phases>
     </god>
@@ -89,6 +91,10 @@
                     </buildPredicates>
                 </phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
+            </phases>
+            <phases>
+                <phase>EndPhase</phase>
             </phases>
         </phases>
     </god>
@@ -114,6 +120,10 @@
                     </buildPredicates>
                 </phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
+            </phases>
+            <phases>
+                <phase>EndPhase</phase>
             </phases>
         </phases>
     </god>
@@ -173,11 +183,13 @@
                 </phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
             </phases>
             <phases>
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
             </phases>
         </phases>
     </god>
@@ -188,15 +200,17 @@
             <phase>ChooseWorkerPhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <!-- <phase>DISPLACE</phase> -->
+                <phase>DisplacePhase</phase>
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
             </phases>
             <phases>
                 <phase>MovePhase</phase>
                 <phase>BuildPhase</phase>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
             </phases>
         </phases>
     </god>
@@ -240,6 +254,10 @@
                     </and>
                 </buildPredicates>
                 <phase>ChooseBlockPhase</phase>
+                <phase>EndPhase</phase>
+            </phases>
+            <phases>
+                <phase>EndPhase</phase>
             </phases>
         </phases>
     </god>
