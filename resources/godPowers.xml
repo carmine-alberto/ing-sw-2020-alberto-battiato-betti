@@ -137,11 +137,11 @@
                     <arg>2</arg>
                 </movePredicate>
                 <or>
+                    <movePredicate>IsCellFreePredicate</movePredicate>
                     <and>
                         <movePredicate>ContainsOpponentWorkerPredicate</movePredicate>
                         <movePredicate>CanMoveBackPredicate</movePredicate>
                     </and>
-                    <movePredicate>IsCellFreePredicate</movePredicate>
                 </or>
             </and>
         </movePredicates>
