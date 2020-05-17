@@ -11,14 +11,16 @@ public class DisplacePredicate implements BiPredicate<FieldCell , GameWorker> {
         if (fieldCell.getWorker() == null)
             return false;
 
-        if (gameWorker.getCell().isOnPerimeter() && !fieldCell.isOnPerimeter())
-            return false;
-
         Integer gapX = gameWorker.getCell().getPosX() - fieldCell.getPosX();
         Integer gapY = gameWorker.getCell().getPosY() - fieldCell.getPosY();
 
-        return (gameWorker.getOwner()
-                          .getCurrentGame()
-                          .getCell(gameWorker.getCell().getPosX() + gapX , gameWorker.getCell().getPosY() + gapY).isFree());
+        try { //TODO ingconti, please love us
+            return gameWorker
+                    .getOwner()
+                    .getCurrentGame()
+                    .getCell(gameWorker.getCell().getPosX() + gapX, gameWorker.getCell().getPosY() + gapY).isFree();
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            return false;
+        }
     }
 }

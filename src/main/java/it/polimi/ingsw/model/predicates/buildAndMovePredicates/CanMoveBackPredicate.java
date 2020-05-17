@@ -12,12 +12,16 @@ public class CanMoveBackPredicate implements BiPredicate<FieldCell, GameWorker> 
         if (fieldCell.isOnPerimeter() && !gameWorker.getCell().isOnPerimeter())
                 return false;
 
-        if(fieldCell.isFree())
-            return true;
-
         Integer gapX = fieldCell.getPosX() - gameWorker.getCell().getPosX();
         Integer gapY = fieldCell.getPosY() - gameWorker.getCell().getPosY();
 
-        return gameWorker.getOwner().getCurrentGame().getCell(fieldCell.getPosX() + gapX, fieldCell.getPosY() + gapY).isFree();
+        try { //TODO ingconti, please love us
+            return gameWorker
+                    .getOwner()
+                    .getCurrentGame()
+                    .getCell(fieldCell.getPosX() + gapX, fieldCell.getPosY() + gapY).isFree();
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            return false;
+        }
     }
 }

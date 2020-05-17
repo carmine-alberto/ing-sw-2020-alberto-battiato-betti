@@ -246,13 +246,15 @@
             <phase>ChooseBlockPhase</phase>
             <phase>ChooseActionPhase</phase>
             <phases>
-                <phase>BuildPhase</phase>
-                <buildPredicates>
-                    <and>
-                        <buildPredicate>IsCellFreePredicate</buildPredicate>
-                        <buildPredicate>NotOnPerimeterPredicate></buildPredicate>
-                    </and>
-                </buildPredicates>
+                <phase>
+                    <name>BuildPhase</name>
+                    <buildPredicates>
+                        <and>
+                            <buildPredicate>IsCellFreePredicate</buildPredicate>
+                            <buildPredicate>NotOnPerimeterPredicate</buildPredicate>
+                        </and>
+                    </buildPredicates>
+                </phase>
                 <phase>ChooseBlockPhase</phase>
                 <phase>EndPhase</phase>
             </phases>
