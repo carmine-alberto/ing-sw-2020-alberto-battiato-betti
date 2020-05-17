@@ -77,7 +77,7 @@ public class LoginView extends View {
         //TODO Controllo su validità di username e IP inseriti
         String username = usernameInput.getText();
         String serverIP = serverIPInput.getText();
-        Integer PORT_NUMBER = 1200;  //TODO Port number should not be hard-coded
+        Integer PORT_NUMBER = 1200;
 
         try {
             clientSocket = new Socket(serverIP, PORT_NUMBER);

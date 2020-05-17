@@ -396,7 +396,7 @@ public class Parser {
                     case "phases":   //new branch
                         god.saveRefNode();
                         buildPhases(node, god);
-                        god.addPhase("EndPhase", (arg1, arg2) -> true);
+                        //god.addPhase("EndPhase", (arg1, arg2) -> true); we read it from the file
                         god.restoreRefNode();
                         break;
                     case "name":   //phase introduces a new predicate
@@ -438,7 +438,7 @@ public class Parser {
         return switch (phaseName){
             case ("MovePhase") -> new CanMovePredicate();
             case ("BuildPhase") -> new CanBuildPredicate();
-            case ("Displace") -> new CanDisplacePredicate();
+            case ("DisplacePhase") -> new CanDisplacePredicate();
             default -> new CanStopPredicate();
         };
     }

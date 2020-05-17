@@ -8,7 +8,7 @@ import java.util.function.BiPredicate;
 public class CanStopPredicate implements BiPredicate<ActionEnum, Player> {
     @Override
     public boolean test(ActionEnum actionEnum, Player player) {
-        if (actionEnum.equals(ActionEnum.STOP))
+        if (actionEnum.equals(ActionEnum.END))
             return true;
         return false;
     }
