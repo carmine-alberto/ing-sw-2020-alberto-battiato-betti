@@ -110,6 +110,23 @@ public class BoardView extends View {
 
     private void handleConfirmation(Button source) {
         String color = colorPicker.getValue().toString(); //TODO Add legality checks, remove button and picker from scene after selection
+
+        for (Integer i = 0; i < BOARD_SIZE; i++)
+            for (Integer j = 0; j < BOARD_SIZE; j++)
+                if(client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().equals(colorPicker.getValue().toString())) {
+                    this.showMessage("One of your opponents already chose this color, pick another one!");
+                    return;
+                }
+
+        if(Math.toIntExact(board
+                .getChildren()
+                .stream()
+                .filter(cell -> ((StackPane) cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
+                .count()) != 2) {
+            this.showMessage("Enter the position of the 2 workers");
+            return;
+        }
+
         List<Integer> xCoordinates = board
                 .getChildren()
                 .stream()
