@@ -2,18 +2,27 @@ package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class ViewEventHandler implements Runnable {
     private ObjectInputStream in;
+    private ObjectOutputStream out;
     private Client client;
+    static Float TIMEOUT = 1F;
 
     ViewEventHandler(Client client, ObjectInputStream in) throws IOException {
-
         this.client = client;
         this.in = in;
         System.out.println("Thread created");
@@ -106,4 +115,31 @@ public class ViewEventHandler implements Runnable {
                                             update.winnerNickname + " is the winner!");
         client.getViewState().terminate();
     }
+
+    public void handle(PingEvent pingEvent) {
+        if (client.getPingTimestamp() == null) {
+            client.setPingTimestamp(LocalDateTime.now());
+            startDeltaTimestampCheckingThread();
+        }
+        client.setPingTimestamp(LocalDateTime.now());
+        client.getViewState().notify(new PingEvent());  //TODO We should decouple pinging and JavaFX thread
+    }
+
+        private void startDeltaTimestampCheckingThread () {
+            Float scalingFactor = 1.5F;
+            new Thread(() -> {
+                while (true) {
+                    LocalDateTime now = LocalDateTime.now();
+                    if (SECONDS.between(client.getPingTimestamp(), now) > scalingFactor * TIMEOUT) { //TODO Should we make all of this synchronized?
+                        client.getViewState().showMessage("The server is no longer available - The current game will be terminated");
+                        client.getViewState().terminate();
+                    }
+                    try {
+                        Thread.sleep((long) (scalingFactor * TIMEOUT * 1000));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
 }

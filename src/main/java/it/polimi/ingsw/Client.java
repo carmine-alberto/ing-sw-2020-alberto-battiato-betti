@@ -3,12 +3,11 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.clientView.LoginView;
 import it.polimi.ingsw.model.FieldCell;
-import it.polimi.ingsw.model.God;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.net.Socket;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,6 +20,7 @@ public class Client extends Application {
     private FieldCell[][] board;
     private List<Integer> availableCellsX;
     private List<Integer> availableCellsY;
+    private LocalDateTime pingTimestamp;
 
 
     public static void main(String[] args) {
@@ -68,5 +68,13 @@ public class Client extends Application {
 
     public void setAvailableCellsY(List<Integer> availableCellsY) {
         this.availableCellsY = availableCellsY;
+    }
+
+    public LocalDateTime getPingTimestamp() {
+        return pingTimestamp;
+    }
+
+    public void setPingTimestamp(LocalDateTime pingTimestamp) {
+        this.pingTimestamp = pingTimestamp;
     }
 }

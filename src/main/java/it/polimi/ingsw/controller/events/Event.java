@@ -23,7 +23,7 @@ public interface Event extends Serializable {
         return;
     } //TODO Add second parameter "view" to events
 
-    default void visit(GodPowerController eventHandler) {
+    default void visit(GodPowerController eventHandler, VirtualView view) {
         return;
     }
 

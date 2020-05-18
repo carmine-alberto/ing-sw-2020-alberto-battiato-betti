@@ -18,7 +18,7 @@ public class GodPowerController extends ControllerState {
 
     @Override
     public void handle(Event event, VirtualView view) {
-        event.visit(this);
+        event.visit(this, view);
     }
 
 

@@ -13,7 +13,7 @@ public class GodSelectionEvent implements Event {
 
 
     @Override
-    public void visit(GodPowerController eventHandler) {
+    public void visit(GodPowerController eventHandler, VirtualView view) {
         eventHandler.handle(this);
     }
 

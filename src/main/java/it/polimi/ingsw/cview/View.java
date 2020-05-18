@@ -65,13 +65,15 @@ public abstract class  View {
         mainStage.close();
     }
 
-    protected void notify(Event e) {
-        try {
-            out.writeObject(e);
-            out.reset();
-        } catch (IOException ex) {
-            connectionClosedHandler();
-        }
+    public void notify(Event e) {
+        Platform.runLater(() -> {
+            try {
+                out.writeObject(e);
+                out.reset();
+            } catch (IOException ex) {
+                connectionClosedHandler();
+            }
+        });
     }
 
     public void showMessage(String message) {                  //TODO Define either 2 subclasses of View (CLIView - GUIView) implementing methods shared among views of a kind or a RenderingStrategy

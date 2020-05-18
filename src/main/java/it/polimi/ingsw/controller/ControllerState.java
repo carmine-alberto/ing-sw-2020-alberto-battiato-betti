@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.controller.events.PingEvent;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
 
@@ -18,7 +19,7 @@ public abstract class ControllerState {
         return mainController.getCurrentGame().getTurnPlayer().getPlayerView().equals(view);
     }
 
-    /*public void handle(PingEvent event, VirtualView view) {  TODO Handle ping
-        //reset timer
-    }*/
+    public void handle(PingEvent event, VirtualView view) {
+        view.resetTimerFlag();
+    }
 }

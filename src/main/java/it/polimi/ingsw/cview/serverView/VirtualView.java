@@ -3,9 +3,9 @@ package it.polimi.ingsw.cview.serverView;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.controller.events.ChangeViewEvent;
 import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.controller.events.PingEvent;
 import it.polimi.ingsw.controller.events.WarningEvent;
 import it.polimi.ingsw.cview.View;
-import it.polimi.ingsw.model.Player;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,17 +13,19 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class VirtualView implements Runnable {
-        private Player viewOwner;
         private Socket socket;
         private Controller controller;
         private ObjectInputStream serverInputStream;
         private ObjectOutputStream serverOutputStream;
         private View viewState;
+        static Float TIMEOUT = 1F;
+        private Boolean isLinkedViewAlive;
 
         public VirtualView(Socket socket, Controller controller) {
             this.socket = socket;
             this.controller = controller;
             this.viewState = new VirtualLoginView(this, socket, viewState);
+            this.isLinkedViewAlive = true;
         }
 
         public void run() {
@@ -31,16 +33,38 @@ public class VirtualView implements Runnable {
                 serverInputStream = new ObjectInputStream(socket.getInputStream());
                 serverOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
+                startPingingThread();
+
                 while (true) {
-                    Event receivedEvent = (Event) serverInputStream.readObject(); // controllare stringa vuota
+                    Event receivedEvent = (Event) serverInputStream.readObject();
                     System.out.println(receivedEvent.getClass());
                     controller.handle(receivedEvent, this);
                 }
 
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println(e.getMessage());
+                //TODO controller.handle(new ClientDisconnectedEvent(), this)
             }
         }
+
+    private void startPingingThread() {
+        new Thread(() -> {
+            while (true) {
+                if (isLinkedViewAlive) {
+                    isLinkedViewAlive = false;
+                    sendToClient(new PingEvent());
+                } else {
+                    //TODO controller.handle(new ClientDisconnectedEvent(), this)
+                    terminate();
+                }
+                try {
+                    Thread.sleep((long) (TIMEOUT * 1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
     public void sendToClient(Event event) {
         try {
@@ -49,10 +73,6 @@ public class VirtualView implements Runnable {
         } catch (IOException e) {
             e.printStackTrace(); //TODO Handle closed connection
         }
-    }
-
-    public void setViewOwner(Player viewOwner) {
-        this.viewOwner = viewOwner;
     }
 
     public void changeView(View nextState) {
@@ -72,5 +92,8 @@ public class VirtualView implements Runnable {
         }
     }
 
+    public void resetTimerFlag() {
+        this.isLinkedViewAlive = true;
+    }
 }
 
