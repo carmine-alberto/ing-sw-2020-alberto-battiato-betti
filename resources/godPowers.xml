@@ -112,10 +112,16 @@
                     <name>BuildPhase</name>
                     <buildPredicates>
                         <and>
-                            <movePredicate>IsCellFreePredicate</movePredicate>
-                            <negate>
-                                <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
-                            </negate>
+                            <buildPredicate>
+                                <name>MaxHeightPredicate</name>
+                                <arg>2</arg>
+                            </buildPredicate>
+                            <and>
+                                <movePredicate>IsCellFreePredicate</movePredicate>
+                                <negate>
+                                    <buildPredicate>NotInOldBuildPositionPredicate</buildPredicate>
+                                </negate>
+                            </and>
                         </and>
                     </buildPredicates>
                 </phase>
