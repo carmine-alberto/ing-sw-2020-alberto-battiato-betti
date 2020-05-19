@@ -127,6 +127,8 @@ public class BoardView extends View {
             return;
         }
 
+        //TODO Check that the selected cell is not occupied
+
         List<Integer> xCoordinates = board
                 .getChildren()
                 .stream()

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 public class PlayerState {
-    private transient GameWorker selectedWorker;
+    private transient GameWorker selectedWorker;            //TODO Enhancement: refactor all the variables here into a Map<String, ?>, modifiable at runtime
     private transient FieldCell selectedCell;
     private transient Constructible selectedConstructible;
     private transient ActionEnum selectedAction;

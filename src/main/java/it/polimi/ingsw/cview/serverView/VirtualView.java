@@ -33,7 +33,7 @@ public class VirtualView implements Runnable {
                 serverInputStream = new ObjectInputStream(socket.getInputStream());
                 serverOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
-                startPingingThread();
+                //startPingingThread(); TODO toggle
 
                 while (true) {
                     Event receivedEvent = (Event) serverInputStream.readObject();

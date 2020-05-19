@@ -48,7 +48,7 @@ public abstract class  View {
     public void next(String nextState) {
         Platform.runLater(() -> {
             try {
-                View newState = (View) Class.forName("it.polimi.ingsw.cview.clientView." + nextState)
+                View newState = (View) Class.forName("it.polimi.ingsw.cview.clientView."  +  nextState)
                         .getConstructors()[0]
                         .newInstance(mainStage, clientSocket, client, out);
                 client.setViewState(newState);
