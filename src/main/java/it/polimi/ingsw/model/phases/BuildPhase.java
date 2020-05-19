@@ -4,8 +4,6 @@ import it.polimi.ingsw.controller.events.AvailableCellsUpdate;
 import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.GameWorker;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 

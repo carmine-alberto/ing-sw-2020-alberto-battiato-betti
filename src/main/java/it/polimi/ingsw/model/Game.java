@@ -220,5 +220,8 @@ public class Game extends Observable<Event> {
 
         choosingPlayer.setSelectedGod(godToBeAssigned);
     }
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
+    }
 }
 
