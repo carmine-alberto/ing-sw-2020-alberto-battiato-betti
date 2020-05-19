@@ -2,17 +2,14 @@ package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.*;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
@@ -88,7 +85,7 @@ public class ViewEventHandler implements Runnable {
 
     public void handle(GameStartedEvent gameStartedEvent) {
         Platform.runLater(() -> {
-            ((BoardView)client.getViewState()).setHideColorPickerBox(true);
+            ((BoardView) client.getViewState()).setHideColorPickerBox(true);
             client.getViewState().render();
         });
     }
@@ -112,7 +109,7 @@ public class ViewEventHandler implements Runnable {
 
     public void handle(GameEndUpdate update) {
         client.getViewState().showMessage("The game is over. " +
-                                            update.winnerNickname + " is the winner!");
+                update.winnerNickname + " is the winner!");
         client.getViewState().terminate();
     }
 
@@ -125,21 +122,25 @@ public class ViewEventHandler implements Runnable {
         client.getViewState().notify(new PingEvent());  //TODO We should decouple pinging and JavaFX thread
     }
 
-        private void startDeltaTimestampCheckingThread () {
-            Float scalingFactor = 1.5F;
-            new Thread(() -> {
-                while (true) {
-                    LocalDateTime now = LocalDateTime.now();
-                    if (SECONDS.between(client.getPingTimestamp(), now) > scalingFactor * TIMEOUT) { //TODO Should we make all of this synchronized?
-                        client.getViewState().showMessage("The server is no longer available - The current game will be terminated");
-                        client.getViewState().terminate();
-                    }
-                    try {
-                        Thread.sleep((long) (scalingFactor * TIMEOUT * 1000));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    public void handle(GameInformationsEvent gameInformationsEvent) {
+        client.setPlayerInfos(gameInformationsEvent.playersName, gameInformationsEvent.chosenGods, gameInformationsEvent.chosenColor);
+    }
+
+    private void startDeltaTimestampCheckingThread() {
+        Float scalingFactor = 1.5F;
+        new Thread(() -> {
+            while (true) {
+                LocalDateTime now = LocalDateTime.now();
+                if (SECONDS.between(client.getPingTimestamp(), now) > scalingFactor * TIMEOUT) { //TODO Should we make all of this synchronized?
+                    client.getViewState().showMessage("The server is no longer available - The current game will be terminated");
+                    client.getViewState().terminate();
                 }
-            }).start();
-        }
+                try {
+                    Thread.sleep((long) (scalingFactor * TIMEOUT * 1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 }

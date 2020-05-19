@@ -88,6 +88,8 @@ public class LoginView extends View {
             serverListener.start();
             System.out.println("Thread started");
 
+            client.setMyName(username);
+
             out.writeObject(new LoginEvent(username));
 
         } catch (IOException ex) {

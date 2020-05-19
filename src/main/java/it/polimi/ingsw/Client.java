@@ -8,7 +8,10 @@ import javafx.stage.Stage;
 
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Hello world!
@@ -21,6 +24,8 @@ public class Client extends Application {
     private List<Integer> availableCellsX;
     private List<Integer> availableCellsY;
     private LocalDateTime pingTimestamp;
+    private Map<String, List<String>> playerInfos;
+    private String myName;
 
 
     public static void main(String[] args) {
@@ -36,6 +41,21 @@ public class Client extends Application {
         this.viewState = new LoginView(stage, clientSocket, this);
         viewState.render();
 
+    }
+
+    public void setPlayerInfos(List<String> player, List<String> god, List<String> color) {
+        this.playerInfos = new HashMap<>();
+
+            for(int i = 0; i < player.size(); i++){
+                List<String> godsAndColor = new ArrayList<>();
+                godsAndColor.add(god.get(i));
+                godsAndColor.add(color.get(i));
+                this.playerInfos.put(player.get(i), godsAndColor);
+            }
+    }
+
+    public Map<String, List<String>> getPlayerInfos(){
+        return this.playerInfos;
     }
 
     public View getViewState() {
@@ -76,5 +96,13 @@ public class Client extends Application {
 
     public void setPingTimestamp(LocalDateTime pingTimestamp) {
         this.pingTimestamp = pingTimestamp;
+    }
+
+    public void setMyName(String username) {
+        this.myName = username;
+    }
+
+    public String getMyName(){
+        return this.myName;
     }
 }

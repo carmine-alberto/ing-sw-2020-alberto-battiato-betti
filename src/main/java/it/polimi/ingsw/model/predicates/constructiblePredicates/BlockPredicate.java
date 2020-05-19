@@ -12,13 +12,9 @@ public class BlockPredicate implements BiPredicate<Player, Constructible> {
         minimumHeight = min;
     }
     @Override
-    public boolean test(Player player, Constructible constructible) { //todo separare atomizzando in due predicates diversi
+    public boolean test(Player player, Constructible constructible) {
         Integer height = player.getPlayerState().getSelectedCell().getHeight();
         return ((constructible.equals(Constructible.BLOCK) && height < 3) || (constructible.equals(constructible.DOME) && height >= minimumHeight));
-    }
-
-    public void setMinimumHeight(Integer minimumHeight) {
-        this.minimumHeight = minimumHeight;
     }
 
 }

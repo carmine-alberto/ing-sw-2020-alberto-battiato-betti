@@ -28,7 +28,7 @@ public class ChallengerSelectionView extends View {
 
     public ChallengerSelectionView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
-        godsList = new ArrayList<>(List.of("Apollo", "Athena", "Artemis", "Atlas"));
+        godsList = new ArrayList<>();
     }
 
     @Override

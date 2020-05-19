@@ -2,9 +2,10 @@ package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.controller.events.AvailableChoicesUpdate;
 import it.polimi.ingsw.controller.events.PhaseUpdate;
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.Constructible;
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.PlayerState;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
-import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -52,6 +53,7 @@ public class ChooseBlockPhase extends TurnPhase {
 
         turnPlayerState.getSelectedWorker().build(turnPlayerState.getSelectedCell(), turnPlayerState.getSelectedConstructible());
         turnPlayerState.getSelectedWorker().getOldBuildPositions().add(turnPlayerState.getSelectedCell()); //TODO Should we do this here or in build?
+        turnPlayerState.setSelectedCell(null);
 
         checkWinConditions();
     }

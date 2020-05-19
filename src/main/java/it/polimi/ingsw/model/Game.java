@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Observable;
-import it.polimi.ingsw.controller.events.Event;
-import it.polimi.ingsw.controller.events.GameEndUpdate;
-import it.polimi.ingsw.controller.events.GameStartedEvent;
-import it.polimi.ingsw.controller.events.PlayerLostUpdate;
+import it.polimi.ingsw.controller.events.*;
 import it.polimi.ingsw.cview.serverView.VirtualBoardView;
 import it.polimi.ingsw.model.actions.Build;
 import it.polimi.ingsw.model.actions.Move;
@@ -111,6 +108,7 @@ public class Game extends Observable<Event> {
     }
 
     public void initGame() {
+        notifyObservers(new GameInformationsEvent(players));
         notifyObservers(new GameStartedEvent());
         turnPhase = turnPlayer.getSelectedGod().getNextPhase(this);
         turnPhase.stateInit();
@@ -219,6 +217,9 @@ public class Game extends Observable<Event> {
             .get();
 
         choosingPlayer.setSelectedGod(godToBeAssigned);
+    }
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
     }
 }
 
