@@ -19,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
@@ -96,11 +97,18 @@ public class BoardView extends View {
                 board.getChildren().add(cell);
             }
 
-        Label selectedGodPower = new Label("Your selected God Power is: ");
+        VBox interfaceBox;
 
-        VBox interfaceBox = new VBox(20, board, selectedGodPower);
-        if (!hideColorPickerBox)
+        if (!hideColorPickerBox) {
+            interfaceBox = new VBox(20, board);
+
             interfaceBox.getChildren().add(0, colorPickerBox);
+        }
+        else {
+                Label selectedGodPower = new Label(client.getMyName() + ", your selected God Power is: " + client.getPlayerInfos().get(client.getMyName()).get(0));
+
+                interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(client.getPlayerInfos().get(client.getMyName()).get(1))));
+        }
         interfaceBox.setAlignment(Pos.CENTER);
         interfaceBox.setFillWidth(false);
 
@@ -110,6 +118,7 @@ public class BoardView extends View {
 
     private void handleConfirmation(Button source) {
         String color = colorPicker.getValue().toString(); //TODO Add legality checks, remove button and picker from scene after selection
+
 
         for (Integer i = 0; i < BOARD_SIZE; i++)
             for (Integer j = 0; j < BOARD_SIZE; j++)
@@ -140,6 +149,11 @@ public class BoardView extends View {
                 .filter(cell -> ((StackPane)cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
                 .map(cell -> extractCellCoordinate(Y, cell))
                 .collect(Collectors.toList());
+
+        if(!client.getBoard()[xCoordinates.get(0) - 1][yCoordinates.get(0) - 1].isFree() || !client.getBoard()[xCoordinates.get(1) - 1][yCoordinates.get(1) - 1].isFree()) {
+            this.showMessage("You can't place a worker in a cell that is alreeady occopied");
+            return;
+        }
 
         board
             .getChildren()
