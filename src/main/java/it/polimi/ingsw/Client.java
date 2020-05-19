@@ -3,12 +3,12 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.clientView.LoginView;
 import it.polimi.ingsw.model.FieldCell;
-import it.polimi.ingsw.model.God;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,6 +21,8 @@ public class Client extends Application {
     private FieldCell[][] board;
     private List<Integer> availableCellsX;
     private List<Integer> availableCellsY;
+    private HashMap<String, List<String>> playerInfos;
+    private String myName;
 
 
     public static void main(String[] args) {
@@ -36,6 +38,21 @@ public class Client extends Application {
         this.viewState = new LoginView(stage, clientSocket, this);
         viewState.render();
 
+    }
+
+    public void setPlayerInfos(List<String> player, List<String> god, List<String> color) {
+        this.playerInfos = new HashMap<String, List<String>>();
+
+            for(int i = 0; i < player.size(); i++){
+                List<String> godsAndColor = new ArrayList<>();
+                godsAndColor.add(god.get(i));
+                godsAndColor.add(color.get(i));
+                this.playerInfos.put(player.get(i), godsAndColor);
+            }
+    }
+
+    public HashMap<String, List<String>> getPlayerInfos(){
+        return this.playerInfos;
     }
 
     public View getViewState() {
@@ -68,5 +85,13 @@ public class Client extends Application {
 
     public void setAvailableCellsY(List<Integer> availableCellsY) {
         this.availableCellsY = availableCellsY;
+    }
+
+    public void setMyName(String username) {
+        this.myName = username;
+    }
+
+    public String getMyName(){
+        return this.myName;
     }
 }

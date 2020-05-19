@@ -106,4 +106,8 @@ public class ViewEventHandler implements Runnable {
                                             update.winnerNickname + " is the winner!");
         client.getViewState().terminate();
     }
+
+    public void handle(GameInformationsEvent gameInformationsEvent) {
+        client.setPlayerInfos(gameInformationsEvent.playersName, gameInformationsEvent.chosenGods, gameInformationsEvent.chosenColor);
+    }
 }
