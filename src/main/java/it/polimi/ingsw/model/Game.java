@@ -8,11 +8,11 @@ import it.polimi.ingsw.model.actions.Move;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import it.polimi.ingsw.model.phases.TurnPhase;
-import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
 import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
 import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
-import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
+import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
 import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
+import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
@@ -188,12 +188,13 @@ public class Game extends Observable<Event> {
     }
 
     public void notifyTurnPlayer(Event event) {
-        this.notify(observers
-                .stream()
-                .filter(observer -> ((VirtualBoardView)observer).getVirtualView().equals(turnPlayer.getPlayerView()))
-                .collect(Collectors.toList())
-                .get(0),
-                event);
+        if (!observers.isEmpty())
+            this.notify(observers
+                    .stream()
+                    .filter(observer -> ((VirtualBoardView)observer).getVirtualView().equals(turnPlayer.getPlayerView()))
+                    .collect(Collectors.toList())
+                    .get(0),
+                    event);
     }
 
     FieldCell[][] getField() {
@@ -217,9 +218,6 @@ public class Game extends Observable<Event> {
             .get();
 
         choosingPlayer.setSelectedGod(godToBeAssigned);
-    }
-    public TurnPhase getTurnPhase() {
-        return turnPhase;
     }
 }
 
