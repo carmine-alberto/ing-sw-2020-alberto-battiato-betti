@@ -2,7 +2,6 @@ package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.UserInputEvent;
-import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Platform;
@@ -11,65 +10,36 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.cview.clientView.BoardView.CellCoordinate.X;
-import static it.polimi.ingsw.cview.clientView.BoardView.CellCoordinate.Y;
 
 public class BoardView extends View {
-    enum CellCoordinate {
-        X, Y;
-    }
-
     final Integer edgeTolerance = 20;
     final Integer BOARD_SIZE = 5;
 
-    private ColorPicker colorPicker;
     private TilePane board;
-    private Boolean hideColorPickerBox;
 
     public BoardView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
 
-        FieldCell[][] newBoard = new FieldCell[BOARD_SIZE][BOARD_SIZE];
-        for (Integer i = 0; i < BOARD_SIZE; i++)
-            for (Integer j = 0; j < BOARD_SIZE; j++)
-                newBoard[i][j] = new FieldCell(null, i, j);
-        client.setBoard(newBoard);
-
         client.setAvailableCellsX(new ArrayList<>());
         client.setAvailableCellsY(new ArrayList<>());
-
-        hideColorPickerBox = false;
     }
 
     @Override
     public void render() { Platform.runLater(() -> {
         FieldCell[][] boardRep = client.getBoard();
         StackPane cell;
-
-        colorPicker = new ColorPicker();
-        colorPicker.setValue(Color.ORANGE);
-
-        Button confirmSelections = new Button("Confirm");
-        confirmSelections.setOnAction(e -> handleConfirmation((Button) e.getSource()));
-
-        HBox colorPickerBox = new HBox(10, colorPicker, confirmSelections);
 
         board = new TilePane();
         FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
@@ -97,18 +67,10 @@ public class BoardView extends View {
                 board.getChildren().add(cell);
             }
 
+        Label selectedGodPower = new Label(client.getMyName() + ", your selected God Power is: " + client.getPlayerInfos().get(client.getMyName()).get(0));
+
         VBox interfaceBox;
-
-        if (!hideColorPickerBox) {
-            interfaceBox = new VBox(20, board);
-
-            interfaceBox.getChildren().add(0, colorPickerBox);
-        }
-        else {
-                Label selectedGodPower = new Label(client.getMyName() + ", your selected God Power is: " + client.getPlayerInfos().get(client.getMyName()).get(0));
-
-                interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(client.getPlayerInfos().get(client.getMyName()).get(1))));
-        }
+        interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(client.getPlayerInfos().get(client.getMyName()).get(1))));
         interfaceBox.setAlignment(Pos.CENTER);
         interfaceBox.setFillWidth(false);
 
@@ -116,62 +78,6 @@ public class BoardView extends View {
     });
     }
 
-    private void handleConfirmation(Button source) {
-        String color = colorPicker.getValue().toString(); //TODO Add legality checks, remove button and picker from scene after selection
-
-
-        for (Integer i = 0; i < BOARD_SIZE; i++)
-            for (Integer j = 0; j < BOARD_SIZE; j++)
-                if(client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().equals(colorPicker.getValue().toString())) {
-                    this.showMessage("One of your opponents already chose this color, pick another one!");
-                    return;
-                }
-
-        if (Math.toIntExact(board
-                .getChildren()
-                .stream()
-                .filter(cell -> ((StackPane) cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
-                .count()) != 2) {
-            this.showMessage("Enter the position of the 2 workers");
-            return;
-        }
-
-        //TODO Check that the selected cell is not occupied
-
-        List<Integer> xCoordinates = board
-                .getChildren()
-                .stream()
-                .filter(cell -> ((StackPane)cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
-                .map(cell -> extractCellCoordinate(X, cell))
-                .collect(Collectors.toList());
-
-        List<Integer> yCoordinates = board
-                .getChildren()
-                .stream()
-                .filter(cell -> ((StackPane)cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
-                .map(cell -> extractCellCoordinate(Y, cell))
-                .collect(Collectors.toList());
-
-        if(!client.getBoard()[xCoordinates.get(0) - 1][yCoordinates.get(0) - 1].isFree() || !client.getBoard()[xCoordinates.get(1) - 1][yCoordinates.get(1) - 1].isFree()) {
-            this.showMessage("You can't place a worker in a cell that is alreeady occopied");
-            return;
-        }
-
-        board
-            .getChildren()
-            .forEach(cell ->
-                    ((StackPane)cell).setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT))));
-
-
-        notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, color));
-    }
-
-    private Integer extractCellCoordinate(CellCoordinate coord, Node cell) {
-        return switch (coord) {
-                case X -> Integer.parseInt(cell.getId().substring(0, 1));
-                case Y -> Integer.parseInt(cell.getId().substring(2, 3));
-        };
-    }
 
     private void fillCell(StackPane cell, FieldCell fieldCell) {
         List<Integer> availableXCoordinates = client.getAvailableCellsX();
@@ -219,9 +125,7 @@ public class BoardView extends View {
     }
 
     private void handleCellClick(StackPane clickedCell) {
-        if (!hideColorPickerBox)
-            toggleCell(clickedCell);
-        else notify(new UserInputEvent(clickedCell.getId()));
+        notify(new UserInputEvent(clickedCell.getId()));
     }
 
     private void toggleCell(StackPane clickedCell) {
@@ -231,9 +135,4 @@ public class BoardView extends View {
             clickedCell.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         }
     }
-
-    public void setHideColorPickerBox(Boolean hideColorPickerBox) {
-        this.hideColorPickerBox = hideColorPickerBox;
-    }
-
 }

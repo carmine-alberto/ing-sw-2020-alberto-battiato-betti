@@ -85,7 +85,7 @@ public class ViewEventHandler implements Runnable {
 
     public void handle(GameStartedEvent gameStartedEvent) {
         Platform.runLater(() -> {
-            ((BoardView) client.getViewState()).setHideColorPickerBox(true);
+            client.getViewState().next("BoardView");
             client.getViewState().render();
         });
     }

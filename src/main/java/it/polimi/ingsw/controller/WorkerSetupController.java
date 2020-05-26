@@ -2,7 +2,9 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
+import it.polimi.ingsw.cview.serverView.VirtualBoardView;
 import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.cview.serverView.VirtualWorkerSetupView;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.actions.Build;
@@ -42,8 +44,7 @@ public class WorkerSetupController extends ControllerState {
             mainController.getCurrentGame().setNextTurnPlayer();
 
             if (mainController.getCurrentGame().getTurnPlayer().getWorkers() != null) { //TODO Low-quality way to check whether the game is ready to be started, can/should we do better?
-                mainController.controllerState = new GamePhasesController(mainController);
-                mainController.getCurrentGame().initGame();
+                moveToNextState();
             } else
                 promptTurnPlayer();
         }
@@ -55,5 +56,12 @@ public class WorkerSetupController extends ControllerState {
                 .getTurnPlayer()
                 .getPlayerView()
                 .showMessage("Select your colour and the workers' starting position");
+    }
+
+    private void moveToNextState() {
+        mainController.getCurrentGame().detachObservers();
+        mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualBoardView(player.getPlayerView(), mainController.getCurrentGame())));
+        mainController.controllerState = new GamePhasesController(mainController);
+        mainController.getCurrentGame().initGame();
     }
 }

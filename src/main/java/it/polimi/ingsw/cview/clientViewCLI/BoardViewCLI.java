@@ -60,10 +60,8 @@ public class BoardViewCLI extends View {
 
                     notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, selectedColour));
                 }
-
-
-                    
                 });
+            selectionThread.start();
         }
     }
 
@@ -103,12 +101,11 @@ public class BoardViewCLI extends View {
             CLIFormatter.print("Choose a color for your workers (available: red, green, yellow): ");
             selectedColour = input.next();
 
-            for (Integer i = 0; i < BOARD_SIZE; i++)
-                for (Integer j = 0; j < BOARD_SIZE; j++)
-                    if (client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().equals(selectedColour)) {
+            for (Integer i = 0; i < BOARD_SIZE && isColourValid; i++)
+                for (Integer j = 0; j < BOARD_SIZE && isColourValid; j++)
+                    if (client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(selectedColour.toUpperCase())) {
                         CLIFormatter.print("One of your opponents already chose this color, pick another one!");
                         isColourValid = false;
-                        break;
                     }
         } while (!isColourValid);
     }
@@ -149,24 +146,26 @@ public class BoardViewCLI extends View {
             System.out.print("══");
         System.out.println("╗");
 
-        for(int i = 1; i <= BOARD_SIZE; i++, System.out.println(" ║")) {
+        for(int i = 1; i < BOARD_SIZE; i++, System.out.println(" ║")) {
             System.out.print(i + "║ ");
-            for (int j = 0; j <= BOARD_SIZE; j++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
                 x = board[i][j];
                 if (x.isFree())
                     System.out.print("o" + board[i][j].getHeight() + " ");
                 else if (x.getHasDome())
                     System.out.print("d" + board[i][j].getHeight() + " ");
-                else
+                else {
                     color = x.getWorker().getOwner().getColour();
-                switch (color) {
-                    case "Red":
-                        System.out.print(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                    case "Green":
-                        System.out.print(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                    case "Yellow":
-                        System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                    switch (color) {
+                        case "Red":
+                            System.out.print(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                        case "Green":
+                            System.out.print(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                        case "Yellow":
+                            System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                    }
                 }
+
             }
         }
         System.out.print("╚");

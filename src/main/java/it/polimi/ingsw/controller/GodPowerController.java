@@ -3,10 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.GodSelectionEvent;
 import it.polimi.ingsw.controller.events.SelectedGodsEvent;
-import it.polimi.ingsw.cview.serverView.VirtualBoardView;
-import it.polimi.ingsw.cview.serverView.VirtualGodPowerView;
-import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.cview.serverView.VirtualWaitingView;
+import it.polimi.ingsw.cview.serverView.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 
@@ -64,7 +61,7 @@ public class GodPowerController extends ControllerState {
     }
 
     private void moveToNextState() {
-        mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualBoardView(player.getPlayerView(), mainController.getCurrentGame())));
+        mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualWorkerSetupView(player.getPlayerView(), mainController.getCurrentGame())));
         mainController.controllerState = new WorkerSetupController(mainController);
     }
 }
