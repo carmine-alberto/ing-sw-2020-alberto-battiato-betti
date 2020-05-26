@@ -46,7 +46,7 @@ public class PlayerState {
         this.selectedAction = selectedAction;
     }
 
-    public void reset() {  //TODO To be called at the end of the turn
+    public void reset() {
         selectedWorker.getOldMovePositions().clear();
         selectedWorker.getOldBuildPositions().clear();
         setSelectedWorker(null);
