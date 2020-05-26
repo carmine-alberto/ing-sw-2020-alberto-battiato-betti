@@ -4,6 +4,7 @@ import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.clientView.LoginView;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.net.Socket;
@@ -23,9 +24,12 @@ public class Client extends Application {
     private FieldCell[][] board;
     private List<Integer> availableCellsX;
     private List<Integer> availableCellsY;
+    private List<String> availableGods;
     private LocalDateTime pingTimestamp;
     private Map<String, List<String>> playerInfos;
     private String myName;
+    private String rendererChoice;
+
 
 
     public static void main(String[] args) {
@@ -37,7 +41,10 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        //stage.setFullScreen(true);
+        this.rendererChoice = "";
+        Platform.setImplicitExit(false); //When the stage is closed, the thread keeps running in background - necessary to make the CLI work on the JavaFX thread
+        //TODO Handle manual termination of the GUI thread - it's not done at mainStage.close() when the above statement is applied.
+        //stage.setFullScreen(true); TODO Should users be able to select it?
         this.viewState = new LoginView(stage, clientSocket, this);
         viewState.render();
 
@@ -104,5 +111,21 @@ public class Client extends Application {
 
     public String getMyName(){
         return this.myName;
+    }
+
+    public String getRendererChoice() {
+        return rendererChoice;
+    }
+
+    public void setRendererChoice(String rendererChoice) {
+        this.rendererChoice = rendererChoice;
+    }
+
+    public List<String> getAvailableGods() {
+        return availableGods;
+    }
+
+    public void setAvailableGods(List<String> availableGods) {
+        this.availableGods = availableGods;
     }
 }

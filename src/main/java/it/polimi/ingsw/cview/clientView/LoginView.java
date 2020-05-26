@@ -72,9 +72,16 @@ public class LoginView extends View {
         mainStage.show();
     }
 
+    /**
+     * Client and server event handling is coupled - if we want to keep the ClientView - VirtualView approach, it can't be any different;
+     * otherwise, we should split the Controller in ClientController - ServerController and decouple event handling
+     */
     private void sendDataToServer() {
-        String interfaceChoice = cliGUIChoice.getValue();
-        //TODO Controllo su validità di username e IP inseriti
+        if (cliGUIChoice.getValue().equals("CLI"))
+            client.setRendererChoice("CLI");
+        else
+            client.setRendererChoice("");
+        //TODO Add Port textBox
         String username = usernameInput.getText();
         String serverIP = serverIPInput.getText();
         Integer PORT_NUMBER = 1200;

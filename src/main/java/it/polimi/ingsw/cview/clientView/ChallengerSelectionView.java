@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +22,10 @@ public class ChallengerSelectionView extends View {
     private ToggleGroup numberOfPlayers;
     private ToggleGroup startingPlayer;
     private FlowPane godsIcons;
-    private List<String> godsList;
 
 
     public ChallengerSelectionView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
-        godsList = new ArrayList<>();
     }
 
     @Override
@@ -72,8 +69,11 @@ public class ChallengerSelectionView extends View {
         godsIcons = new FlowPane();
         godsIcons.setHgap(8);
         godsIcons.setVgap(10);
-        for (String god : godsList)
-            godsIcons.getChildren().add(new ToggleButton(god));
+
+        List<String> godsList = client.getAvailableGods();
+        if (godsList != null)
+            for (String god : godsList)
+                godsIcons.getChildren().add(new ToggleButton(god));
 
 
         HBox godPowersBox = new HBox(10, godPowersLabel, godsIcons);
@@ -114,9 +114,5 @@ public class ChallengerSelectionView extends View {
             MessageWindow.show("You can't choose the third player as starting player in a 2-players game!", "Error");
         else
             notify(new ChallengerSelectionEvent(selectedNumberOfPlayers, selectedGods, selectedStartingPlayer));
-    }
-
-    public void setGodsList(List<String> godsList) {
-        this.godsList = godsList;
     }
 }

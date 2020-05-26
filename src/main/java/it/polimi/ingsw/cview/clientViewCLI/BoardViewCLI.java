@@ -1,53 +1,140 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
+import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.UserInputEvent;
+import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.utility.CLIFormatter;
 import it.polimi.ingsw.model.*;
+import javafx.stage.Stage;
 
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BoardViewCLI extends View {
-
+    private Thread selectionThread;
     private final Integer BOARD_SIZE = 5;
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_YELLOW = "\u001B[33m";
 
-    private Player callee;
-    private Game currentGame;
+    
+    private Boolean hideColorPickerBox;
+    private String selectedColour;
+
+    public BoardViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
+        super(stage, clientSocket, client, out);
+
+        FieldCell[][] newBoard = new FieldCell[BOARD_SIZE][BOARD_SIZE];
+        for (Integer i = 0; i < BOARD_SIZE; i++)
+            for (Integer j = 0; j < BOARD_SIZE; j++)
+                newBoard[i][j] = new FieldCell(null, i, j);
+        client.setBoard(newBoard);
+
+        client.setAvailableCellsX(new ArrayList<>());
+        client.setAvailableCellsY(new ArrayList<>());
+
+        hideColorPickerBox = false;
+    }
 
     @Override
     public void render() {
         FieldCell[][] boardRep = client.getBoard();
         showBoard(boardRep);
-        if(currentGame.getTurnPlayer().equals(callee))
-            getInput(callee, currentGame);
 
+        if (selectionThread == null) {
+            selectionThread = new Thread( () -> {
+                Scanner input = new Scanner(System.in);
+
+                if (!hideColorPickerBox) {
+                    List<Integer> xCoordinates = new ArrayList<>();
+                    List<Integer> yCoordinates = new ArrayList<>();
+
+                    askForPreferredColor(input);
+
+                    askForWorkersPosition(input, xCoordinates, yCoordinates);
+
+                    notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, selectedColour));
+                }
+
+
+                    
+                });
+        }
+    }
+
+    private void askForWorkersPosition(Scanner input, List<Integer> xCoordinates, List<Integer> yCoordinates) {
+        Integer tempX;
+        Integer tempY;
+        
+        for (Integer i = 1; i < 3; i++) {
+            do {
+                CLIFormatter.print("Select the position of the worker n°" + i + " .\nX (from 1 to 5): ");
+                tempX = input.nextInt();
+                CLIFormatter.print("Y (from 1 to 5): ");
+                tempY = input.nextInt();
+            } while (isOutOfBounds(tempX) || isOutOfBounds(tempY) || isOccupied(tempX, tempY));
+            xCoordinates.add(tempX);
+            yCoordinates.add(tempY);
+        }
+
+
+        
+        
+    }
+
+    private Boolean isOccupied(Integer tempX, Integer tempY) {
+        return !client.getBoard()[tempX - 1][tempY - 1].isFree();
+    }
+
+    private boolean isOutOfBounds(Integer coordinate) {
+        return coordinate < 1 || coordinate > 5;
+    }
+
+    private void askForPreferredColor(Scanner input) {
+        Boolean isColourValid;
+
+        do {
+            isColourValid = true;
+            CLIFormatter.print("Choose a color for your workers (available: red, green, yellow): ");
+            selectedColour = input.next();
+
+            for (Integer i = 0; i < BOARD_SIZE; i++)
+                for (Integer j = 0; j < BOARD_SIZE; j++)
+                    if (client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().equals(selectedColour)) {
+                        CLIFormatter.print("One of your opponents already chose this color, pick another one!");
+                        isColourValid = false;
+                        break;
+                    }
+        } while (!isColourValid);
     }
 
     private void showBoard(FieldCell[][] board) {
-/*                      Esempio di scacchiera a video
+/*      Esempio di scacchiera a video
 
-   1    2    3    4    5
- ╔════════════════════════╗
-1║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
- ║════════════════════════║
-2║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
- ║════════════════════════║
-3║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
- ║════════════════════════║
-4║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
- ║════════════════════════║
-5║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
- ╚════════════════════════╝
-*/
+           1    2    3    4    5
+         ╔════════════════════════╗
+        1║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+         ║════════════════════════║
+        2║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+         ║════════════════════════║
+        3║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+         ║════════════════════════║
+        4║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+         ║════════════════════════║
+        5║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
+         ╚════════════════════════╝
+        */
         System.out.println("This is the current game board\n\n");
-        System.out.println("Each letter represent a cell. Legend: \n" +
-                "The o letter represent a cell without any worker or dome\n" +
-                "The w letter represent a cell wit a worker\n" +
-                "The d letter represent a cell wit a dome\n" +
-                "The number next to each cell represent his height (dome excluded)\n\n\n");
+        System.out.println("Each letter represents a cell. Legend: \n" +
+                "The o letter represents a cell without any worker or dome\n" +
+                "The w letter represents a cell with a worker\n" +
+                "The d letter represents a cell with a dome\n" +
+                "The number next to each cell represents its height (dome excluded)\n\n\n");
 
         String color = "";
         FieldCell x;
@@ -93,8 +180,6 @@ public class BoardViewCLI extends View {
 
         String sel = input.nextLine();
         notify(new UserInputEvent(sel));
-//        System.out.println("Enter the coordinates you wold like to move the worker to");
     }
-//        System.out.println("Where would you like to build? Enter the coordinates");
 
 }

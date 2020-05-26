@@ -55,14 +55,14 @@ public class ViewEventHandler implements Runnable {
 
     public void handle(SelectedGodsEvent selectedGodsEvent) {
         Platform.runLater(() -> {
-            ((GodPowerView) client.getViewState()).setGodsList(selectedGodsEvent.godPowers);
+            client.setAvailableGods(selectedGodsEvent.godPowers);
             client.getViewState().render();
         });
     }
 
     public void handle(AvailableGodsEvent availableGodsEvent) {
         Platform.runLater(() -> {
-            ((ChallengerSelectionView) client.getViewState()).setGodsList((availableGodsEvent.godPowers));
+            client.setAvailableGods((availableGodsEvent.godPowers));
             client.getViewState().render();
         });
     }

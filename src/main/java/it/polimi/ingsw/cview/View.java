@@ -48,7 +48,10 @@ public abstract class  View {
     public void next(String nextState) {
         Platform.runLater(() -> {
             try {
-                View newState = (View) Class.forName("it.polimi.ingsw.cview.clientView."  +  nextState)
+                String rendererChoice = client.getRendererChoice();
+                if (rendererChoice.equals("CLI"))  //TODO So awful if left here alone - needed for LoginView: if the username is rejected, we need the stage to be open in order to perform a second login.
+                    mainStage.close();
+                View newState = (View) Class.forName("it.polimi.ingsw.cview.clientView" + rendererChoice + "."  +  nextState + rendererChoice)
                         .getConstructors()[0]
                         .newInstance(mainStage, clientSocket, client, out);
                 client.setViewState(newState);

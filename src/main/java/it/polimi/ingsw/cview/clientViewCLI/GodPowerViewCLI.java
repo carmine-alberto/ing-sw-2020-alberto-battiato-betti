@@ -1,41 +1,47 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
+import it.polimi.ingsw.Client;
+import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
 import it.polimi.ingsw.controller.events.GodSelectionEvent;
 import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.utility.CLIFormatter;
+import javafx.stage.Stage;
 
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class GodPowerViewCLI extends View {
+    private String selectedGod;
 
-    private List<String> godsList = List.of("Empty"); //in teoria lo dovrebbe condividere con la view GUI
-
+    public GodPowerViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
+        super(stage, clientSocket, client, out);
+    }
     @Override
     public void render() {
+        Thread selectionThread;
+        List<String> availableGods = client.getAvailableGods();
 
-        Scanner input = new Scanner(System.in);
-        String selected = null;
+        if (availableGods != null) {
+            selectionThread = new Thread(() -> {
+                Scanner input = new Scanner(System.in);
 
-        System.out.println("Enter the name of the desired God Power:");
-        System.out.println(godsList);
+                askForDesiredGod(availableGods, input);
 
+                notify(new GodSelectionEvent(selectedGod));
+            });
+            selectionThread.start();
+        }
+    }
+
+    private void askForDesiredGod(List<String> availableGods, Scanner input) {
         do {
-            if (selected != null) {
-                System.out.println("Enter the name of one of these God Power:");
-                System.out.println(godsList);
-            }
-            selected = input.next();
-        } while(!godsList.contains(selected));
-        sendSelectionToServer(selected);
-        removeFromGodsList(selected);
+            CLIFormatter.print("God Powers available: " + CLIFormatter.formatStringList(availableGods) + "\n" +
+                    "Enter the name of the desired God Power: ");
+            selectedGod = input.next();
+        } while (!availableGods.contains(selectedGod));
     }
 
-    private void sendSelectionToServer(String selection){
-        notify(new GodSelectionEvent(selection));
-
-    }
-
-    private void removeFromGodsList(String toDelete){
-        godsList.remove(toDelete);
-    }
 }

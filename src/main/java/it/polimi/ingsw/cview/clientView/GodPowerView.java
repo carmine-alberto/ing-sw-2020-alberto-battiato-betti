@@ -17,8 +17,6 @@ import java.util.List;
 public class GodPowerView extends View {
     private FlowPane godsIcons;
 
-    private List<String> godsList = List.of("Empty");
-
     public GodPowerView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
     }
@@ -26,26 +24,22 @@ public class GodPowerView extends View {
     @Override
     public void render() {
         Label selectGodLabel = new Label("Select your desired God Power: ");
+        List<String> godsList = client.getAvailableGods();
 
         godsIcons = new FlowPane();
         godsIcons.setAlignment(Pos.CENTER);
         godsIcons.setHgap(8);
         godsIcons.setVgap(10);
-        for (String god : godsList) {
-            Button godButton = new Button(god);
-            godButton.setOnAction(e -> sendSelectionToServer((Button) e.getSource()));
-            godsIcons.getChildren().add(godButton);
+        if (godsList != null)
+            for (String god : godsList) {
+                Button godButton = new Button(god);
+                godButton.setOnAction(e -> sendSelectionToServer((Button) e.getSource()));
+                godsIcons.getChildren().add(godButton);
+            }
+        VBox selectGodBox = new VBox(30, selectGodLabel, godsIcons);
+        selectGodBox.setAlignment(Pos.CENTER);
 
-            VBox selectGodBox = new VBox(30, selectGodLabel, godsIcons);
-            selectGodBox.setAlignment(Pos.CENTER);
-
-            mainStage.getScene().setRoot(selectGodBox);
-
-        }
-    }
-
-    public void setGodsList(List <String> godsList) {
-        this.godsList = godsList;
+        mainStage.getScene().setRoot(selectGodBox);
     }
 
 

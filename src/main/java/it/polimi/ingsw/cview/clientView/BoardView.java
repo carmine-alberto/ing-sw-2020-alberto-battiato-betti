@@ -127,7 +127,7 @@ public class BoardView extends View {
                     return;
                 }
 
-        if(Math.toIntExact(board
+        if (Math.toIntExact(board
                 .getChildren()
                 .stream()
                 .filter(cell -> ((StackPane) cell).getBorder().getStrokes().get(0).getLeftStroke().equals(Color.RED))
