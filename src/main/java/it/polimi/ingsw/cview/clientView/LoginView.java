@@ -2,7 +2,7 @@ package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.LoginEvent;
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.ViewEventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,7 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class LoginView extends View {
+public class LoginView extends GUIView {
     private ChoiceBox<String> cliGUIChoice;
     private TextField usernameInput;
     private TextField serverIPInput;
@@ -32,7 +32,7 @@ public class LoginView extends View {
     }
 
     @Override
-    public void render() {
+    public void fXRender() {
 
         Image backgroundImage = new Image("file:" + System.getProperty("user.dir") + File.separator + "resources" + File.separator + "copertina_santorini_2016.jpg");
         ImageView imageNode = new ImageView(backgroundImage);

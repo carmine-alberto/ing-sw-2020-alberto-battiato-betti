@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller.events;
 
 import it.polimi.ingsw.controller.*;
-import it.polimi.ingsw.cview.clientView.ViewEventHandler;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
 public class UserInputEvent implements Event {

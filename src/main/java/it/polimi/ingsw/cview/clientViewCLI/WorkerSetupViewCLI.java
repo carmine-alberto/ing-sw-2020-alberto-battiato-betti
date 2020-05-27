@@ -5,7 +5,9 @@ import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.utility.CLIFormatter;
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.FieldCell;
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
@@ -14,8 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class BoardViewCLI extends CLIView {
+public class WorkerSetupViewCLI extends CLIView {
     private Thread selectionThread;
+    private Boolean hasPlayerAlreadyChosen;
     private final Integer BOARD_SIZE = 5;
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_RED = "\u001B[31m";
@@ -24,32 +27,80 @@ public class BoardViewCLI extends CLIView {
 
     private String selectedColour;
 
-    public BoardViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
+    public WorkerSetupViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
-
-        FieldCell[][] newBoard = new FieldCell[BOARD_SIZE][BOARD_SIZE];
-        for (Integer i = 0; i < BOARD_SIZE; i++)
-            for (Integer j = 0; j < BOARD_SIZE; j++)
-                newBoard[i][j] = new FieldCell(null, i, j);
-        client.setBoard(newBoard);
-
-        client.setAvailableCellsX(new ArrayList<>());
-        client.setAvailableCellsY(new ArrayList<>());
+        hasPlayerAlreadyChosen = false;
     }
 
     @Override
     public void render() {
         FieldCell[][] boardRep = client.getBoard();
-        showBoard(boardRep);
+        if (boardRep != null) {
+            showBoard(boardRep);
 
-        if (selectionThread == null) {
-            selectionThread = new Thread(() -> {
-                Scanner input = new Scanner(System.in);
+            if (!hasPlayerAlreadyChosen) {
+                hasPlayerAlreadyChosen = true;
+                new Thread(() -> {
+                    Scanner input = new Scanner(System.in);
+                    List<Integer> xCoordinates = new ArrayList<>();
+                    List<Integer> yCoordinates = new ArrayList<>();
 
+                    askForPreferredColor(input);
 
-            });
-            selectionThread.start();
+                    askForWorkersPosition(input, xCoordinates, yCoordinates);
+
+                    notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, selectedColour));
+                })
+                .start();
+            }
         }
+    }
+
+    private void askForPreferredColor(Scanner input) {
+        Boolean isColourValid;
+
+        do {
+            isColourValid = true;
+            CLIFormatter.print("Choose a color for your workers (available: red, green, yellow): ");
+            selectedColour = input.next();
+
+            if (!List.of("RED", "GREEN", "YELLOW").contains(selectedColour.toUpperCase())) {
+                CLIFormatter.print("The selected color is not available, try again");
+                isColourValid = false;
+            }
+
+            for (Integer i = 0; i < BOARD_SIZE && isColourValid; i++)
+                for (Integer j = 0; j < BOARD_SIZE && isColourValid; j++)
+                    if (client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(selectedColour.toUpperCase())) {
+                        CLIFormatter.print("One of your opponents already chose this color, pick another one!");
+                        isColourValid = false;
+                    }
+        } while (!isColourValid);
+    }
+
+    private void askForWorkersPosition(Scanner input, List<Integer> xCoordinates, List<Integer> yCoordinates) {
+        Integer tempX;
+        Integer tempY;
+
+        for (Integer i = 1; i < 3; i++) {
+            do {
+                CLIFormatter.print("Select the position of the worker n°" + i + " .\nX (from 1 to 5): ");
+                tempX = input.nextInt();
+                CLIFormatter.print("Y (from 1 to 5): ");
+                tempY = input.nextInt();
+            } while (isOutOfBounds(tempX) || isOutOfBounds(tempY) || isOccupied(tempX, tempY));
+            xCoordinates.add(tempX);
+            yCoordinates.add(tempY);
+        }
+
+    }
+
+    private Boolean isOccupied(Integer tempX, Integer tempY) {
+        return !client.getBoard()[tempX - 1][tempY - 1].isFree();
+    }
+
+    private boolean isOutOfBounds(Integer coordinate) {
+        return coordinate < 1 || coordinate > 5;
     }
 
     private void showBoard(FieldCell[][] board) {
@@ -116,11 +167,5 @@ public class BoardViewCLI extends CLIView {
         System.out.println("╝");
     }
 
-    private void getInput(Player callee, Game currentGame) {
-        Scanner input = new Scanner(System.in);
-
-        String sel = input.nextLine();
-        notify(new UserInputEvent(sel));
-    }
-
 }
+

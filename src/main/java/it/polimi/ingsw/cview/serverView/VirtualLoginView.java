@@ -4,7 +4,7 @@ import it.polimi.ingsw.cview.View;
 
 import java.net.Socket;
 
-public class VirtualLoginView extends View {
+public class VirtualLoginView extends VirtualViewState {
 
     public VirtualLoginView() {};
 

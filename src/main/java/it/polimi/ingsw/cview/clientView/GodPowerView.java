@@ -14,7 +14,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-public class GodPowerView extends View {
+public class GodPowerView extends GUIView {
     private FlowPane godsIcons;
 
     public GodPowerView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
@@ -22,7 +22,7 @@ public class GodPowerView extends View {
     }
 
     @Override
-    public void render() {
+    public void fXRender() {
         Label selectGodLabel = new Label("Select your desired God Power: ");
         List<String> godsList = client.getAvailableGods();
 

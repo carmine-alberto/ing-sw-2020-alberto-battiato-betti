@@ -1,4 +1,4 @@
-package it.polimi.ingsw.cview.clientView;
+package it.polimi.ingsw.cview;
 
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.*;
@@ -19,7 +19,7 @@ public class ViewEventHandler implements Runnable {
     private Client client;
     static Float TIMEOUT = 1F;
 
-    ViewEventHandler(Client client, ObjectInputStream in) throws IOException {
+    public ViewEventHandler(Client client, ObjectInputStream in) throws IOException {
         this.client = client;
         this.in = in;
         System.out.println("Thread created");
@@ -40,13 +40,13 @@ public class ViewEventHandler implements Runnable {
         }
     }
 
+    private void accept(Event receivedEvent) {
+        receivedEvent.visit(this);
+    }
+
     public void handle(ChangeViewEvent event) {
         client.getViewState().next(event.viewState);
         System.out.println(client.getViewState().getClass());
-    }
-
-    private void accept(Event receivedEvent) {
-        receivedEvent.visit(this);
     }
 
     public void handle(WarningEvent event) {
@@ -122,7 +122,7 @@ public class ViewEventHandler implements Runnable {
         client.getViewState().notify(new PingEvent());  //TODO We should decouple pinging and JavaFX thread
     }
 
-    public void handle(GameInformationsEvent gameInformationsEvent) {
+    public void handle(GameInformationEvent gameInformationsEvent) {
         client.setPlayerInfos(gameInformationsEvent.playersName, gameInformationsEvent.chosenGods, gameInformationsEvent.chosenColor);
     }
 

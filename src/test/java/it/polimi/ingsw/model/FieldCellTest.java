@@ -32,7 +32,7 @@ class FieldCellTest {
     @Test
     void placeDome() {
         notOnPerimeterCell.placeDome();
-        assertTrue(notOnPerimeterCell.isComplete());
+        assertFalse(notOnPerimeterCell.isComplete());
     }
 
     @Test

@@ -61,7 +61,18 @@ public class GodPowerController extends ControllerState {
     }
 
     private void moveToNextState() {
-        mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualWorkerSetupView(player.getPlayerView(), mainController.getCurrentGame())));
+        Player turnPlayer = mainController.getCurrentGame().getTurnPlayer();
+
+        mainController
+                .getCurrentGame()
+                .getPlayers()
+                .stream()
+                .filter(player -> !player.equals(turnPlayer))
+                .forEach(player -> player.getPlayerView().changeView(new VirtualWaitingView()));
+
+        turnPlayer
+                .getPlayerView()
+                .changeView(new VirtualWorkerSetupView(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
         mainController.controllerState = new WorkerSetupController(mainController);
     }
 }

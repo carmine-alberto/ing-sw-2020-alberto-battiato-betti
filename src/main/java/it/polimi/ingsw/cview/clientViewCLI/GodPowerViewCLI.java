@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class GodPowerViewCLI extends View {
+public class GodPowerViewCLI extends CLIView {
     private String selectedGod;
 
     public GodPowerViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {

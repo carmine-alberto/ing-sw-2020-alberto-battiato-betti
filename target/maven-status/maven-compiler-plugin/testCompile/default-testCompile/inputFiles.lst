@@ -1,4 +1,10 @@
 C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\PlayerTest.java
+C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\predicates\buildAndMovePredicates\NotInOldBuildPositionPredicateTest.java
+C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\predicates\winConditionsPredicates\CompleteTowersPredicateTest.java
+C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\predicates\buildAndMovePredicates\NotOnPerimeterPredicateTest.java
+C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\predicates\buildAndMovePredicates\CanMoveBackPredicateTest.java
 C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\GameTest.java
 C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\GameWorkerTest.java
 C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\FieldCellTest.java
+C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\predicates\buildAndMovePredicates\CanBuildUnderItselfPredicateTest.java
+C:\Users\Casa\Desktop\ing-sw-2020-alberto-battiato-betti\src\test\java\it\polimi\ingsw\model\predicates\buildAndMovePredicates\ContainsOpponentWorkerPredicateTest.java

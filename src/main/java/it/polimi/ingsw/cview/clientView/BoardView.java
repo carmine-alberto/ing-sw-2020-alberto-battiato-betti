@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BoardView extends View {
+public class BoardView extends GUIView {
     final Integer edgeTolerance = 20;
     final Integer BOARD_SIZE = 5;
 
@@ -37,45 +37,47 @@ public class BoardView extends View {
     }
 
     @Override
-    public void render() { Platform.runLater(() -> {
-        FieldCell[][] boardRep = client.getBoard();
-        StackPane cell;
+    protected void fXRender() {
+        if (client.getPlayerInfos() != null) {
+            FieldCell[][] boardRep = client.getBoard();
+            StackPane cell;
 
-        board = new TilePane();
-        FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
-        mainStage.getScene().heightProperty().addListener(e -> updateProperty(tileSideLength));
-        mainStage.getScene().widthProperty().addListener(e -> updateProperty(tileSideLength));
+            board = new TilePane();
+            FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
+            mainStage.getScene().heightProperty().addListener(e -> updateProperty(tileSideLength));
+            mainStage.getScene().widthProperty().addListener(e -> updateProperty(tileSideLength));
 
-        board.setOrientation(Orientation.HORIZONTAL);
-        board.setPrefRows(5);
-        board.setPrefColumns(5);
-        board.prefTileWidthProperty().bind(tileSideLength);
-        board.prefTileHeightProperty().bind(tileSideLength);
+            board.setOrientation(Orientation.HORIZONTAL);
+            board.setPrefRows(5);
+            board.setPrefColumns(5);
+            board.prefTileWidthProperty().bind(tileSideLength);
+            board.prefTileHeightProperty().bind(tileSideLength);
 
-        for (Integer i = 1; i < 6; i++)
-            for (Integer j = 1; j < 6; j++) {
-                cell = new StackPane();
-                cell.setId(i.toString() + " " + j.toString());
-                cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
-                cell.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                cell.setOnMouseClicked(e -> handleCellClick((StackPane) e.getSource()));
-                cell.prefHeightProperty().bind(tileSideLength);
-                cell.prefWidthProperty().bind(tileSideLength);
+            for (Integer i = 1; i < 6; i++)
+                for (Integer j = 1; j < 6; j++) {
+                    cell = new StackPane();
+                    cell.setId(i.toString() + " " + j.toString());
+                    cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
+                    cell.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+                    cell.setOnMouseClicked(e -> handleCellClick((StackPane) e.getSource()));
+                    cell.prefHeightProperty().bind(tileSideLength);
+                    cell.prefWidthProperty().bind(tileSideLength);
 
-                fillCell(cell, boardRep[i - 1][j - 1]);
+                    fillCell(cell, boardRep[i - 1][j - 1]);
 
-                board.getChildren().add(cell);
-            }
+                    board.getChildren().add(cell);
+                }
 
-        Label selectedGodPower = new Label(client.getMyName() + ", your selected God Power is: " + client.getPlayerInfos().get(client.getMyName()).get(0));
+            Label selectedGodPower = new Label(client.getMyName() + ", your selected God Power is: " + client.getPlayerInfos().get(client.getMyName()).get(0));
 
-        VBox interfaceBox;
-        interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(client.getPlayerInfos().get(client.getMyName()).get(1))));
-        interfaceBox.setAlignment(Pos.CENTER);
-        interfaceBox.setFillWidth(false);
+            VBox interfaceBox;
+            interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(client.getPlayerInfos().get(client.getMyName()).get(1))));
+            interfaceBox.setPadding(new Insets(20));
+            interfaceBox.setAlignment(Pos.CENTER);
+            interfaceBox.setFillWidth(false);
 
-        mainStage.getScene().setRoot(interfaceBox);
-    });
+            mainStage.getScene().setRoot(interfaceBox);
+        }
     }
 
 

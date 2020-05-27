@@ -1,8 +1,17 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
+import it.polimi.ingsw.Client;
 import it.polimi.ingsw.cview.View;
+import javafx.stage.Stage;
 
-public class LoginViewCLI extends View {
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+public class LoginViewCLI extends CLIView {
+
+    public LoginViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
+        super(stage, clientSocket, client, out);
+    }
 
     @Override
     public void render() { //questa fase viene per forza fatta nella GUI

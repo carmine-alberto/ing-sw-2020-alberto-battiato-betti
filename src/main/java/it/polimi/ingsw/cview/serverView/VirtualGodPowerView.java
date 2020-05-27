@@ -4,7 +4,7 @@ import it.polimi.ingsw.cview.View;
 
 import java.net.Socket;
 
-public class VirtualGodPowerView extends View {
+public class VirtualGodPowerView extends VirtualViewState {
 
     public VirtualGodPowerView() {};
 

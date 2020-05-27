@@ -17,13 +17,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WaitingView extends View {
+public class WaitingView extends GUIView {
     public WaitingView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
     }
 
     @Override
-    public void render() {
+    protected void fXRender() {
         Integer NUM_OF_PARTICLES = 12;
         Circle particle = null;
         Circle particlePath = new Circle(mainStage.getWidth() / 2, mainStage.getHeight() / 2, 60);

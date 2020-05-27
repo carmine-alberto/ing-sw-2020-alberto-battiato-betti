@@ -108,7 +108,7 @@ public class Game extends Observable<Event> {
     }
 
     public void initGame() {
-        notifyObservers(new GameInformationsEvent(players));
+        notifyObservers(new GameInformationEvent(players));
         notifyObservers(new GameStartedEvent());
         turnPhase = turnPlayer.getSelectedGod().getNextPhase(this);
         turnPhase.stateInit();
@@ -141,7 +141,7 @@ public class Game extends Observable<Event> {
                 .get(0);
 
         notifyObservers(new GameEndUpdate(winner.getNickname()));
-        //TODO What should we do here? Terminate the game threads and return?
+        System.exit(0);
     }
 
     public void setNextTurnPlayer() {
@@ -197,7 +197,7 @@ public class Game extends Observable<Event> {
                     event);
     }
 
-    FieldCell[][] getField() {
+    public FieldCell[][] getField() {
         return this.field;
     }
 

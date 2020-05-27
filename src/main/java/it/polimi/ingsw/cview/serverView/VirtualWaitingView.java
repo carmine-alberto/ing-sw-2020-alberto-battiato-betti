@@ -4,7 +4,7 @@ import it.polimi.ingsw.cview.View;
 
 import java.net.Socket;
 
-public class VirtualWaitingView extends View {
+public class VirtualWaitingView extends VirtualViewState {
 
     public VirtualWaitingView() {}; //TODO Refactor constructors in case attributes are never used
     public VirtualWaitingView(VirtualView virtualView, Socket clientSocket, View viewState) {

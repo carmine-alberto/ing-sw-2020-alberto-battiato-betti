@@ -62,12 +62,6 @@ public abstract class  View {
         });
     }
 
-
-    protected void connectionClosedHandler() {
-        MessageWindow.show("Connection closed - Restart the client and try again!", "Connection Error");
-        mainStage.close();
-    }
-
     public void notify(Event e) {
         Platform.runLater(() -> {
             try {
@@ -79,23 +73,11 @@ public abstract class  View {
         });
     }
 
-    public void showMessage(String message) {                  //TODO Define either 2 subclasses of View (CLIView - GUIView) implementing methods shared among views of a kind or a RenderingStrategy
-        Platform.runLater(() -> {
-            MessageWindow.show(message, "Notification");
+    protected abstract void connectionClosedHandler();
 
-        });
-    }
+    public abstract void showMessage(String message);
 
-    public void showWarning(String message) {
-        Platform.runLater(() -> {
-            MessageWindow.show(message, "Warning");
-        });
-    }
+    public abstract void showWarning(String message);
 
-    public void showChoices(List<String> availableChoices) {
-        Platform.runLater(() -> {
-            String choice = ChoiceWindow.show("Available items", availableChoices );
-            notify(new UserInputEvent(choice));
-        });
-    }
+    public abstract void showChoices(List<String> availableChoices);
 }

@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class WaitingViewCLI extends View {
+public class WaitingViewCLI extends CLIView {
 
     public WaitingViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);

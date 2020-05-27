@@ -5,7 +5,7 @@ import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.Game;
 
-public class VirtualWorkerSetupView extends View implements Observer<Event> {
+public class VirtualWorkerSetupView extends VirtualViewState implements Observer<Event> {
 
     public VirtualWorkerSetupView () {};
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ChallengerSelectionViewCLI extends View {
+public class ChallengerSelectionViewCLI extends CLIView {
 
     private Integer selectedNumber;
     private Integer selectedStarter;

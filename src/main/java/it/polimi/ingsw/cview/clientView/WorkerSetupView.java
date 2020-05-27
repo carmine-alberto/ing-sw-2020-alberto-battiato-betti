@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.cview.clientView.WorkerSetupView.CellCoordinate.Y;
 import static it.polimi.ingsw.cview.clientView.WorkerSetupView.CellCoordinate.X;
 
-public class WorkerSetupView extends View {
+public class WorkerSetupView extends GUIView {
     enum CellCoordinate {
         X, Y;
     }
@@ -41,61 +41,57 @@ public class WorkerSetupView extends View {
 
     public WorkerSetupView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
-
-        FieldCell[][] newBoard = new FieldCell[BOARD_SIZE][BOARD_SIZE];
-        for (Integer i = 0; i < BOARD_SIZE; i++)
-            for (Integer j = 0; j < BOARD_SIZE; j++)
-                newBoard[i][j] = new FieldCell(null, i, j);
-        client.setBoard(newBoard);
     }
 
     @Override
-    public void render() { Platform.runLater(() -> {
+    protected void fXRender() {
         FieldCell[][] boardRep = client.getBoard();
         StackPane cell;
 
-        colorPicker = new ColorPicker();
-        colorPicker.setValue(Color.ORANGE);
+        if (boardRep != null) {
+            colorPicker = new ColorPicker();
+            colorPicker.setValue(Color.ORANGE);
 
-        Button confirmSelections = new Button("Confirm");
-        confirmSelections.setOnAction(e -> handleConfirmation((Button) e.getSource()));
+            Button confirmSelections = new Button("Confirm");
+            confirmSelections.setOnAction(e -> handleConfirmation((Button) e.getSource()));
 
-        HBox colorPickerBox = new HBox(10, colorPicker, confirmSelections);
+            HBox colorPickerBox = new HBox(10, colorPicker, confirmSelections);
 
-        board = new TilePane();
-        FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
-        mainStage.getScene().heightProperty().addListener(e -> updateProperty(tileSideLength));
-        mainStage.getScene().widthProperty().addListener(e -> updateProperty(tileSideLength));
+            board = new TilePane();
+            FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
+            mainStage.getScene().heightProperty().addListener(e -> updateProperty(tileSideLength));
+            mainStage.getScene().widthProperty().addListener(e -> updateProperty(tileSideLength));
 
-        board.setOrientation(Orientation.HORIZONTAL);
-        board.setPrefRows(5);
-        board.setPrefColumns(5);
-        board.prefTileWidthProperty().bind(tileSideLength);
-        board.prefTileHeightProperty().bind(tileSideLength);
+            board.setOrientation(Orientation.HORIZONTAL);
+            board.setPrefRows(5);
+            board.setPrefColumns(5);
+            board.prefTileWidthProperty().bind(tileSideLength);
+            board.prefTileHeightProperty().bind(tileSideLength);
 
-        for (Integer i = 1; i < 6; i++)
-            for (Integer j = 1; j < 6; j++) {
-                cell = new StackPane();
-                cell.setId(i.toString() + " " + j.toString());
-                cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
-                cell.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                cell.setOnMouseClicked(e -> handleCellClick((StackPane) e.getSource()));
-                cell.prefHeightProperty().bind(tileSideLength);
-                cell.prefWidthProperty().bind(tileSideLength);
+            for (Integer i = 1; i < 6; i++)
+                for (Integer j = 1; j < 6; j++) {
+                    cell = new StackPane();
+                    cell.setId(i.toString() + " " + j.toString());
+                    cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
+                    cell.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+                    cell.setOnMouseClicked(e -> handleCellClick((StackPane) e.getSource()));
+                    cell.prefHeightProperty().bind(tileSideLength);
+                    cell.prefWidthProperty().bind(tileSideLength);
 
-                fillCell(cell, boardRep[i - 1][j - 1]);
+                    fillCell(cell, boardRep[i - 1][j - 1]);
 
-                board.getChildren().add(cell);
-            }
+                    board.getChildren().add(cell);
+                }
 
-        VBox interfaceBox;
-        interfaceBox = new VBox(20, board);
-        interfaceBox.getChildren().add(0, colorPickerBox);
-        interfaceBox.setAlignment(Pos.CENTER);
-        interfaceBox.setFillWidth(false);
+            VBox interfaceBox;
+            interfaceBox = new VBox(20, board);
+            interfaceBox.setPadding(new Insets(20));
+            interfaceBox.getChildren().add(0, colorPickerBox);
+            interfaceBox.setAlignment(Pos.CENTER);
+            interfaceBox.setFillWidth(false);
 
-        mainStage.getScene().setRoot(interfaceBox);
-    });
+            mainStage.getScene().setRoot(interfaceBox);
+        }
     }
 
     private void handleConfirmation(Button source) {

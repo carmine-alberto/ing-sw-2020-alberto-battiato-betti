@@ -4,7 +4,7 @@ import it.polimi.ingsw.cview.View;
 
 import java.net.Socket;
 
-public class VirtualChallengerSelectionView extends View {
+public class VirtualChallengerSelectionView extends VirtualViewState {
 
     public VirtualChallengerSelectionView() {};
 

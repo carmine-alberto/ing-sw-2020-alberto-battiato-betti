@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.events.BoardUpdate;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.cview.serverView.VirtualBoardView;
@@ -17,6 +18,7 @@ public class WorkerSetupController extends ControllerState {
 
     public WorkerSetupController(Controller mainController) {
         super(mainController);
+        mainController.getCurrentGame().getTurnPlayer().getPlayerView().sendToClient(new BoardUpdate(mainController.getCurrentGame().getField())); //TODO I know, I know, I'm cheating here
         promptTurnPlayer();
     }
 
@@ -43,11 +45,17 @@ public class WorkerSetupController extends ControllerState {
 
             mainController.getCurrentGame().setNextTurnPlayer();
 
-            if (mainController.getCurrentGame().getTurnPlayer().getWorkers() != null) { //TODO Low-quality way to check whether the game is ready to be started, can/should we do better?
+            turnPlayer = mainController.getCurrentGame().getTurnPlayer();
+
+            if (turnPlayer.getWorkers() != null) { //TODO Low-quality way to check whether the game is ready to be started, can/should we do better?
                 moveToNextState();
-            } else
+            } else {
+                turnPlayer.getPlayerView().changeView(new VirtualWorkerSetupView(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
+                turnPlayer.getPlayerView().sendToClient(new BoardUpdate(mainController.getCurrentGame().getField())); //TODO I know, I know, I'm cheating here
                 promptTurnPlayer();
-        }
+            }
+        } else
+            view.showMessage("It's not your turn!");
     }
 
     private void promptTurnPlayer() {

@@ -9,7 +9,7 @@ import it.polimi.ingsw.model.Game;
 
 import java.net.Socket;
 
-public class VirtualBoardView extends View implements Observer<Event> {  //TODO The view components should observe the game components (board, godPowers)
+public class VirtualBoardView extends VirtualViewState implements Observer<Event> {  //TODO The view components should observe the game components (board, godPowers)
 
     public VirtualBoardView() {};
 

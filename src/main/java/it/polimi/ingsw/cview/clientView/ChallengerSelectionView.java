@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class ChallengerSelectionView extends View {
+public class ChallengerSelectionView extends GUIView {
     private ToggleGroup numberOfPlayers;
     private ToggleGroup startingPlayer;
     private FlowPane godsIcons;
@@ -29,7 +29,7 @@ public class ChallengerSelectionView extends View {
     }
 
     @Override
-    public void render() {
+    protected void fXRender() {
         numberOfPlayers = new ToggleGroup();
 
         Label numberOfPlayersLabel = new Label("Select the number of players: ");

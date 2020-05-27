@@ -14,7 +14,7 @@ import javafx.scene.image.*;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class View3D extends View {
+public class View3D extends GUIView {
 
     public View3D(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
@@ -22,7 +22,7 @@ public class View3D extends View {
 
 
     @Override
-    public void render() {
+    public void fXRender() {
 
         Group root = new Group();
         Scene scene = new Scene(root, 800, 800);

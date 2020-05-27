@@ -1,8 +1,6 @@
 package it.polimi.ingsw.controller.events;
 
-import it.polimi.ingsw.controller.*;
-import it.polimi.ingsw.cview.clientView.ViewEventHandler;
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.cview.ViewEventHandler;
 
 public class WarningEvent implements Event {
     public String message;
