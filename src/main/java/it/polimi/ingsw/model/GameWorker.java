@@ -21,8 +21,7 @@ public class GameWorker implements Serializable  {
         this.owner = owner;
         this.moveStrategy = owner.getSelectedGod().getMoveStrategy();
         this.buildStrategy = owner.getSelectedGod().getBuildStrategy();
-
-    };
+    }
 
     public GameWorker(Action moveStrategy, Action buildStrategy, Game currentGame, Player owner) { //TODO Refactor tests and remove this constructor
         this.moveStrategy = moveStrategy;

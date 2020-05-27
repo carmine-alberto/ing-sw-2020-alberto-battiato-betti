@@ -124,7 +124,7 @@ public class WorkerSetupViewCLI extends CLIView {
         5║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
          ╚════════════════════════╝
         */
-        System.out.println("This is the current game board\n\n");
+        System.out.println("This is the current game board\n");
         System.out.println("Each letter represents a cell. Legend: \n" +
                 "The o letter represents a cell without any worker or dome\n" +
                 "The w letter represents a cell with a worker\n" +
@@ -144,29 +144,34 @@ public class WorkerSetupViewCLI extends CLIView {
             System.out.print("══");
         System.out.println("╗");
 
-        for(int i = 1; i < BOARD_SIZE; i++, System.out.println(" ║")) {
-            System.out.print(i + "║ ");
+        for(int i = 0; i < BOARD_SIZE; i++, System.out.println("║")) {
+            System.out.print((i + 1) + "║ ");
             for (int j = 0; j < BOARD_SIZE; j++) {
                 x = board[i][j];
                 if (x.isFree())
                     System.out.print("o" + board[i][j].getHeight() + " ");
-                else if (x.getHasDome())
-                    System.out.print("d" + board[i][j].getHeight() + " ");
-                else {
-                    color = x.getWorker().getOwner().getColour();
-                    switch (color.toUpperCase()) {
-                        case "RED":
-                            System.out.print(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                        case "GREEN":
-                            System.out.print(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                        case "YELLOW":
-                            System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                else{
+                    if (x.getHasDome())
+                        System.out.print("d" + board[i][j].getHeight() + " ");
+                    else {
+                        color = x.getWorker().getOwner().getColour();
+                        switch (color.toUpperCase()) {
+                            case "RED":
+                                System.out.print(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                                break;
+                            case "GREEN":
+                                System.out.print(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                                break;
+                            default: //todo assign proper color when we don't find the precise one
+                                //case "YELLOW":
+                                System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                                break;
+                        }
                     }
                 }
-
             }
         }
-        System.out.print("╚");
+        System.out.print(" ╚");
         for (int c = 1; c <= BOARD_SIZE + 3; c++)
             System.out.print("══");
         System.out.println("╝");
