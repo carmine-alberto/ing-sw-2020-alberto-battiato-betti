@@ -17,87 +17,103 @@ import java.util.List;
 import java.util.Scanner;
 
 public class WorkerSetupViewCLI extends CLIView {
-    private Thread selectionThread;
-    private Boolean hasPlayerAlreadyChosen;
-    private final Integer BOARD_SIZE = 5;
-    private static final String ANSI_RESET = "\u001B[0m";
-    private static final String ANSI_RED = "\u001B[31m";
-    private static final String ANSI_GREEN = "\u001B[32m";
-    private static final String ANSI_YELLOW = "\u001B[33m";
-
+    private enum InternalState {
+        COLOR_SELECTION,
+        WORKER_SELECTION,
+        IDLE
+    }
     private String selectedColour;
+    private InternalState currentState;
+    private List<Integer> xCoordinates;
+    private List<Integer> yCoordinates;
 
     public WorkerSetupViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
-        hasPlayerAlreadyChosen = false;
-    }
-
-    @Override
-    public void handleCLIInput(String input) {
+        currentState = InternalState.COLOR_SELECTION;
+        xCoordinates = new ArrayList<>();
+        yCoordinates = new ArrayList<>();
 
     }
 
     @Override
     public void render() {
         FieldCell[][] boardRep = client.getBoard();
-        if (boardRep != null) {
-            showBoard(boardRep);
 
-            if (!hasPlayerAlreadyChosen) {
-                hasPlayerAlreadyChosen = true;
-                new Thread(() -> {
-                    Scanner input = new Scanner(System.in);
-                    List<Integer> xCoordinates = new ArrayList<>();
-                    List<Integer> yCoordinates = new ArrayList<>();
-
-                    askForPreferredColor(input);
-
-                    askForWorkersPosition(input, xCoordinates, yCoordinates);
-
-                    notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, selectedColour));
-                })
-                .start();
+        if (boardRep != null)
+            switch (currentState) {
+                case COLOR_SELECTION -> showMessage(getSelectColourMessage());
+                case WORKER_SELECTION -> {
+                    showBoard(boardRep);
+                    showMessage(getSelectWorkerMessage());
+                }
             }
+    }
+
+    @Override
+    public void handleCLIInput(String input) {
+        switch (currentState) {
+            case COLOR_SELECTION -> handleColorSelection(input);
+            case WORKER_SELECTION -> handleWorkerSelection(input);
         }
     }
 
-    private void askForPreferredColor(Scanner input) {
-        Boolean isColourValid;
+    private String getSelectWorkerMessage() {
+        return String.format("""
+                            Select the position of the worker n°%s (format: x y): """,
+                            xCoordinates.size() + 1
+        );
 
-        do {
-            isColourValid = true;
-            CLIFormatter.print("Choose a color for your workers (available: red, green, yellow): ");
-            selectedColour = input.next();
-
-            if (!List.of("RED", "GREEN", "YELLOW").contains(selectedColour.toUpperCase())) {
-                CLIFormatter.print("The selected color is not available, try again");
-                isColourValid = false;
-            }
-
-            for (Integer i = 0; i < BOARD_SIZE && isColourValid; i++)
-                for (Integer j = 0; j < BOARD_SIZE && isColourValid; j++)
-                    if (client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(selectedColour.toUpperCase())) {
-                        CLIFormatter.print("One of your opponents already chose this color, pick another one!");
-                        isColourValid = false;
-                    }
-        } while (!isColourValid);
     }
 
-    private void askForWorkersPosition(Scanner input, List<Integer> xCoordinates, List<Integer> yCoordinates) {
+    private String getSelectColourMessage() {
+        return "Choose a color for your workers (available: red, green, yellow): ";
+    }
+
+    private void handleColorSelection(String input) {
+        if (!List.of("RED", "GREEN", "YELLOW").contains(input.toUpperCase())){
+            showWarning("The selected color is not available, try again");
+            return;
+        }
+
+        for (Integer i = 0; i < BOARD_SIZE; i++)
+            for (Integer j = 0; j < BOARD_SIZE; j++)
+                if (client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(input.toUpperCase())) {
+                    showWarning("One of your opponents already chose this color, pick another one!");
+                    return;
+                }
+
+        selectedColour = input;
+        currentState = InternalState.WORKER_SELECTION;
+    }
+
+    private void handleWorkerSelection(String input) {
         Integer tempX;
         Integer tempY;
 
-        for (Integer i = 1; i < 3; i++) {
-            do {
-                CLIFormatter.print("Select the position of the worker n°" + i + " .\nX (from 1 to 5): ");
-                tempX = input.nextInt();
-                CLIFormatter.print("Y (from 1 to 5): ");
-                tempY = input.nextInt();
-            } while (isOutOfBounds(tempX) || isOutOfBounds(tempY) || isOccupied(tempX, tempY));
-            xCoordinates.add(tempX);
-            yCoordinates.add(tempY);
-        }
+        if (input.length() == 3) {
+            try {
+                tempX = Integer.parseInt(input.substring(0, 1));
+                tempY = Integer.parseInt(input.substring(2, 3));
 
+                if (isOutOfBounds(tempX) || isOutOfBounds(tempY) || isOccupied(tempX, tempY)) {
+                    showWarning("The provided coordinates point to a non-available cell!");
+                    return;
+                }
+            } catch (NumberFormatException exception) {
+                showWarning("Your input contains unexpected characters!");
+                return;
+            }
+        } else {
+            showWarning("Bad format - Remember, the correct one is: \"x y\", where x is the row index and y is the column index");
+            return;
+        }
+        xCoordinates.add(tempX);
+        yCoordinates.add(tempY);
+
+        if (xCoordinates.size() == 2) {
+            currentState = InternalState.IDLE;
+            notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, selectedColour));
+        }
     }
 
     private Boolean isOccupied(Integer tempX, Integer tempY) {
@@ -107,75 +123,5 @@ public class WorkerSetupViewCLI extends CLIView {
     private boolean isOutOfBounds(Integer coordinate) {
         return coordinate < 1 || coordinate > 5;
     }
-
-    private void showBoard(FieldCell[][] board) {
-/*      Esempio di scacchiera a video
-
-           1    2    3    4    5
-         ╔════════════════════════╗
-        1║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
-         ║════════════════════════║
-        2║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
-         ║════════════════════════║
-        3║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
-         ║════════════════════════║
-        4║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
-         ║════════════════════════║
-        5║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
-         ╚════════════════════════╝
-        */
-        System.out.println("This is the current game board\n");
-        System.out.println("Each letter represents a cell. Legend: \n" +
-                "The o letter represents a cell without any worker or dome\n" +
-                "The w letter represents a cell with a worker\n" +
-                "The d letter represents a cell with a dome\n" +
-                "The number next to each cell represents its height (dome excluded)\n\n\n");
-
-        String color = "";
-        FieldCell x;
-
-
-        System.out.print(" ");
-        for (int c = 1; c <= BOARD_SIZE; c++)
-            System.out.print("  " + c);
-
-        System.out.print("\n" + " ╔");
-        for (int c = 1; c <= BOARD_SIZE + 3; c++)
-            System.out.print("══");
-        System.out.println("╗");
-
-        for(int i = 0; i < BOARD_SIZE; i++, System.out.println("║")) {
-            System.out.print((i + 1) + "║ ");
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                x = board[i][j];
-                if (x.isFree())
-                    System.out.print("o" + board[i][j].getHeight() + " ");
-                else{
-                    if (x.getHasDome())
-                        System.out.print("d" + board[i][j].getHeight() + " ");
-                    else {
-                        color = x.getWorker().getOwner().getColour();
-                        switch (color.toUpperCase()) {
-                            case "RED":
-                                System.out.print(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                                break;
-                            case "GREEN":
-                                System.out.print(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                                break;
-                            default: //todo assign proper color when we don't find the precise one
-                                //case "YELLOW":
-                                System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-        System.out.print(" ╚");
-        for (int c = 1; c <= BOARD_SIZE + 3; c++)
-            System.out.print("══");
-        System.out.println("╝");
-    }
-
 }
 

@@ -16,6 +16,7 @@ import java.net.Socket;
 import java.util.List;
 
 public abstract class  View {
+    protected static Integer BOARD_SIZE = 5;
     protected Stage mainStage;
     protected Socket clientSocket;
     protected Client client;
@@ -80,4 +81,5 @@ public abstract class  View {
     public abstract void showWarning(String message);
 
     public abstract void showChoices(List<String> availableChoices);
+
 }
