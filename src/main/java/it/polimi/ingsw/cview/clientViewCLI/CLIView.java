@@ -36,4 +36,6 @@ public abstract class CLIView extends View {
     public void showChoices(List<String> availableChoices) {
         System.out.println(CLIFormatter.formatStringList(availableChoices));
     }
+
+    public abstract void handleCLIInput(String input);
 }

@@ -33,6 +33,11 @@ public class WorkerSetupViewCLI extends CLIView {
     }
 
     @Override
+    public void handleCLIInput(String input) {
+
+    }
+
+    @Override
     public void render() {
         FieldCell[][] boardRep = client.getBoard();
         if (boardRep != null) {

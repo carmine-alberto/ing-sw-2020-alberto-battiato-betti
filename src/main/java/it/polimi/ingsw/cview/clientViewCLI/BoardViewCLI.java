@@ -38,6 +38,11 @@ public class BoardViewCLI extends CLIView {
     }
 
     @Override
+    public void handleCLIInput(String input) {
+
+    }
+
+    @Override
     public void render() {
         FieldCell[][] boardRep = client.getBoard();
         showBoard(boardRep);

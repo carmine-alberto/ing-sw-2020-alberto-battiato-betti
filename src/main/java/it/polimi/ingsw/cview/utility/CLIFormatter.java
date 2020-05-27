@@ -15,4 +15,8 @@ public class CLIFormatter {
     public static void print(String printable) {
         System.out.println(printable);
     }
+
+    public static String capitalize(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+    }
 }

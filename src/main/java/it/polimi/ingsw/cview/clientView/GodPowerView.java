@@ -42,7 +42,6 @@ public class GodPowerView extends GUIView {
         mainStage.getScene().setRoot(selectGodBox);
     }
 
-
     private void sendSelectionToServer(Button pressedButton) {
         notify(new GodSelectionEvent(pressedButton.getText()));
     }

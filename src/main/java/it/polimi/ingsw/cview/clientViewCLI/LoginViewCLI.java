@@ -14,6 +14,11 @@ public class LoginViewCLI extends CLIView {
     }
 
     @Override
+    public void handleCLIInput(String input) {
+
+    }
+
+    @Override
     public void render() { //questa fase viene per forza fatta nella GUI
 
         System.out.println("Insert Username:");

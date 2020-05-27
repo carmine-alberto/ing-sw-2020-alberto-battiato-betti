@@ -12,36 +12,54 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class GodPowerViewCLI extends CLIView {
-    private String selectedGod;
+    private enum InternalState {
+        GOD_SELECTION,
+        IDLE
+    }
+    private List<String> availableGods;
+    private InternalState currentState;
 
     public GodPowerViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
         super(stage, clientSocket, client, out);
+        this.currentState = InternalState.GOD_SELECTION;
     }
+
     @Override
     public void render() {
-        Thread selectionThread;
-        List<String> availableGods = client.getAvailableGods();
+        availableGods = client.getAvailableGods();
 
-        if (availableGods != null) {
-            selectionThread = new Thread(() -> {
-                Scanner input = new Scanner(System.in);
+        if (availableGods != null)
+            switch (currentState) {
+                case GOD_SELECTION -> showMessage(getDesiredGodMessage());
+            }
+    }
 
-                askForDesiredGod(availableGods, input);
-
-                notify(new GodSelectionEvent(selectedGod));
-            });
-            selectionThread.start();
+    @Override
+    public void handleCLIInput(String input) {
+        switch (currentState) {
+            case GOD_SELECTION -> handleGodSelection(input);
         }
     }
 
-    private void askForDesiredGod(List<String> availableGods, Scanner input) {
-        do {
-            CLIFormatter.print("God Powers available: " + CLIFormatter.formatStringList(availableGods) + "\n" +
-                    "Enter the name of the desired God Power: ");
-            selectedGod = input.next();
-        } while (!availableGods.contains(selectedGod));
+    private void handleGodSelection(String input) {
+        String sanitizedInput = CLIFormatter.capitalize(input);
+        if (availableGods.contains(sanitizedInput)) {
+            currentState = InternalState.IDLE;
+            notify(new GodSelectionEvent(input));
+        } else
+            showWarning("The chosen God is not available!");
+    }
+
+    private String getDesiredGodMessage() {
+        return String.format("""
+                    God Powers available: %s
+
+                    Enter the name of the desired God of yours: """,
+                CLIFormatter.formatStringList(availableGods)
+        );
     }
 
 }

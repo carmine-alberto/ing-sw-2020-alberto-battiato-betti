@@ -3,6 +3,7 @@ package it.polimi.ingsw.cview.clientView;
 import it.polimi.ingsw.Client;
 import it.polimi.ingsw.controller.events.LoginEvent;
 import it.polimi.ingsw.cview.ViewEventHandler;
+import it.polimi.ingsw.cview.clientViewCLI.TerminalEventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,6 +27,7 @@ public class LoginView extends GUIView {
     private ChoiceBox<String> cliGUIChoice;
     private TextField usernameInput;
     private TextField serverIPInput;
+    private TextField portInput;
 
     public LoginView(Stage stage, Socket clientSocket, Client client) {
         super(stage, clientSocket, client, null);
@@ -52,6 +54,12 @@ public class LoginView extends GUIView {
         HBox serverIPBox = new HBox(18, serverIP, serverIPInput);
         serverIPBox.setAlignment(Pos.CENTER);
 
+        Label port = new Label("Port:         ");
+        portInput = new TextField();
+        portInput.setText("1200"); //TODO Remove hardcoded value
+        HBox portBox = new HBox(18, port, portInput);
+        portBox.setAlignment(Pos.CENTER);
+
         Button confirmButton = new Button("Connect");
         confirmButton.setOnAction(e -> sendDataToServer());
 
@@ -59,7 +67,7 @@ public class LoginView extends GUIView {
         cliGUIChoice.getItems().addAll("CLI", "GUI");
         cliGUIChoice.setValue("GUI");
 
-        VBox userDataBox = new VBox(10, usernameBox, serverIPBox, cliGUIChoice, confirmButton);
+        VBox userDataBox = new VBox(10, usernameBox, serverIPBox, portBox, cliGUIChoice, confirmButton);
         userDataBox.setAlignment(Pos.CENTER);
         userDataBox.setBackground(new Background(new BackgroundFill(new Color(0.47, 0.95, 0.98, 0.9), new CornerRadii(30), new Insets(55))));
         userDataBox.setMaxSize(400, 300);
@@ -77,17 +85,19 @@ public class LoginView extends GUIView {
      * otherwise, we should split the Controller in ClientController - ServerController and decouple event handling
      */
     private void sendDataToServer() {
-        if (cliGUIChoice.getValue().equals("CLI"))
+        if (cliGUIChoice.getValue().equals("CLI")) {
             client.setRendererChoice("CLI");
-        else
+            Thread CLIListener = new Thread(new TerminalEventHandler(client));
+            CLIListener.start();
+        } else
             client.setRendererChoice("");
-        //TODO Add Port textBox
+
         String username = usernameInput.getText();
         String serverIP = serverIPInput.getText();
-        Integer PORT_NUMBER = 1200;
+        Integer portNumber = Integer.parseInt(portInput.getText());
 
         try {
-            clientSocket = new Socket(serverIP, PORT_NUMBER);
+            clientSocket = new Socket(serverIP, portNumber);
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 

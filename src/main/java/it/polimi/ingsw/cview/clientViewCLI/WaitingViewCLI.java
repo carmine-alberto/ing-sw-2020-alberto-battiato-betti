@@ -13,10 +13,14 @@ public class WaitingViewCLI extends CLIView {
         super(stage, clientSocket, client, out);
     }
 
+
     @Override
     public void render() {
+        showMessage("Waiting for the other players...");
+    }
 
-        System.out.println("Waiting for the other players...");
-
+    @Override
+    public void handleCLIInput(String input) {
+        showWarning("Be patient man");
     }
 }
