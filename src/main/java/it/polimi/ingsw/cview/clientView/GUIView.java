@@ -28,8 +28,7 @@ public abstract class GUIView extends View {
     @Override
     protected void connectionClosedHandler() {
         MessageWindow.show("Connection closed - Restart the client and try again!", "Connection Error");
-        mainStage.close();
-        Platform.exit();
+        terminate();
     }
 
     @Override
@@ -52,5 +51,11 @@ public abstract class GUIView extends View {
             String choice = ChoiceWindow.show("Available items", availableChoices );
             notify(new UserInputEvent(choice));
         });
+    }
+
+    @Override
+    public void terminate() {
+        Platform.runLater(() -> this.mainStage.close());
+        Platform.exit();
     }
 }

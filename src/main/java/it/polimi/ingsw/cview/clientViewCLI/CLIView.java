@@ -5,6 +5,7 @@ import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.utility.CLIFormatter;
 import it.polimi.ingsw.cview.utility.MessageWindow;
 import it.polimi.ingsw.model.FieldCell;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
@@ -59,12 +60,15 @@ public abstract class CLIView extends View {
         String color;
         FieldCell x;
 
-        System.out.println("This is the current game board\n");
-        System.out.println("Each letter represents a cell. Legend: \n" +
-                "The o letter represents a cell without any worker or dome\n" +
-                "The w letter represents a cell with a worker\n" +
-                "The d letter represents a cell with a dome\n" +
-                "The number next to each cell represents its height (dome excluded)\n");
+        showMessage("""
+                    This is the current game board
+                    Each letter represents a cell. Legend:
+                    The o letter represents a cell without any worker or dome
+                    The w letter represents a cell with a worker
+                    The d letter represents a cell with a dome
+                    The number next to each cell represents its height (dome excluded)
+                    """
+        );
 
         System.out.print(" ");
         for (int c = 1; c <= BOARD_SIZE; c++)
@@ -108,6 +112,10 @@ public abstract class CLIView extends View {
         System.out.println("╝");
     }
 
+    public void terminate() {
+        Platform.exit();
+        System.exit(0);
+    }
 
 
     public abstract void handleCLIInput(String input);

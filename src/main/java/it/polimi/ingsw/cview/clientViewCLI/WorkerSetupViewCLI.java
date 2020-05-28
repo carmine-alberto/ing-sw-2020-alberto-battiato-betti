@@ -46,6 +46,7 @@ public class WorkerSetupViewCLI extends CLIView {
                     showBoard(boardRep);
                     showMessage(getSelectWorkerMessage());
                 }
+                case IDLE -> showBoard(boardRep);
             }
     }
 
@@ -117,7 +118,7 @@ public class WorkerSetupViewCLI extends CLIView {
     }
 
     private Boolean isOccupied(Integer tempX, Integer tempY) {
-        return !client.getBoard()[tempX - 1][tempY - 1].isFree();
+        return !client.getBoard()[tempX - 1][tempY - 1].isFree() || xCoordinates.contains(tempX) && yCoordinates.contains(tempY);
     }
 
     private boolean isOutOfBounds(Integer coordinate) {

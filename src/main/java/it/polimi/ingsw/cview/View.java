@@ -41,10 +41,7 @@ public abstract class  View {
 
     public abstract void render();
 
-    public void terminate() {
-        Platform.runLater(() -> this.mainStage.close());
-    }
-
+    public abstract void terminate();
 
     public void next(String nextState) {
         Platform.runLater(() -> {

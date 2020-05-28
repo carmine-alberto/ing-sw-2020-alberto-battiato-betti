@@ -37,4 +37,9 @@ public abstract class VirtualViewState extends View {
     public void showChoices(List<String> availableChoices) {
         throw new UnsupportedOperationException("Operation not available on the server");
     }
+
+    @Override
+    public void terminate() {
+        virtualView.terminate();
+    }
 }

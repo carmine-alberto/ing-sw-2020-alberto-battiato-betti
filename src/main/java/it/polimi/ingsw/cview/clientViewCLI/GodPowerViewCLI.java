@@ -48,7 +48,7 @@ public class GodPowerViewCLI extends CLIView {
         String sanitizedInput = CLIFormatter.capitalize(input);
         if (availableGods.contains(sanitizedInput)) {
             currentState = InternalState.IDLE;
-            notify(new GodSelectionEvent(input));
+            notify(new GodSelectionEvent(sanitizedInput));
         } else
             showWarning("The chosen God is not available!");
     }
