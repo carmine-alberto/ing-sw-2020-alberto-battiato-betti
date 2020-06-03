@@ -9,10 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.BiPredicate;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class NotOnPerimeterPredicateTest {
+class MaxHeightPredicateTest {
     static Integer FIELD_SIZE = 5;
     Game game;
     FieldCell[][] board;
@@ -33,8 +32,8 @@ class NotOnPerimeterPredicateTest {
                 board[i][j] = new FieldCell(game , i , j);
 
         cellToTest = board[0][0];
-        worker.getOldMovePositions().add(cellToTest);
-        predicate = new NotOnPerimeterPredicate();
+        cellToTest.incrementHeight();
+        predicate = new MaxHeightPredicate(0);
     }
 
     @Test

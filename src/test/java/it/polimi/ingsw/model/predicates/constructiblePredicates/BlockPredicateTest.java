@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.predicates.buildAndMovePredicates;
+package it.polimi.ingsw.model.predicates.constructiblePredicates;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
@@ -9,10 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.BiPredicate;
 
+import static it.polimi.ingsw.model.Constructible.BLOCK;
+import static it.polimi.ingsw.model.Constructible.DOME;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class NotOnPerimeterPredicateTest {
+class BlockPredicateTest {
     static Integer FIELD_SIZE = 5;
     Game game;
     FieldCell[][] board;
@@ -33,13 +35,13 @@ class NotOnPerimeterPredicateTest {
                 board[i][j] = new FieldCell(game , i , j);
 
         cellToTest = board[0][0];
-        worker.getOldMovePositions().add(cellToTest);
-        predicate = new NotOnPerimeterPredicate();
+        player.getPlayerState().setSelectedCell(cellToTest);
+        predicate = new BlockPredicate(3);
     }
 
     @Test
     void test(){
-        assertFalse(predicate.test(cellToTest , worker));
-        assertTrue(predicate.test(board[2][1] , worker));
+        assertFalse(predicate.test(player , DOME));
+        assertTrue(predicate.test(player , BLOCK));
     }
 }

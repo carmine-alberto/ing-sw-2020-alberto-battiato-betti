@@ -4,87 +4,42 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.exceptions.IllegalFormatException;
-import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.BiPredicate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NotInOldBuildPositionPredicateTest {
+    static Integer FIELD_SIZE = 5;
     Game game;
-    List<Player> players;
+    FieldCell[][] board;
+    Player player;
+    GameWorker worker;
+    FieldCell cellToTest;
+    BiPredicate predicate;
 
     @BeforeEach
-    void setUp() throws InvalidSelectionException {
-        setupGame();
-        game.setTurnPlayer(players.get(0));
-        game.initGame();
+    void setUp(){
+        game = new Game();
+        board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
+        player = new Player("Zio" , null);
+        game.assignSelectedGodPowerToPlayer("Demetra" , player);
+        worker = new GameWorker(game , player);
+        for (Integer i = 0; i < FIELD_SIZE; i++)
+            for (Integer j = 0; j < FIELD_SIZE; j++)
+                board[i][j] = new FieldCell(game , i , j);
+
+        cellToTest = board[1][1];
+        worker.getOldBuildPositions().add(cellToTest);
+        predicate = new NotInOldBuildPositionPredicate();
     }
 
     @Test
-    void shift() throws IllegalFormatException, InvalidSelectionException {
-        assertEquals(game.getCell(1 , 1) , players.get(1).getWorkers().get(0).getCell());
-        game.runPhase("1 1");
-        game.runPhase("2 2");
-        //TODO come lo testo?;
-    }
-
-    void setupGame() throws InvalidSelectionException {
-        game = new Game();
-
-        List<String> players = new ArrayList<>();
-        List<String> godPowers = new ArrayList<>();
-
-        players.add("Jonny");
-        godPowers.add("Minotaur");
-        players.add("Il Peloso");
-        godPowers.add("Apollo");
-
-        setPlayers(players , godPowers);
-
-        /*
-         *    0   1   2   3   4
-         * 0  O       X
-         * 1      X   O
-         * 2
-         * 3
-         * 4
-         *
-         * */
-        List<FieldCell> positions = new ArrayList<>();
-        positions.add(game.getCell(0,0));
-        positions.add(game.getCell(1,2));
-        positions.add(game.getCell(1,1));
-        positions.add(game.getCell(0,2));
-
-        setWorkers(positions);
-    }
-
-    void setPlayers(List<String> names , List<String> powers) throws InvalidSelectionException {
-        players = new ArrayList<>();
-
-        for (int i = 0;  i < names.size(); i++) {
-            players.add(new Player(names.get(i) , null));
-            game.addPlayer(players.get(i));
-            game.assignSelectedGodPowerToPlayer(powers.get(i) , players.get(i));
-        }
-    }
-
-    void setWorkers(List<FieldCell> positions){
-        Integer numOfPlayers = positions.size() / 2;
-
-        for (Integer i = 0 , j = 0; i < numOfPlayers; i++ , j++) {
-            List<GameWorker> gw = new ArrayList<>();
-            gw.add(new GameWorker(game, players.get(i)));
-            gw.get(0).setPosition(positions.get(j));
-            j++;
-            gw.add(new GameWorker(game, players.get(i)));
-            gw.get(1).setPosition(positions.get(j));
-            players.get(i).setWorkers(gw);
-        }
+    void test(){
+        assertFalse(predicate.test(cellToTest , worker));
+        assertTrue(predicate.test(board[2][1] , worker));
     }
 }

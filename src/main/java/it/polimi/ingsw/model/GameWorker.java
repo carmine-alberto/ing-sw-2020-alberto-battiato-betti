@@ -23,13 +23,6 @@ public class GameWorker implements Serializable  {
         this.buildStrategy = owner.getSelectedGod().getBuildStrategy();
     }
 
-    public GameWorker(Action moveStrategy, Action buildStrategy, Game currentGame, Player owner) { //TODO Refactor tests and remove this constructor
-        this.moveStrategy = moveStrategy;
-        this.buildStrategy = buildStrategy;
-        this.currentGame = currentGame;
-        this.owner = owner;
-    }
-
     public void setPosition(FieldCell cell) {
         this.position = cell;
         if (!this.equals(cell.getWorker())) {
@@ -38,11 +31,7 @@ public class GameWorker implements Serializable  {
         }
     }
 
-
-    public void move(Integer x, Integer y) { //TODO args non è String
-        moveStrategy.run(currentGame.getCell(x, y), this);
-    }
-    public void move(FieldCell destination) {moveStrategy.run(destination, this);} //TODO Overloading for ease of use, may be removed in the future
+    public void move(FieldCell destination) {moveStrategy.run(destination, this);}
 
     public void build(FieldCell destination, Constructible constructible) {
         buildStrategy.run(destination, constructible);

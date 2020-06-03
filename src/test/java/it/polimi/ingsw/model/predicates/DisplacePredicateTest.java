@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.predicates.buildAndMovePredicates;
+package it.polimi.ingsw.model.predicates;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
@@ -12,12 +12,12 @@ import java.util.function.BiPredicate;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class NotOnPerimeterPredicateTest {
+class DisplacePredicateTest {
     static Integer FIELD_SIZE = 5;
     Game game;
     FieldCell[][] board;
-    Player player;
-    GameWorker worker;
+    Player player , secondPlayer;
+    GameWorker worker , secondWorker;
     FieldCell cellToTest;
     BiPredicate predicate;
 
@@ -26,20 +26,32 @@ class NotOnPerimeterPredicateTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Zio" , null);
-        game.assignSelectedGodPowerToPlayer("Hestia" , player);
+        player.setCurrentGame(game);
+        game.assignSelectedGodPowerToPlayer("Charon" , player);
         worker = new GameWorker(game , player);
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
                 board[i][j] = new FieldCell(game , i , j);
 
-        cellToTest = board[0][0];
-        worker.getOldMovePositions().add(cellToTest);
-        predicate = new NotOnPerimeterPredicate();
+        worker.setPosition(board[0][0]);
+        board[0][0].setOccupyingWorker(worker);
+        secondPlayer = new Player("lol" , null);
+        secondPlayer.setCurrentGame(game);
+        game.assignSelectedGodPowerToPlayer("Artemis", secondPlayer);
+        secondWorker = new GameWorker(game , secondPlayer);
+        cellToTest = board[1][1];
+        secondWorker.setPosition(cellToTest);
+        cellToTest.setOccupyingWorker(secondWorker);
+        predicate = new DisplacePredicate();
     }
 
     @Test
     void test(){
         assertFalse(predicate.test(cellToTest , worker));
-        assertTrue(predicate.test(board[2][1] , worker));
+        cellToTest = board[2][2];
+        secondWorker.move(cellToTest);
+        assertFalse(predicate.test(cellToTest , worker));
+        worker.move(board[1][1]);
+        assertTrue(predicate.test(cellToTest , worker));
     }
 }

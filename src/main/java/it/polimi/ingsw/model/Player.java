@@ -24,11 +24,6 @@ public class Player implements Serializable {
     //Predicates
     private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
 
-    public Player(String nickname){
-        this.nickname = nickname;
-        this.isWinner = false;
-    }//TODO eliminare questo costruttore
-
     public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
         this.playerView = playerView;

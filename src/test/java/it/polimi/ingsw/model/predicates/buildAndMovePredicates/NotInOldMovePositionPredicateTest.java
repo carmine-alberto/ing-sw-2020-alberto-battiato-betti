@@ -9,10 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.BiPredicate;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class NotOnPerimeterPredicateTest {
+class NotInOldMovePositionPredicateTest {
     static Integer FIELD_SIZE = 5;
     Game game;
     FieldCell[][] board;
@@ -26,15 +25,15 @@ class NotOnPerimeterPredicateTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Zio" , null);
-        game.assignSelectedGodPowerToPlayer("Hestia" , player);
+        game.assignSelectedGodPowerToPlayer("Artemis" , player);
         worker = new GameWorker(game , player);
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
                 board[i][j] = new FieldCell(game , i , j);
 
-        cellToTest = board[0][0];
+        cellToTest = board[1][1];
         worker.getOldMovePositions().add(cellToTest);
-        predicate = new NotOnPerimeterPredicate();
+        predicate = new NotInOldMovePositionPredicate();
     }
 
     @Test

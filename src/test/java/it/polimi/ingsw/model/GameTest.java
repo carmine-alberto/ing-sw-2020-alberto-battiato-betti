@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameTest {
 
@@ -19,9 +19,18 @@ class GameTest {
     @BeforeEach
     void setUp() {
         game = new Game();
-        player1 = new Player("Es1");
-        player2 = new Player("Es2");
-        player3 = new Player("Es3");
+        player1 = new Player("Es1" , null);
+        game.assignSelectedGodPowerToPlayer("Apollo" , player1);
+
+        player2 = new Player("Es2" , null);
+        game.assignSelectedGodPowerToPlayer("Artemis" , player2);
+
+        player3 = new Player("Es3" , null);
+        game.assignSelectedGodPowerToPlayer("Athena" , player3);
+
+        List<GameWorker> workers = new ArrayList<>();
+        player1.setWorkers(workers);
+
         try {
             game.addPlayer(player1);
             game.addPlayer(player2);
@@ -45,7 +54,7 @@ class GameTest {
 
     @Test
     void addPlayer() {
-        Player alreadyExistingPlayer = new Player("Es3");
+        Player alreadyExistingPlayer = new Player("Es3" , null);
 
         List<Player> allPlayers = List.of(player1, player2, player3);
         try {
@@ -58,10 +67,11 @@ class GameTest {
 
     @Test
     void removeTurnPlayer() {
-        game.setCurrentPlayerIndex(2);
-        game.setTurnPlayer(player3);
+        game.setCurrentPlayerIndex(0);
+        game.setTurnPlayer(player1);
+        game.initGame();
         game.removeTurnPlayer();
-        List<Player> allPlayers = List.of(player1, player2);
+        List<Player> allPlayers = List.of(player2, player3);
         assertEquals(allPlayers, game.getPlayers());
     }
 
@@ -72,26 +82,6 @@ class GameTest {
         game.setNextTurnPlayer();
         assertEquals(player1, game.getTurnPlayer());
     }
-
-    @Test
-    void setNextTurnPlayerAfterRemovingTheLast() {
-        game.setCurrentPlayerIndex(2);
-        game.setTurnPlayer(player3);
-        game.removeTurnPlayer();
-        game.setNextTurnPlayer();
-        assertEquals(player1, game.getTurnPlayer());
-
-    }
-
-    @Test
-    void setNextTurnPlayerAfterRemovingTheSecond() {
-        game.setCurrentPlayerIndex(1);
-        game.setTurnPlayer(player2);
-        game.removeTurnPlayer();
-        game.setNextTurnPlayer();
-        assertEquals(player3, game.getTurnPlayer());
-    }
-
 
     @Test
     void endGame() {

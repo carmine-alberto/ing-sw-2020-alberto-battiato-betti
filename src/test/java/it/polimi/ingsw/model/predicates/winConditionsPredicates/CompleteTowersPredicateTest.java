@@ -26,7 +26,7 @@ class CompleteTowersPredicateTest {
     }
 
     @Test
-    void test1() throws IllegalFormatException, InvalidSelectionException {
+    void test() throws IllegalFormatException, InvalidSelectionException {
         for (Integer i = 0; i < 3 ; i++) {
             game.getCell(3, 3).incrementHeight();
             game.getCell(3,4).incrementHeight();

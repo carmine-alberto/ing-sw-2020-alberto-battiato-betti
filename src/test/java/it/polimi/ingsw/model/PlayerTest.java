@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PlayerTest {
 
     Game game = new Game();
-    Player first = new Player("Scroto");
-    Player second = new Player("Pallido");
-    Player third = new Player("Francesco");
+    Player first = new Player("Scroto" , null);
+    Player second = new Player("Pallido" , null);
+    Player third = new Player("Francesco" , null);
     List<Player> firstOpponents = new ArrayList<>();
     List<Player> secondOpponents = new ArrayList<>();
 
