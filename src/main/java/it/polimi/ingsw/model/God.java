@@ -57,8 +57,8 @@ public class God implements Serializable {
             return newPhase;
         } catch (Exception e) {
             e.printStackTrace(); //TODO Handle exception properly
+            return null;
         }
-        return null;
     }
 
 
