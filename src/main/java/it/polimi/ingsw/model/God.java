@@ -44,8 +44,13 @@ public class God implements Serializable {
         outerPredicatesHashmap = new HashMap<>();
     }
 
-
-    public TurnPhase getNextPhase(Game currentGame)  {
+    /**
+     * This function is used to get the next turnPhase form the phaseTree of the selected god.
+     *
+     * @param currentGame The game you're playing
+     * @return Return the following phase (or null if something goes wrong)
+     */
+    public TurnPhase getNextPhase(Game currentGame) {
         try {
             String nextPhase = currentPhaseNode.getPhase();
             BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate(); // TODO fix
@@ -57,16 +62,16 @@ public class God implements Serializable {
             return newPhase;
         } catch (Exception e) {
             e.printStackTrace(); //TODO Handle exception properly
+            return null;
         }
-        return null;
     }
 
 
     /**
      * Assumption: the only node with more than 1 child is the ChooseActionPhase node
      * if this assumption holds, the method works
-     * @return
-     * @param currentGame
+     *
+     * @param currentGame The game you're playing
      */
     public void setNextPhase(Game currentGame) {
         if (currentPhaseNode.getChildren().size() > 1) {
@@ -87,21 +92,22 @@ public class God implements Serializable {
         }
     }
 
+    /**
+     * This function returns the biPredicate, assigned in the outerPredicateHashMap of the god
+     * @param predicateClass String key of the hashMap value
+     * @return biPredicate assigned to that key
+     */
     public BiPredicate getOuterPredicate(String predicateClass){
         return outerPredicatesHashmap.get(predicateClass);
     }
 
-    public void reset() {
+    private void reset() {
         currentPhaseNode = phasesTree;
     }
-    /**
-    * @param
-    * @return String
-    */
+
     public String getName() {
         return name;
     }
-
 
     public void setMovePredicates(BiPredicate<FieldCell, GameWorker> movePredicates) {
         this.movePredicates = movePredicates;
@@ -131,6 +137,11 @@ public class God implements Serializable {
         return winConditionPredicate;
     }
 
+    /**
+     * This function sets the biPredicate to a string (meaning the predicate class) in the outerPredicateHashMap of the god
+     * @param predicate key of the hashMap
+     * @param biPredicate value of the hashMap
+     */
     public void setOuterPredicate(String predicate, BiPredicate biPredicate) {
         this.outerPredicatesHashmap.put(predicate, biPredicate);
     }
@@ -157,6 +168,15 @@ public class God implements Serializable {
             return this;
         }
 
+        /**
+         * This function adds a phase to the phaseTree. If it has a specific biPredicate it is assigned,
+         * otherwise the "standard" biPredicate of that phase is assigned. In that case the biPredicate has to be null
+         *
+         * @param phaseName Is the string the predicate has to be assigned to
+         * @param phasePredicate The specific biPredicate of the phase, if null ,teh standard biPredicate is used
+         *
+         * @return the node just added to the phasesTree
+         */
         public GodBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
             if (phasePredicate == null)
                     phasePredicate = getPhasePredicate(phaseName);
@@ -179,56 +199,137 @@ public class God implements Serializable {
 
         }
 
+        /**
+         * This function adds the values to the outerHashMap, with the meaning of the key for the string and value for the biPredicate
+         *
+         * @param turnPhase The name of the turnPhase the outerHashMap has to modify
+         * @param biPredicate The biPredicate that has to be added to the turnPhase inserted as first value
+         *
+         * @return actually useless
+         */
+        //todo refactor return
         public GodBuilder addOuterHashMap(String turnPhase, BiPredicate biPredicate){
             tempGod.outerPredicatesHashmap.put(turnPhase, biPredicate); //todo gestire le concatenazioni con predicates multipli
             return this;
         }
 
+        /**
+         * This function is used to save the node, usually the one where the turnTree divides
+         *
+         * @return the node saved
+         */
         public GodBuilder saveRefNode() {
             refNode = currNode;
             return this;
         }
 
+        /**
+         * This function is used to get back to the saved node, the division of the two branches in the turnTree
+         *
+         * @return the node saved before
+         */
         public GodBuilder restoreRefNode() {
             currNode = refNode;
             return this;
         }
 
+        /**
+         * This function sets the biPredicate given as winConditionPredicate of the god, if you want to have
+         * multiple biPredicate, you have to concatenate them externally
+         *
+         * @param winConditionPredicate the biPredicate you want to add as winConditionPredicate
+         *
+         * @return the godBuilder in the actual state
+         */
         public GodBuilder winConditionPredicate(BiPredicate<Game, GameWorker> winConditionPredicate) {
             this.tempGod.winConditionPredicate = winConditionPredicate;
             return this;
         }
 
+        /**
+         * This function sets the biPredicate given as movePredicate of the god, if you want to have
+         * multiple biPredicate, you have to concatenate them externally
+         *
+         * @param movePredicate the biPredicate you want to add as movePredicate
+         *
+         * @return the godBuilder in the actual state
+         */
         public GodBuilder movePredicate(BiPredicate<FieldCell, GameWorker> movePredicate){
             this.tempGod.movePredicates = movePredicate;
             return this;
         }
 
-        public GodBuilder buildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate){
+        /**
+         * This function sets the biPredicate given as buildPredicate of the god, if you want to have
+         * multiple biPredicate, you have to concatenate them externally
+         *
+         * @param buildPredicate the biPredicate you want to add as buildPredicate
+         *
+         * @return the godBuilder in the actual state
+         */
+        public GodBuilder buildPredicate(BiPredicate<FieldCell, GameWorker> buildPredicate) {
             this.tempGod.buildPredicates = buildPredicate;
             return this;
         }
 
+        /**
+         * This function sets the biPredicate given as constructibleBiPredicate of the god, if you want to have
+         * multiple biPredicate, you have to concatenate them externally
+         *
+         * @param constructibleBiPredicate the biPredicate you want to add as constructibleBiPredicate
+         *
+         * @return the godBuilder in the actual state
+         */
         public GodBuilder constructiblePredicate(BiPredicate<Player, Constructible> constructibleBiPredicate){
             this.tempGod.constructiblePredicates =  constructibleBiPredicate;
             return this;
         }
 
+        /**
+         * This function sets the biPredicate given as moveStrategy of the god, if you want to have
+         * multiple biPredicate, you have to concatenate them externally
+         *
+         * @param moveStrategy the biPredicate you want to add as moveStrategy
+         *
+         * @return the godBuilder in the actual state
+         */
         public GodBuilder moveStrategy(Action moveStrategy) {//todo non è meglio usare getter e setter separati ?
             this.tempGod.moveStrategy = moveStrategy;
             return this;
         }
 
+        /**
+         * This function sets the biPredicate given as actionPredicate of the god, if you want to have
+         * multiple biPredicate, you have to concatenate them externally
+         *
+         * @param actionEnumBiPredicate the biPredicate you want to add as actionPredicate
+         *
+         * @return the godBuilder in the actual state
+         */
         public GodBuilder actionPredicate(BiPredicate<ActionEnum, Player> actionEnumBiPredicate){
             this.tempGod.actionPredicates = actionEnumBiPredicate;
             return this;
         }
 
+        /**
+         * This function sets the biPredicate given as buildStrategy of the god, if you want to have
+         * multiple biPredicate, you have to concatenate them externally
+         *
+         * @param buildStrategy the biPredicate you want to add as buildStrategy
+         *
+         * @return the godBuilder in the actual state
+         */
         public GodBuilder buildStrategy(Action buildStrategy) {
             this.tempGod.buildStrategy = buildStrategy;
             return this;
         }
 
+        /**
+         * This function is used to extract the god built with all the settings given,
+         * if the phasesTree is empty it will be filled with the basePhasesTree
+         *
+         * @return the god built
+         */
         public God getCompleteGod() {
             if(tempGod.phasesTree.getChildren().size() == 0)
                 setBasePhases();
@@ -255,6 +356,10 @@ public class God implements Serializable {
 
         }
 
+        /**
+         * This function is used to reset the godBuilder, it is already called in getCompleteGod(),
+         * but can also be called externally for any needs.
+         */
         public void reset() {
             tempGod = new God();
             tempGod.phasesTree = new Node(null, null, null); //ROOT - Modified by the GodBuilder

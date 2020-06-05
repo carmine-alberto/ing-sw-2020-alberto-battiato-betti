@@ -24,11 +24,6 @@ public class Player implements Serializable {
     //Predicates
     private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
 
-    public Player(String nickname){
-        this.nickname = nickname;
-        this.isWinner = false;
-    }//TODO eliminare questo costruttore
-
     public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
@@ -36,11 +31,9 @@ public class Player implements Serializable {
         this.isWinner = false;
     }
 
-
     public BiPredicate<Game, GameWorker> getWinConditions() {
         return selectedGod.getWinCondition();
     }
-
 
     public List<GameWorker> getWorkers() {
         return workers;
@@ -50,7 +43,6 @@ public class Player implements Serializable {
         this.workers = workers;
     }
 
-
     public Boolean getIsWinner(){
         return this.isWinner;
     }
@@ -58,7 +50,6 @@ public class Player implements Serializable {
     public void setIsWinner(Boolean tmp){
         isWinner = tmp;
     }
-
 
     public String getNickname() {
         return nickname;
@@ -68,7 +59,6 @@ public class Player implements Serializable {
         this.nickname = nickname;
     }
 
-
     public String getColour() {
         return colour;
     }
@@ -76,7 +66,6 @@ public class Player implements Serializable {
     public void setColour(String colour) {
         this.colour = colour;
     }
-
 
     public Game getCurrentGame() {
         return currentGame;
@@ -86,11 +75,9 @@ public class Player implements Serializable {
         this.currentGame = currentGame;
     }
 
-
     public VirtualView getPlayerView() {
         return playerView;
     }
-
 
     public List<Player> getOpponents(){
         return currentGame.getPlayers().stream()

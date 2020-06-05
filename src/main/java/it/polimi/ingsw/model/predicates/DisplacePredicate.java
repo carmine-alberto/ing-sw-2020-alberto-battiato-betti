@@ -6,6 +6,14 @@ import it.polimi.ingsw.model.GameWorker;
 import java.util.function.BiPredicate;
 
 public class DisplacePredicate implements BiPredicate<FieldCell , GameWorker> {
+
+    /**
+     * We check if the displace can be done in the considered fieldCell form the considered gameWorker
+     *
+     * @param fieldCell the fieldCell on which we're considering if the displace is possible
+     * @param gameWorker the gameWorker that has to displace
+     * @return
+     */
     @Override
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
         if (fieldCell.getWorker() == null)

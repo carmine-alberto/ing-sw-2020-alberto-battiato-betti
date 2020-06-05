@@ -26,7 +26,7 @@ class CanBuildUnderItselfPredicateTest {
     }
 
     @Test
-    void shift() throws IllegalFormatException, InvalidSelectionException {
+    void test() throws IllegalFormatException, InvalidSelectionException {
         assertEquals(game.getCell(1 , 1) , players.get(1).getWorkers().get(0).getCell());
         game.runPhase("1 1");
         game.runPhase("2 1");

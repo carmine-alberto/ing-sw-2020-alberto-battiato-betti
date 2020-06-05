@@ -6,6 +6,16 @@ import it.polimi.ingsw.model.GameWorker;
 import java.util.function.BiPredicate;
 
 public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
+
+    /**
+     * We check if the considered gameWorker has won, this winningMove is a move
+     * from a certain level into another one.
+     *
+     * @param game the game we're playing on
+     * @param gameWorker the gameWorker that we're checking the winCondition
+     *
+     * @return true if the winCondition is respected (the gameWorker has won), false otherwise
+     */
     @Override
     public boolean test(Game game, GameWorker gameWorker) {
         return movedFromLevel2ToLevel3(game, gameWorker);
@@ -16,6 +26,6 @@ public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
                             &&
                 game.getTurnPlayer().getPlayerState().getSelectedCell() != null
                 &&
-               game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight() == 3;  //TODO Fix case where player moves on a level 2 cell and builds a level 3 cell: selectedCell will be level 3, workerPosition is level 2 - winCondition triggered
+               game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight() == 3;
     }
 }

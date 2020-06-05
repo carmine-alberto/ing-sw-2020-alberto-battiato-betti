@@ -417,7 +417,7 @@ public class Parser {
         }
     }
 
-   private BiPredicate getActionPredicate(Node item){
+    private BiPredicate getActionPredicate(Node item){
        Node node = item.getFirstChild();
        String firstPhase;
        String secondPhase = "End";
@@ -482,6 +482,11 @@ public class Parser {
         }
     }
 
+    /**
+     * This function is used to get the parser going, it makes it read the file with the written gods
+     *
+     * @return the godsList just red
+     */
     public List<God> getGodsList() {
         read();
         return this.godsList;

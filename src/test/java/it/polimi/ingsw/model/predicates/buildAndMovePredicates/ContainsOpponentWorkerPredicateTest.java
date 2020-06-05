@@ -26,7 +26,7 @@ class ContainsOpponentWorkerPredicateTest {
     }
 
     @Test
-    void shift() throws IllegalFormatException, InvalidSelectionException {
+    void test() throws IllegalFormatException, InvalidSelectionException {
         assertEquals(game.getCell(0 , 0).getWorker() , players.get(0).getWorkers().get(0));
         game.runPhase("1 1");
         game.runPhase("2 2");
