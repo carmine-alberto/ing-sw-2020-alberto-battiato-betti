@@ -19,7 +19,6 @@ public class PlayerState {
         this.selectedWorker = selectedWorker;
     }
 
-
     public FieldCell getSelectedCell() {
         return selectedCell;
     }
@@ -27,7 +26,6 @@ public class PlayerState {
     public void setSelectedCell(FieldCell selectedCell) {
         this.selectedCell = selectedCell;
     }
-
 
     public Constructible getSelectedConstructible() {
         return selectedConstructible;
@@ -37,7 +35,6 @@ public class PlayerState {
         this.selectedConstructible = selectedConstructible;
     }
 
-
     public ActionEnum getSelectedAction() {
         return selectedAction;
     }
@@ -46,6 +43,9 @@ public class PlayerState {
         this.selectedAction = selectedAction;
     }
 
+    /**
+     * This function is used to clear all the settings (useful when changing players for any needs)
+     */
     public void reset() {
         selectedWorker.getOldMovePositions().clear();
         selectedWorker.getOldBuildPositions().clear();

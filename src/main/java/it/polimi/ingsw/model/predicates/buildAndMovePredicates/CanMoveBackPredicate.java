@@ -7,6 +7,16 @@ import java.util.function.BiPredicate;
 
 public class CanMoveBackPredicate implements BiPredicate<FieldCell, GameWorker> {
 
+    /**
+     * This function is used to check if a given worker can make another one
+     * move back from its position (fieldCell) into another cell in line with the one
+     * where the gameWorker is occupying
+     *
+     * @param fieldCell the cell examined (that should contain another worker)
+     * @param gameWorker the gameWorker that should move back the other worker
+     *
+     * @return true if the other worker can move back, false otherwise
+     */
     @Override
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
         if (fieldCell.isOnPerimeter() && !gameWorker.getCell().isOnPerimeter())

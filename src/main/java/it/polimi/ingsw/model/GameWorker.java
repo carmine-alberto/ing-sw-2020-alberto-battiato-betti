@@ -33,10 +33,20 @@ public class GameWorker implements Serializable  {
 
     public void move(FieldCell destination) {moveStrategy.run(destination, this);}
 
+    /**
+     * This function is used to get the selected gameWorker to build in the destination insert as first parameter.
+     *
+     * @param destination the fieldCell you want to build into
+     * @param constructible the constructible type you want to build
+     */
     public void build(FieldCell destination, Constructible constructible) {
         buildStrategy.run(destination, constructible);
     }
 
+    /**
+     * This function is used to get the position of the worker
+     * @return the fieldCell the worker is occupying
+     */
     public FieldCell getCell() {
         return this.position;
     }

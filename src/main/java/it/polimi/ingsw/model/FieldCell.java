@@ -14,6 +14,7 @@ public class FieldCell implements Serializable {
     private GameWorker occupyingWorker;
     private Integer posX, posY, height;
     private Boolean hasDome;
+    private static int MAX_HEIGHT = 3;
 
     public FieldCell(Game currentGame, Integer posX, Integer posY) {
         this.occupyingWorker = null;
@@ -39,14 +40,16 @@ public class FieldCell implements Serializable {
         currentGame.notifyObservers(new BoardUpdate(currentGame.getField()));
     }
 
-
     public Integer getHeight() {
         return height;
     }
 
+    /**
+     * This function is used to increment the fieldCell height if possible (eg. it has reached its MAX_HEIGHT) and notifies the observers
+     */
     public void incrementHeight() {
         try {
-            if (height >= 3)
+            if (height >= MAX_HEIGHT)
                 throw new MaxHeightReachedException("Impossibile costruire un altro blocco. Altezza massima raggiunta.");
             height++;
             currentGame.notifyObservers(new BoardUpdate(currentGame.getField()));
@@ -55,32 +58,52 @@ public class FieldCell implements Serializable {
         }
     }
 
-
+    /**
+     * This function places a dome in the selected fieldCell and notifies the observers.
+     */
     public void placeDome() {
         hasDome = true;
         currentGame.notifyObservers(new BoardUpdate(currentGame.getField()));
     }
 
-
+    /**
+     * This function return true if the fieldCell is on the perimeter of the board
+     *
+     * @return true if it's on perimeter
+     */
     public Boolean isOnPerimeter() {
         return posX.equals(0) || posX.equals(4) || posY.equals(0) || posY.equals(4);
     }
 
+    /**
+     * A cell is considered to be free if has no worker on it and is has no dome
+     *
+     * @return true if the cell is free, false otherwise
+     */
     public Boolean isFree() { return this.occupyingWorker == null && !this.hasDome; } // una cella è libera se non c'è ne cupola ne worker
 
+    /**
+     * A cell is complete if it has reached its maximum height and it has a dome
+     *
+     * @return tre if the cell is complete, false otherwise
+     */
     public Boolean isComplete() {
-        return this.hasDome && this.getHeight()==3;
+        return this.hasDome && this.getHeight() == MAX_HEIGHT;
     }
 
     public Boolean getHasDome() {
         return this.hasDome;
     }
 
-
     public GameWorker getWorker() {
         return this.occupyingWorker;
     }
 
+    /**
+     * The adjacentCells are the cells surrounding the selected one.
+     *
+     * @return the list of the cell's adjacent cells
+     */
     public List<FieldCell> getAdjacentCells() {
         List<FieldCell> adjacentCells = new ArrayList<>();
 
@@ -96,7 +119,7 @@ public class FieldCell implements Serializable {
         return adjacentCells;
     }
 
-
+    //Todo: javadoc on this one ?
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
