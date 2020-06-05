@@ -38,7 +38,7 @@ public abstract class CLIView extends View {
 
     @Override
     public void showChoices(List<String> availableChoices) {
-        System.out.println(CLIFormatter.formatStringList(availableChoices));
+        System.out.println("Pick one: " + CLIFormatter.formatStringList(availableChoices));
     }
 
     protected void showBoard(FieldCell[][] board) {
