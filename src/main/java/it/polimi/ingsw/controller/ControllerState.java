@@ -12,7 +12,12 @@ public abstract class ControllerState {
         this.mainController = mainController;
     }
 
-
+    /**
+     * This function just sends the event calling its visit function
+     *
+     * @param event The event the controller has to handle
+     * @param view The view in which the player is now
+     */
     public abstract void handle(Event event, VirtualView view);
 
     protected Boolean isTurnPlayer(VirtualView view) {

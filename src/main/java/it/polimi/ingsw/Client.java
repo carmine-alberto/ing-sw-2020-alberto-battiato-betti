@@ -39,6 +39,12 @@ public class Client extends Application {
 
     }
 
+    /**
+     * This function is used to get the client started, it starts a loginView state and launches it
+     *
+     * @param stage The stage you want the client to be shown
+     * @throws Exception When the //todo chiedi a carmine (non so cosa faccia esattamente la setimplicitexit per lanciare un'eccezione)
+     */
     @Override
     public void start(Stage stage) throws Exception {
         this.rendererChoice = "";
@@ -50,6 +56,13 @@ public class Client extends Application {
 
     }
 
+    /**
+     * This function is used to set infos of the players, those will be used to show player's info in the view
+     *
+     * @param player List of the player's nickname
+     * @param god List of the player's god chosen
+     * @param color List of the player's color chosen
+     */
     public void setPlayerInfos(List<String> player, List<String> god, List<String> color) {
         this.playerInfos = new HashMap<>();
 

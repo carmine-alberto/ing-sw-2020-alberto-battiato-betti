@@ -29,6 +29,11 @@ public class Server {
         listenToNewGameConnections();
     }
 
+    /**
+     * This functions starts the server on the given server socket port and sets the executor
+     *
+     * @param port the port you want the server to work on
+     */
     public static void startServer(int port) {
         executor = Executors.newCachedThreadPool();
 
@@ -40,6 +45,9 @@ public class Server {
         }
     }
 
+    /**
+     * This function is used to set the server waiting for connections
+     */
     private static void listenToNewGameConnections() {
         lastGame = games.get(games.size() - 1);
         while (true) {

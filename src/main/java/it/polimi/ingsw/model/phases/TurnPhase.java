@@ -36,10 +36,23 @@ public abstract class TurnPhase {
             .reduce(phasePredicate, BiPredicate::and);
     }
 
+    /**
+     * This function is used to start the phase
+     */
     public abstract void stateInit();
 
+    /**
+     * This function is called to get the turnPhase running
+     *
+     * @param arg The string used in the Phase
+     * @throws IllegalFormatException If the format of the string does not fit the required one
+     * @throws InvalidSelectionException If the selection of the action is invalid
+     */
     public abstract void run(String arg) throws IllegalFormatException, InvalidSelectionException;
 
+    /**
+     * This function is called to end the phase
+     */
     public void stateEnd() {
         currentGame.getPlayers().forEach(this::checkIsWinner);
         turnPlayer.getSelectedGod().setNextPhase(currentGame);
