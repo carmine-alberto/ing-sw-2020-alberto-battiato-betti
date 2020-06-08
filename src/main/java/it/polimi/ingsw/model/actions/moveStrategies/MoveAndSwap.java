@@ -7,6 +7,11 @@ import it.polimi.ingsw.model.actions.Move;
 
 public class MoveAndSwap extends Move implements Action {
 
+    /**
+     * this strategy makes the given worker swap position with the given cell's occupying worker
+     * @param cell where the worker moves
+     * @param gw worker which moves in the given cell
+     */
     @Override
     public void run(FieldCell cell, GameWorker gw) {
 

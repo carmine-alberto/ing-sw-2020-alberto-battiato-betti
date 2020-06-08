@@ -15,6 +15,9 @@ public class EndPhase extends TurnPhase {
         super(currentGame);
     }
 
+    /**
+     * here is run the phase
+     */
     @Override
     public void stateInit() {
         try {
@@ -27,6 +30,12 @@ public class EndPhase extends TurnPhase {
 
     }
 
+    /**
+     * here is sent a message to the player
+     * @param arg
+     * @throws IllegalFormatException
+     * @throws InvalidSelectionException
+     */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
         turnPlayer = currentGame.getTurnPlayer();
@@ -37,6 +46,9 @@ public class EndPhase extends TurnPhase {
 
     }
 
+    /**
+     * here is set the next turn player
+     */
     @Override
     public void stateEnd() {
         super.stateEnd();

@@ -23,6 +23,10 @@ public class Node {
         this.phasePredicate = phasePredicate;
     }
 
+    /**
+     * this method adds a child to the list of children
+     * @param node to add
+     */
     public void addChild(Node node) {
         children.add(node);
     }

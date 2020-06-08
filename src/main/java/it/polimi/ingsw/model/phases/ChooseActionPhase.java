@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.phases;
 import it.polimi.ingsw.controller.events.AvailableChoicesUpdate;
 import it.polimi.ingsw.model.ActionEnum;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.ArrayList;
@@ -19,6 +18,9 @@ public class ChooseActionPhase extends TurnPhase {
         super(currentGame, phasePredicate, "actionPredicate");
     }
 
+    /**
+     * Here available actions are calculated. If there's more than one, it's sent a message to the current turn player
+     */
     @Override
     public void stateInit() {
 
@@ -40,6 +42,12 @@ public class ChooseActionPhase extends TurnPhase {
             }
     }
 
+    /**
+     * Here is setted the player's selected action
+     *
+     * @param arg coordinates
+     * @throws InvalidSelectionException If the selection of the action is invalid
+     */
     @Override
     public void run(String arg) throws InvalidSelectionException {
         parseArg(arg);
@@ -49,6 +57,11 @@ public class ChooseActionPhase extends TurnPhase {
         turnPlayer.getPlayerState().setSelectedAction(selectedAction);
     }
 
+    /**
+     * this method is used to check the validity of the user Input
+     * @param arg action
+     * @throws InvalidSelectionException If the selection of the action is invalid
+     */
     private void parseArg(String arg) throws InvalidSelectionException {
         if (stringify(availableActions).contains(arg))
             return;

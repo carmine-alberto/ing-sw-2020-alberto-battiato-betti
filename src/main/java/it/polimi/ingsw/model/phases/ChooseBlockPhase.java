@@ -21,6 +21,9 @@ public class ChooseBlockPhase extends TurnPhase {
 
     }
 
+    /**
+     * Here available constructibles are calculated. If there's more than one, it's sent a message to the current turn player
+     */
     @Override
     public void stateInit() {
 
@@ -42,6 +45,12 @@ public class ChooseBlockPhase extends TurnPhase {
             }
     }
 
+    /**
+     * Here the build action is run
+     *
+     * @param arg coordinates
+     * @throws InvalidSelectionException If the selection of the action is invalid
+     */
     @Override
     public void run(String arg) throws InvalidSelectionException {
         PlayerState turnPlayerState = turnPlayer.getPlayerState();
@@ -58,6 +67,11 @@ public class ChooseBlockPhase extends TurnPhase {
         checkWinConditions();
     }
 
+    /**
+     * this method is used to check the validity of the user Input
+     * @param arg action
+     * @throws InvalidSelectionException If the selection of the action is invalid
+     */
     private void parseArg(String arg) throws InvalidSelectionException {
         if (stringify(availableBlocks).contains(arg))
             return;

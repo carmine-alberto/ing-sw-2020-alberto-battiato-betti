@@ -15,11 +15,21 @@ public class ChooseWorkerPhase extends TurnPhase {
         super(currentGame, phasePredicate, "chooseWorkerPredicate");
     }
 
+    /**
+     * here is sent a notification to the turn player
+     */
     @Override
     public void stateInit() {
         currentGame.notifyTurnPlayer(new PhaseUpdate("Select the desired worker"));
     }
 
+    /**
+     * Here is setted the player's selected worker
+     *
+     * @param arg coordinates
+     * @throws IllegalFormatException If the format of the string does not fit the required one
+     * @throws InvalidSelectionException If the selection is invalid
+     */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
         parseCoordinatesArg(arg);
