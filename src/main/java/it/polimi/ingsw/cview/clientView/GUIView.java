@@ -53,6 +53,7 @@ public abstract class GUIView extends View {
         });
     }
 
+
     @Override
     public void terminate() {
         Platform.runLater(() -> this.mainStage.close());

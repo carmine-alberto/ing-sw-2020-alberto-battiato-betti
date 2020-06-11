@@ -39,10 +39,21 @@ public abstract class  View {
         this.out = out;
     }
 
+    /**
+     * This function is used to start the view
+     */
     public abstract void render();
 
+    /**
+     * This function is used to start the view
+     */
     public abstract void terminate();
 
+    /**
+     * This function is used to pass to the next view
+     *
+     * @param nextState The next state you want to enter to (red in the phasesTree)
+     */
     public void next(String nextState) {
         Platform.runLater(() -> {
             try {
@@ -60,6 +71,11 @@ public abstract class  View {
         });
     }
 
+    /**
+     * Used to send an event to the server
+     *
+     * @param e the event you want to send
+     */
     public void notify(Event e) {
         Platform.runLater(() -> {
             try {
@@ -71,12 +87,27 @@ public abstract class  View {
         });
     }
 
+    /**
+     * This method is used whenever the client disconnects from the server
+     */
     protected abstract void connectionClosedHandler();
 
+    /**
+     * This method shows the given message to the player
+     * @param message You want to be shown
+     */
     public abstract void showMessage(String message);
 
+    /**
+     * This method shows the given warning to the player
+     * @param message You want to be shown
+     */
     public abstract void showWarning(String message);
 
+    /**
+     * This method shows the given choices to the player
+     * @param availableChoices You want to be shown
+     */
     public abstract void showChoices(List<String> availableChoices);
 
 }

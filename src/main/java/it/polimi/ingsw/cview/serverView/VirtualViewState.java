@@ -33,6 +33,10 @@ public abstract class VirtualViewState extends View {
         throw new UnsupportedOperationException("Operation not available on the server");
     }
 
+    /**
+     *
+     * @param availableChoices You want to be shown
+     */
     @Override
     public void showChoices(List<String> availableChoices) {
         throw new UnsupportedOperationException("Operation not available on the server");

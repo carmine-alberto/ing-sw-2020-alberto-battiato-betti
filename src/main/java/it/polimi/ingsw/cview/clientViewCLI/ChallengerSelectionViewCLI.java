@@ -39,6 +39,7 @@ public class ChallengerSelectionViewCLI extends CLIView {
     }
 
 
+
     @Override
     public synchronized void render() {
         availableGods = client.getAvailableGods();

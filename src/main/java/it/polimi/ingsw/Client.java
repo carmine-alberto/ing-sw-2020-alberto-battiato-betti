@@ -43,10 +43,10 @@ public class Client extends Application {
      * This function is used to get the client started, it starts a loginView state and launches it
      *
      * @param stage The stage you want the client to be shown
-     * @throws Exception When the //todo chiedi a carmine (non so cosa faccia esattamente la setimplicitexit per lanciare un'eccezione)
      */
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage){
+        //con la scelta da args cli/gui
         this.rendererChoice = "";
         Platform.setImplicitExit(false); //When the stage is closed, the thread keeps running in background - necessary to make the CLI work on the JavaFX thread
         //TODO Handle manual termination of the GUI thread - it's not done at mainStage.close() when the above statement is applied.
