@@ -1,7 +1,6 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.View;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.shape.*;
@@ -14,10 +13,10 @@ import javafx.scene.image.*;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class View3D extends GUIView {
+public class ViewState3D extends GUIViewState {
 
-    public View3D(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public ViewState3D(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
 

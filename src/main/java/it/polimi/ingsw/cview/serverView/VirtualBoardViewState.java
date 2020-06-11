@@ -2,21 +2,20 @@ package it.polimi.ingsw.cview.serverView;
 
 import it.polimi.ingsw.Observer;
 import it.polimi.ingsw.controller.events.Event;
-import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.Game;
 
-public class VirtualWorkerSetupView extends VirtualViewState implements Observer<Event> {
+public class VirtualBoardViewState extends VirtualViewStateState implements Observer<Event> {  //TODO The view components should observe the game components (board, godPowers)
 
-    public VirtualWorkerSetupView () {};
+    public VirtualBoardViewState() {};
 
-    public VirtualWorkerSetupView (VirtualView virtualView, Game currentGame) {
+    public VirtualBoardViewState(VirtualView virtualView, Game currentGame) {
         this.virtualView = virtualView;
         currentGame.addObserver(this); //TODO Observers should be deregistered as well
     }
 
     @Override
     public String toString() {
-        return "WorkerSetupView";
+        return "BoardView";
     }
 
     @Override

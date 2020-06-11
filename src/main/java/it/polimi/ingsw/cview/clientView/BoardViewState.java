@@ -1,10 +1,8 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.UserInputEvent;
-import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.FieldCell;
-import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Insets;
@@ -23,23 +21,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BoardView extends GUIView {
+public class BoardViewState extends GUIViewState {
     final Integer edgeTolerance = 20;
     final Integer BOARD_SIZE = 5;
 
     private TilePane board;
 
-    public BoardView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public BoardViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
 
-        client.setAvailableCellsX(new ArrayList<>());
-        client.setAvailableCellsY(new ArrayList<>());
+        view.setAvailableCellsX(new ArrayList<>());
+        view.setAvailableCellsY(new ArrayList<>());
     }
 
     @Override
     protected void fXRender() {
-        if (client.getPlayerInfos() != null) {
-            FieldCell[][] boardRep = client.getBoard();
+        if (view.getPlayerInfos() != null) {
+            FieldCell[][] boardRep = view.getBoard();
             StackPane cell;
 
             board = new TilePane();
@@ -68,10 +66,10 @@ public class BoardView extends GUIView {
                     board.getChildren().add(cell);
                 }
 
-            Label selectedGodPower = new Label(client.getMyName() + ", your selected God Power is: " + client.getPlayerInfos().get(client.getMyName()).get(0));
+            Label selectedGodPower = new Label(view.getMyName() + ", your selected God Power is: " + view.getPlayerInfos().get(view.getMyName()).get(0));
 
             VBox interfaceBox;
-            interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(client.getPlayerInfos().get(client.getMyName()).get(1))));
+            interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(view.getPlayerInfos().get(view.getMyName()).get(1))));
             interfaceBox.setPadding(new Insets(20));
             interfaceBox.setAlignment(Pos.CENTER);
             interfaceBox.setFillWidth(false);
@@ -82,8 +80,8 @@ public class BoardView extends GUIView {
 
 
     private void fillCell(StackPane cell, FieldCell fieldCell) {
-        List<Integer> availableXCoordinates = client.getAvailableCellsX();
-        List<Integer> availableYCoordinates = client.getAvailableCellsY();
+        List<Integer> availableXCoordinates = view.getAvailableCellsX();
+        List<Integer> availableYCoordinates = view.getAvailableCellsY();
 
         Double baseWidth = 0.9 * cell.getPrefWidth();
 

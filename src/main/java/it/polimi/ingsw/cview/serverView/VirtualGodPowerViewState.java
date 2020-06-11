@@ -1,14 +1,14 @@
 package it.polimi.ingsw.cview.serverView;
 
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.ViewState;
 
 import java.net.Socket;
 
-public class VirtualGodPowerView extends VirtualViewState {
+public class VirtualGodPowerViewState extends VirtualViewStateState {
 
-    public VirtualGodPowerView() {};
+    public VirtualGodPowerViewState() {};
 
-    public VirtualGodPowerView(VirtualView virtualView, Socket clientSocket, View viewState) {
+    public VirtualGodPowerViewState(VirtualView virtualView, Socket clientSocket, ViewState viewState) {
         super(virtualView, clientSocket, viewState);
     }
     @Override

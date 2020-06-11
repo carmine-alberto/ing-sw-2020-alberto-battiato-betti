@@ -1,7 +1,6 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.cview.utility.MessageWindow;
 import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
 import javafx.geometry.Insets;
@@ -18,14 +17,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class ChallengerSelectionView extends GUIView {
+public class ChallengerSelectionViewState extends GUIViewState {
     private ToggleGroup numberOfPlayers;
     private ToggleGroup startingPlayer;
     private FlowPane godsIcons;
 
 
-    public ChallengerSelectionView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public ChallengerSelectionViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
     @Override
@@ -70,7 +69,7 @@ public class ChallengerSelectionView extends GUIView {
         godsIcons.setHgap(8);
         godsIcons.setVgap(10);
 
-        List<String> godsList = client.getAvailableGods();
+        List<String> godsList = view.getAvailableGods();
         if (godsList != null)
             for (String god : godsList)
                 godsIcons.getChildren().add(new ToggleButton(god));

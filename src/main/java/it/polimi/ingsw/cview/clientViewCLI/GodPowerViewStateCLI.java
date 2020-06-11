@@ -1,20 +1,15 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.GodSelectionEvent;
-import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.utility.CLIFormatter;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
-public class GodPowerViewCLI extends CLIView {
+public class GodPowerViewStateCLI extends CLIViewState {
     private enum InternalState {
         GOD_SELECTION,
         IDLE
@@ -22,14 +17,14 @@ public class GodPowerViewCLI extends CLIView {
     private List<String> availableGods;
     private InternalState currentState;
 
-    public GodPowerViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public GodPowerViewStateCLI(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
         this.currentState = InternalState.GOD_SELECTION;
     }
 
     @Override
     public void render() {
-        availableGods = client.getAvailableGods();
+        availableGods = view.getAvailableGods();
 
         if (availableGods != null)
             switch (currentState) {

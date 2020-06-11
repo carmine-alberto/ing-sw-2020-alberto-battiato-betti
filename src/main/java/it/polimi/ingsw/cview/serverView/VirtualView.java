@@ -5,7 +5,7 @@ import it.polimi.ingsw.controller.events.ChangeViewEvent;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.PingEvent;
 import it.polimi.ingsw.controller.events.WarningEvent;
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.ViewState;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,14 +17,14 @@ public class VirtualView implements Runnable {
         private Controller controller;
         private ObjectInputStream serverInputStream;
         private ObjectOutputStream serverOutputStream;
-        private View viewState;
+        private ViewState viewState;
         static Float TIMEOUT = 1F;
         private Boolean isLinkedViewAlive;
 
         public VirtualView(Socket socket, Controller controller) {
             this.socket = socket;
             this.controller = controller;
-            this.viewState = new VirtualLoginView(this, socket, viewState);
+            this.viewState = new VirtualLoginViewState(this, socket, viewState);
             this.isLinkedViewAlive = true;
         }
 
@@ -75,7 +75,7 @@ public class VirtualView implements Runnable {
         }
     }
 
-    public void changeView(View nextState) {
+    public void changeView(ViewState nextState) {
             viewState = nextState;
             sendToClient(new ChangeViewEvent(nextState.toString()));
     }

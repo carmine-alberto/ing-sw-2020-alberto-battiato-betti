@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.Server;
 import it.polimi.ingsw.model.actions.Action;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSet;
 import it.polimi.ingsw.model.actions.moveStrategies.MoveAndShiftBack;
@@ -14,7 +15,9 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -22,14 +25,18 @@ import java.util.function.BiPredicate;
 
 public class Parser {
 
-    private List<God> godsList = new ArrayList<God>();
+    private List<God> godsList = new ArrayList<>();
 
     private void read() {
         God.GodBuilder builder = new God.GodBuilder();
         // Add setters for the remaining God attributes in GodBuilder (SHOULD BE DONE)
 
         try {
-            File xmlFile = new File(System.getProperty("user.dir") + File.separator + "resources" + File.separator + "godPowers.xml");
+            InputStream godPowersStream = Server.class.getClassLoader().getResourceAsStream("godPowers.xml");
+            File xmlFile = File.createTempFile("godPowersFile", ".xml");
+            xmlFile.deleteOnExit();
+            copyInputStreamToFile(godPowersStream, xmlFile);
+
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(xmlFile);
@@ -37,7 +44,6 @@ public class Parser {
             doc.getDocumentElement().normalize();
             stripSpace(doc);
 
-            //printNode(doc, 0);
             visitNode(doc, builder);
 
 
@@ -490,5 +496,15 @@ public class Parser {
     public List<God> getGodsList() {
         read();
         return this.godsList;
+    }
+
+    private void copyInputStreamToFile(InputStream input, File destination) {
+
+        try (OutputStream output = new FileOutputStream(destination)) {
+            input.transferTo(output);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
     }
 }

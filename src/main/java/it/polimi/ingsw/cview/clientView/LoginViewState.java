@@ -1,6 +1,6 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.LoginEvent;
 import it.polimi.ingsw.cview.ViewEventHandler;
 import it.polimi.ingsw.cview.clientViewCLI.TerminalEventHandler;
@@ -23,20 +23,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class LoginView extends GUIView {
+public class LoginViewState extends GUIViewState {
     private ChoiceBox<String> cliGUIChoice;
     private TextField usernameInput;
     private TextField serverIPInput;
     private TextField portInput;
 
-    public LoginView(Stage stage, Socket clientSocket, Client client) {
-        super(stage, clientSocket, client, null);
+    public LoginViewState(Stage stage, Socket clientSocket, View view) {
+        super(stage, clientSocket, view, null);
     }
 
     @Override
     public void fXRender() {
 
-        Image backgroundImage = new Image("file:" + System.getProperty("user.dir") + File.separator + "resources" + File.separator + "copertina_santorini_2016.jpg");
+        Image backgroundImage = new Image(this.getClass().getClassLoader().getResource("copertina_santorini_2016.jpg").toString());
         ImageView imageNode = new ImageView(backgroundImage);
         imageNode.fitHeightProperty().bind(mainStage.heightProperty());
         imageNode.setPreserveRatio(true);
@@ -86,11 +86,11 @@ public class LoginView extends GUIView {
      */
     private void sendDataToServer() {
         if (cliGUIChoice.getValue().equals("CLI")) {
-            client.setRendererChoice("CLI");
-            Thread CLIListener = new Thread(new TerminalEventHandler(client));
+            view.setRendererChoice("CLI");
+            Thread CLIListener = new Thread(new TerminalEventHandler(view));
             CLIListener.start();
         } else
-            client.setRendererChoice("");
+            view.setRendererChoice("");
 
         String username = usernameInput.getText();
         String serverIP = serverIPInput.getText();
@@ -101,11 +101,11 @@ public class LoginView extends GUIView {
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-            Thread serverListener = new Thread(new ViewEventHandler(client, clientInputStream));
+            Thread serverListener = new Thread(new ViewEventHandler(view, clientInputStream));
             serverListener.start();
             System.out.println("Thread started");
 
-            client.setMyName(username);
+            view.setMyName(username);
 
             out.writeObject(new LoginEvent(username));
 

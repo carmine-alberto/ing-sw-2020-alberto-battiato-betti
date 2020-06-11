@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GodPowerController extends ControllerState {
     private Integer choosingPlayerIndex;
@@ -44,7 +43,7 @@ public class GodPowerController extends ControllerState {
             currentGame.assignSelectedGodPowerToPlayer(event.selectedGod, choosingPlayer);
             currentGame.removeGodPowerFromAvailableGods(event.selectedGod);
             godPowersList.remove(event.selectedGod);    //Looks redundant? Necessary for the below code to work (if condition evaluates to true)
-            choosingPlayer.getPlayerView().changeView(new VirtualWaitingView());
+            choosingPlayer.getPlayerView().changeView(new VirtualWaitingViewState());
             choosingPlayerIndex++;
             if (choosingPlayerIndex % currentGame.NUM_OF_PLAYERS == 0) {
                 currentGame.assignSelectedGodPowerToPlayer(godPowersList.get(0), currentGame.getPlayers().get(0));
@@ -52,7 +51,7 @@ public class GodPowerController extends ControllerState {
                 moveToNextState();
             } else {
                 choosingPlayer = currentGame.getPlayers().get(choosingPlayerIndex);
-                choosingPlayer.getPlayerView().changeView(new VirtualGodPowerView());
+                choosingPlayer.getPlayerView().changeView(new VirtualGodPowerViewState());
                 notifySelectedGods(currentGame.getPlayers().get(choosingPlayerIndex));
             }
         } else
@@ -68,11 +67,11 @@ public class GodPowerController extends ControllerState {
                 .getPlayers()
                 .stream()
                 .filter(player -> !player.equals(turnPlayer))
-                .forEach(player -> player.getPlayerView().changeView(new VirtualWaitingView()));
+                .forEach(player -> player.getPlayerView().changeView(new VirtualWaitingViewState()));
 
         turnPlayer
                 .getPlayerView()
-                .changeView(new VirtualWorkerSetupView(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
+                .changeView(new VirtualWorkerSetupViewState(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
         mainController.controllerState = new WorkerSetupController(mainController);
     }
 }

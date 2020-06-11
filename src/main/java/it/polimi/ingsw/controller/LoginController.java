@@ -1,12 +1,10 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.Server;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.LoginEvent;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.cview.serverView.VirtualChallengerSelectionView;
+import it.polimi.ingsw.cview.serverView.VirtualChallengerSelectionViewState;
 import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.model.exceptions.AlreadyExistingNameException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.stream.Collectors;
@@ -26,7 +24,7 @@ public class LoginController extends ControllerState {
 
         try {
             mainController.getCurrentGame().addPlayer(newPlayer);
-            newPlayer.getPlayerView().changeView(new VirtualChallengerSelectionView());
+            newPlayer.getPlayerView().changeView(new VirtualChallengerSelectionViewState());
             mainController.controllerState = new ChallengerSelectionController(mainController);
 
             System.out.println(mainController.getCurrentGame().getPlayers().stream().map(player -> player.getNickname()).collect(Collectors.toList())); //TODO Remove random print

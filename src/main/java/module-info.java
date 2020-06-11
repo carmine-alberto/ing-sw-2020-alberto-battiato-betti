@@ -4,5 +4,6 @@ module org.example {
     requires java.xml;
 
     opens it.polimi.ingsw to javafx.fxml;
+    opens it.polimi.ingsw.model.predicates.winConditionsPredicates;
     exports it.polimi.ingsw;
 }

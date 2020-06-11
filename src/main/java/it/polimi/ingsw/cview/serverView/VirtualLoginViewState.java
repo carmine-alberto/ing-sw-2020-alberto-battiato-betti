@@ -1,14 +1,14 @@
 package it.polimi.ingsw.cview.serverView;
 
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.ViewState;
 
 import java.net.Socket;
 
-public class VirtualLoginView extends VirtualViewState {
+public class VirtualLoginViewState extends VirtualViewStateState {
 
-    public VirtualLoginView() {};
+    public VirtualLoginViewState() {};
 
-    public VirtualLoginView(VirtualView virtualView, Socket clientSocket, View viewState) {
+    public VirtualLoginViewState(VirtualView virtualView, Socket clientSocket, ViewState viewState) {
         super(virtualView, clientSocket, viewState);
     }
 

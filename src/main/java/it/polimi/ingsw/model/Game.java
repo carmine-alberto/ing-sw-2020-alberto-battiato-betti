@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Observable;
 import it.polimi.ingsw.controller.events.*;
-import it.polimi.ingsw.cview.serverView.VirtualBoardView;
+import it.polimi.ingsw.cview.serverView.VirtualBoardViewState;
 import it.polimi.ingsw.model.actions.Build;
 import it.polimi.ingsw.model.actions.Move;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
@@ -191,7 +191,7 @@ public class Game extends Observable<Event> {
         if (!observers.isEmpty())
             this.notify(observers
                     .stream()
-                    .filter(observer -> ((VirtualBoardView)observer).getVirtualView().equals(turnPlayer.getPlayerView()))
+                    .filter(observer -> ((VirtualBoardViewState)observer).getVirtualView().equals(turnPlayer.getPlayerView()))
                     .collect(Collectors.toList())
                     .get(0),
                     event);

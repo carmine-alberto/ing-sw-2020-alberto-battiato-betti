@@ -1,9 +1,8 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.View;
+import it.polimi.ingsw.cview.ViewState;
 import it.polimi.ingsw.cview.utility.CLIFormatter;
-import it.polimi.ingsw.cview.utility.MessageWindow;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -14,10 +13,10 @@ import java.util.List;
 
 import static it.polimi.ingsw.cview.utility.CLIFormatter.*;
 
-public abstract class CLIView extends View {
+public abstract class CLIViewState extends ViewState {
 
-    public CLIView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public CLIViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
     @Override

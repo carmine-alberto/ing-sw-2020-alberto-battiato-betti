@@ -1,6 +1,6 @@
 package it.polimi.ingsw.cview;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.*;
 import javafx.application.Platform;
 
@@ -16,11 +16,11 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 public class ViewEventHandler implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private Client client;
+    private View view;
     static Float TIMEOUT = 1F;
 
-    public ViewEventHandler(Client client, ObjectInputStream in) throws IOException {
-        this.client = client;
+    public ViewEventHandler(View view, ObjectInputStream in) throws IOException {
+        this.view = view;
         this.in = in;
         System.out.println("Thread created");
 
@@ -45,85 +45,85 @@ public class ViewEventHandler implements Runnable {
     }
 
     public void handle(ChangeViewEvent event) {
-        client.getViewState().next(event.viewState);
-        System.out.println(client.getViewState().getClass());
+        view.getViewState().next(event.viewState);
+        System.out.println(view.getViewState().getClass());
     }
 
     public void handle(WarningEvent event) {
-        client.getViewState().showWarning(event.message);
+        view.getViewState().showWarning(event.message);
     }
 
     public void handle(SelectedGodsEvent selectedGodsEvent) {
         Platform.runLater(() -> {
-            client.setAvailableGods(selectedGodsEvent.godPowers);
-            client.getViewState().render();
+            view.setAvailableGods(selectedGodsEvent.godPowers);
+            view.getViewState().render();
         });
     }
 
     public void handle(AvailableGodsEvent availableGodsEvent) {
         Platform.runLater(() -> {
-            client.setAvailableGods((availableGodsEvent.godPowers));
-            client.getViewState().render();
+            view.setAvailableGods((availableGodsEvent.godPowers));
+            view.getViewState().render();
         });
     }
 
     public void handle(BoardUpdate boardUpdate) {
         Platform.runLater(() -> {
-            client.setBoard(boardUpdate.board);
-            client.getViewState().render();
+            view.setBoard(boardUpdate.board);
+            view.getViewState().render();
         });
     }
 
     public void handle(PhaseUpdate update) {
-        client.setAvailableCellsX(new ArrayList<>());  //At every phase change, the available cells are reset
-        client.setAvailableCellsY(new ArrayList<>());
-        client.getViewState().render();
+        view.setAvailableCellsX(new ArrayList<>());  //At every phase change, the available cells are reset
+        view.setAvailableCellsY(new ArrayList<>());
+        view.getViewState().render();
 
-        client.getViewState().showMessage(update.message);
+        view.getViewState().showMessage(update.message);
 
     }
 
     public void handle(GameStartedEvent gameStartedEvent) {
         Platform.runLater(() -> {
-            client.getViewState().next("BoardView");
-            client.getViewState().render();
+            view.getViewState().next("BoardView");
+            view.getViewState().render();
         });
     }
 
     public void handle(AvailableChoicesUpdate update) {
-        client.getViewState().showChoices(update.availableChoices);
+        view.getViewState().showChoices(update.availableChoices);
 
     }
 
     public void handle(AvailableCellsUpdate availableCellsUpdate) {
-        client.setAvailableCellsX(availableCellsUpdate.xCoordinates);
-        client.setAvailableCellsY(availableCellsUpdate.yCoordinates);
+        view.setAvailableCellsX(availableCellsUpdate.xCoordinates);
+        view.setAvailableCellsY(availableCellsUpdate.yCoordinates);
 
-        client.getViewState().render();
+        view.getViewState().render();
 
     }
 
     public void handle(PlayerLostUpdate update) {
-        client.getViewState().showMessage(update.losingPlayerNickname + " has no available moves and was removed from the game");
+        view.getViewState().showMessage(update.losingPlayerNickname + " has no available moves and was removed from the game");
     }
 
     public void handle(GameEndUpdate update) {
-        client.getViewState().showMessage("The game is over. " +
+        view.getViewState().showMessage("The game is over. " +
                 update.winnerNickname + " is the winner!");
-        client.getViewState().terminate();
+        view.getViewState().terminate();
     }
 
     public void handle(PingEvent pingEvent) {
-        if (client.getPingTimestamp() == null) {
-            client.setPingTimestamp(LocalDateTime.now());
+        if (view.getPingTimestamp() == null) {
+            view.setPingTimestamp(LocalDateTime.now());
             startDeltaTimestampCheckingThread();
         }
-        client.setPingTimestamp(LocalDateTime.now());
-        client.getViewState().notify(new PingEvent());  //TODO We should decouple pinging and JavaFX thread
+        view.setPingTimestamp(LocalDateTime.now());
+        view.getViewState().notify(new PingEvent());  //TODO We should decouple pinging and JavaFX thread
     }
 
     public void handle(GameInformationEvent gameInformationsEvent) {
-        client.setPlayerInfos(gameInformationsEvent.playersName, gameInformationsEvent.chosenGods, gameInformationsEvent.chosenColor);
+        view.setPlayerInfos(gameInformationsEvent.playersName, gameInformationsEvent.chosenGods, gameInformationsEvent.chosenColor);
     }
 
     private void startDeltaTimestampCheckingThread() {
@@ -131,9 +131,9 @@ public class ViewEventHandler implements Runnable {
         new Thread(() -> {
             while (true) {
                 LocalDateTime now = LocalDateTime.now();
-                if (SECONDS.between(client.getPingTimestamp(), now) > scalingFactor * TIMEOUT) { //TODO Should we make all of this synchronized?
-                    client.getViewState().showMessage("The server is no longer available - The current game will be terminated");
-                    client.getViewState().terminate();
+                if (SECONDS.between(view.getPingTimestamp(), now) > scalingFactor * TIMEOUT) { //TODO Should we make all of this synchronized?
+                    view.getViewState().showMessage("The server is no longer available - The current game will be terminated");
+                    view.getViewState().terminate();
                 }
                 try {
                     Thread.sleep((long) (scalingFactor * TIMEOUT * 1000));

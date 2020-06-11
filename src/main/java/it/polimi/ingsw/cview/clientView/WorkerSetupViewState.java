@@ -1,10 +1,8 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
-import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.model.FieldCell;
-import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Insets;
@@ -24,10 +22,10 @@ import java.net.Socket;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.cview.clientView.WorkerSetupView.CellCoordinate.Y;
-import static it.polimi.ingsw.cview.clientView.WorkerSetupView.CellCoordinate.X;
+import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.Y;
+import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.X;
 
-public class WorkerSetupView extends GUIView {
+public class WorkerSetupViewState extends GUIViewState {
     enum CellCoordinate {
         X, Y;
     }
@@ -39,13 +37,13 @@ public class WorkerSetupView extends GUIView {
     private ColorPicker colorPicker;
     private TilePane board;
 
-    public WorkerSetupView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public WorkerSetupViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
     @Override
     protected void fXRender() {
-        FieldCell[][] boardRep = client.getBoard();
+        FieldCell[][] boardRep = view.getBoard();
         StackPane cell;
 
         if (boardRep != null) {
@@ -99,7 +97,7 @@ public class WorkerSetupView extends GUIView {
 
         for (Integer i = 0; i < BOARD_SIZE; i++)
             for (Integer j = 0; j < BOARD_SIZE; j++)
-                if(client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().equals(colorPicker.getValue().toString())) {
+                if(view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().equals(colorPicker.getValue().toString())) {
                     this.showMessage("One of your opponents already chose this color, pick another one!");
                     return;
                 }
@@ -127,7 +125,7 @@ public class WorkerSetupView extends GUIView {
                 .map(cell -> extractCellCoordinate(Y, cell))
                 .collect(Collectors.toList());
 
-        if(!client.getBoard()[xCoordinates.get(0) - 1][yCoordinates.get(0) - 1].isFree() || !client.getBoard()[xCoordinates.get(1) - 1][yCoordinates.get(1) - 1].isFree()) {
+        if(!view.getBoard()[xCoordinates.get(0) - 1][yCoordinates.get(0) - 1].isFree() || !view.getBoard()[xCoordinates.get(1) - 1][yCoordinates.get(1) - 1].isFree()) {
             this.showMessage("You can't place a worker in a cell that is already occupied");
             return;
         }
@@ -141,7 +139,7 @@ public class WorkerSetupView extends GUIView {
         notify(new WorkerSelectionEvent(xCoordinates, yCoordinates, color));
     }
 
-    private Integer extractCellCoordinate(WorkerSetupView.CellCoordinate coord, Node cell) {
+    private Integer extractCellCoordinate(WorkerSetupViewState.CellCoordinate coord, Node cell) {
         return switch (coord) {
             case X -> Integer.parseInt(cell.getId().substring(0, 1));
             case Y -> Integer.parseInt(cell.getId().substring(2, 3));
@@ -149,8 +147,8 @@ public class WorkerSetupView extends GUIView {
     }
 
     private void fillCell(StackPane cell, FieldCell fieldCell) {
-        List<Integer> availableXCoordinates = client.getAvailableCellsX();
-        List<Integer> availableYCoordinates = client.getAvailableCellsY();
+        List<Integer> availableXCoordinates = view.getAvailableCellsX();
+        List<Integer> availableYCoordinates = view.getAvailableCellsY();
 
         Double baseWidth = 0.9 * cell.getPrefWidth();
 

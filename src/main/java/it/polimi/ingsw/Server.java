@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

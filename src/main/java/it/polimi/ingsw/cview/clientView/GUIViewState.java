@@ -1,8 +1,8 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.UserInputEvent;
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.ViewState;
 import it.polimi.ingsw.cview.utility.ChoiceWindow;
 import it.polimi.ingsw.cview.utility.MessageWindow;
 import javafx.application.Platform;
@@ -12,10 +12,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-public abstract class GUIView extends View {
+public abstract class GUIViewState extends ViewState {
 
-    public GUIView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public GUIViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
     @Override

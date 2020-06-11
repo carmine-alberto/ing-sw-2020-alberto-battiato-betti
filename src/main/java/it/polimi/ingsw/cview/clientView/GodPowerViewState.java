@@ -1,8 +1,7 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.GodSelectionEvent;
-import it.polimi.ingsw.cview.View;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,17 +13,17 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-public class GodPowerView extends GUIView {
+public class GodPowerViewState extends GUIViewState {
     private FlowPane godsIcons;
 
-    public GodPowerView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public GodPowerViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
     @Override
     public void fXRender() {
         Label selectGodLabel = new Label("Select your desired God Power: ");
-        List<String> godsList = client.getAvailableGods();
+        List<String> godsList = view.getAvailableGods();
 
         godsIcons = new FlowPane();
         godsIcons.setAlignment(Pos.CENTER);

@@ -39,9 +39,7 @@ class CompleteTowersPredicateTest {
         game.getCell(4,3).placeDome();
         game.getCell(4 ,4).placeDome();
         game.getCell(2 , 3).placeDome();
-        game.runPhase("1 1");
-        game.runPhase("2 1");
-        assertTrue(players.get(0).getIsWinner());
+        assertTrue(new CompleteTowersPredicate(5).test(game, null)); //if this statement is reached, the game thread has not been closed, i.e. the winCondition doesn't work because the game is not over
     }
 
     void setupGame() throws InvalidSelectionException {

@@ -3,13 +3,11 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.controller.events.BoardUpdate;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
-import it.polimi.ingsw.cview.serverView.VirtualBoardView;
+import it.polimi.ingsw.cview.serverView.VirtualBoardViewState;
 import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.cview.serverView.VirtualWorkerSetupView;
+import it.polimi.ingsw.cview.serverView.VirtualWorkerSetupViewState;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.actions.Build;
-import it.polimi.ingsw.model.actions.Move;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +48,7 @@ public class WorkerSetupController extends ControllerState {
             if (turnPlayer.getWorkers() != null) { //TODO Low-quality way to check whether the game is ready to be started, can/should we do better?
                 moveToNextState();
             } else {
-                turnPlayer.getPlayerView().changeView(new VirtualWorkerSetupView(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
+                turnPlayer.getPlayerView().changeView(new VirtualWorkerSetupViewState(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
                 turnPlayer.getPlayerView().sendToClient(new BoardUpdate(mainController.getCurrentGame().getField())); //TODO I know, I know, I'm cheating here
                 promptTurnPlayer();
             }
@@ -68,7 +66,7 @@ public class WorkerSetupController extends ControllerState {
 
     private void moveToNextState() {
         mainController.getCurrentGame().detachObservers();
-        mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualBoardView(player.getPlayerView(), mainController.getCurrentGame())));
+        mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualBoardViewState(player.getPlayerView(), mainController.getCurrentGame())));
         mainController.controllerState = new GamePhasesController(mainController);
         mainController.getCurrentGame().initGame();
     }

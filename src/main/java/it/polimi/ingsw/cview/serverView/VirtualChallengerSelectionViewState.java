@@ -1,19 +1,20 @@
 package it.polimi.ingsw.cview.serverView;
 
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.cview.ViewState;
 
 import java.net.Socket;
 
-public class VirtualWaitingView extends VirtualViewState {
+public class VirtualChallengerSelectionViewState extends VirtualViewStateState {
 
-    public VirtualWaitingView() {}; //TODO Refactor constructors in case attributes are never used
-    public VirtualWaitingView(VirtualView virtualView, Socket clientSocket, View viewState) {
+    public VirtualChallengerSelectionViewState() {};
+
+    public VirtualChallengerSelectionViewState(VirtualView virtualView, Socket clientSocket, ViewState viewState) {
         super(virtualView, clientSocket, viewState);
     }
 
     @Override
     public String toString() {
-        return "WaitingView";
+        return "ChallengerSelectionView";
     }
 
     @Override

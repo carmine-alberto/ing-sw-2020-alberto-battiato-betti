@@ -1,22 +1,16 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.controller.events.UserInputEvent;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
-import it.polimi.ingsw.cview.View;
-import it.polimi.ingsw.cview.utility.CLIFormatter;
 import it.polimi.ingsw.model.FieldCell;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class WorkerSetupViewCLI extends CLIView {
+public class WorkerSetupViewStateCLI extends CLIViewState {
     private enum InternalState {
         COLOR_SELECTION,
         WORKER_SELECTION,
@@ -27,8 +21,8 @@ public class WorkerSetupViewCLI extends CLIView {
     private List<Integer> xCoordinates;
     private List<Integer> yCoordinates;
 
-    public WorkerSetupViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public WorkerSetupViewStateCLI(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
         currentState = InternalState.COLOR_SELECTION;
         xCoordinates = new ArrayList<>();
         yCoordinates = new ArrayList<>();
@@ -37,7 +31,7 @@ public class WorkerSetupViewCLI extends CLIView {
 
     @Override
     public void render() {
-        FieldCell[][] boardRep = client.getBoard();
+        FieldCell[][] boardRep = view.getBoard();
 
         if (boardRep != null)
             switch (currentState) {
@@ -78,7 +72,7 @@ public class WorkerSetupViewCLI extends CLIView {
 
         for (Integer i = 0; i < BOARD_SIZE; i++)
             for (Integer j = 0; j < BOARD_SIZE; j++)
-                if (client.getBoard()[i][j].getWorker() != null && client.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(input.toUpperCase())) {
+                if (view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(input.toUpperCase())) {
                     showWarning("One of your opponents already chose this color, pick another one!");
                     return;
                 }
@@ -118,7 +112,7 @@ public class WorkerSetupViewCLI extends CLIView {
     }
 
     private Boolean isOccupied(Integer tempX, Integer tempY) {
-        return !client.getBoard()[tempX - 1][tempY - 1].isFree() || xCoordinates.contains(tempX) && yCoordinates.contains(tempY);
+        return !view.getBoard()[tempX - 1][tempY - 1].isFree() || xCoordinates.contains(tempX) && yCoordinates.contains(tempY);
     }
 
     private boolean isOutOfBounds(Integer coordinate) {

@@ -1,8 +1,7 @@
 package it.polimi.ingsw.cview.clientViewCLI;
 
-import it.polimi.ingsw.Client;
+import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
-import it.polimi.ingsw.cview.View;
 import it.polimi.ingsw.cview.utility.CLIFormatter;
 import javafx.stage.Stage;
 
@@ -10,10 +9,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 
-public class ChallengerSelectionViewCLI extends CLIView {
+public class ChallengerSelectionViewStateCLI extends CLIViewState {
     /**
      * Solution viable because of the little number of microstates.
      * The State pattern has been applied to the macroCLIStates,
@@ -32,8 +29,8 @@ public class ChallengerSelectionViewCLI extends CLIView {
     private InternalState currentState;
 
 
-    public ChallengerSelectionViewCLI(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+    public ChallengerSelectionViewStateCLI(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
         currentState = InternalState.NUM_OF_PLAYERS_SELECTION;
         selectedGods = new ArrayList<>();
     }
@@ -41,7 +38,7 @@ public class ChallengerSelectionViewCLI extends CLIView {
 
     @Override
     public synchronized void render() {
-        availableGods = client.getAvailableGods();
+        availableGods = view.getAvailableGods();
 
         if (availableGods != null)
             switch (currentState) {

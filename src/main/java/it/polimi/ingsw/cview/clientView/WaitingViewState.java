@@ -1,7 +1,6 @@
 package it.polimi.ingsw.cview.clientView;
 
-import it.polimi.ingsw.Client;
-import it.polimi.ingsw.cview.View;
+import it.polimi.ingsw.View;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -17,9 +16,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WaitingView extends GUIView {
-    public WaitingView(Stage stage, Socket clientSocket, Client client, ObjectOutputStream out) {
-        super(stage, clientSocket, client, out);
+public class WaitingViewState extends GUIViewState {
+    public WaitingViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
     @Override
