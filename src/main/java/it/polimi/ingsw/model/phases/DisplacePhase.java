@@ -22,6 +22,9 @@ public class DisplacePhase extends TurnPhase {
         super(currentGame, new ContainsOpponentWorkerPredicate().and(new DisplacePredicate()), "displacePredicate"); //TODO We are hardcoding the predicate here - a better solution would be getting the predicate from the godPowers file, but it's pointless.
     }
 
+    /**
+     * Here available cells are calculated and if no cell is available the player is removed from the game
+     */
     @Override
     public void stateInit() {
         availableCells = turnPlayer
@@ -44,6 +47,13 @@ public class DisplacePhase extends TurnPhase {
         }
     }
 
+    /**
+     * Here the displace action is run
+     *
+     * @param arg coordinates
+     * @throws IllegalFormatException If the format of the string does not fit the required one
+     * @throws InvalidSelectionException If the selection of the action is invalid
+     */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
         parseCoordinatesArg(arg);

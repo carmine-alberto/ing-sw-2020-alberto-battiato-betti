@@ -36,6 +36,7 @@ public class ChallengerSelectionViewStateCLI extends CLIViewState {
     }
 
 
+
     @Override
     public synchronized void render() {
         availableGods = view.getAvailableGods();

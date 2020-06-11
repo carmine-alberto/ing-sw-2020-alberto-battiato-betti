@@ -19,6 +19,9 @@ public class BuildPhase extends TurnPhase {
         super(currentGame, phasePredicate, "buildPredicate");
     }
 
+    /**
+     * Here available cells are calculated and if no cell is available the player is removed from the game
+     */
     @Override
     public void stateInit() {
 
@@ -47,6 +50,13 @@ public class BuildPhase extends TurnPhase {
         }
     }
 
+    /**
+     * Here is setted the player's selected cell
+     *
+     * @param arg coordinates
+     * @throws IllegalFormatException If the format of the string does not fit the required one
+     * @throws InvalidSelectionException If the selection is invalid
+     */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
         parseCoordinatesArg(arg);

@@ -4,14 +4,11 @@ import it.polimi.ingsw.controller.events.AvailableCellsUpdate;
 import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.GameWorker;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
@@ -22,6 +19,9 @@ public class MovePhase extends TurnPhase {
        super(currentGame, phasePredicate, "movePredicate");
    }
 
+    /**
+     * Here available cells are calculated and if no cell is available the player is removed from the game
+     */
     @Override
     public void stateInit() {
        availableCells = turnPlayer
@@ -45,10 +45,11 @@ public class MovePhase extends TurnPhase {
     }
 
     /**
-     * The adjacentCells list is passed to ease the computation (no god lets you move farther than 1 cell);
-     * a more flexible solution would be passing the entire field and adding a predicate enforcing a check on the
-     * distance from the current position
-     * @param arg
+     * Here is setted the player's selected cell and the player moves
+     *
+     * @param arg coordinates
+     * @throws IllegalFormatException If the format of the string does not fit the required one
+     * @throws InvalidSelectionException If the selection of the action is invalid
      */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {

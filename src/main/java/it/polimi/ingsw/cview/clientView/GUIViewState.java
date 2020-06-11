@@ -53,6 +53,7 @@ public abstract class GUIViewState extends ViewState {
         });
     }
 
+
     @Override
     public void terminate() {
         Platform.runLater(() -> this.mainStage.close());

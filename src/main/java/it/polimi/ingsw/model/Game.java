@@ -34,6 +34,9 @@ public class Game extends Observable<Event> {
 
     public static Integer FIELD_SIZE = 5;
 
+    /**
+     * Constructor for class Game, it creates the board and the list of available gods
+     */
     public Game() {
         players = new ArrayList<>();
 
@@ -100,13 +103,15 @@ public class Game extends Observable<Event> {
 
     /**
      * Sets the currentPlayerIndex, used to extract the turnPlayers from the players list
-     *
      * @param currentPlayerIndex as passed by view (incremented by one, to improve user experience)
      */
     public void setCurrentPlayerIndex(Integer currentPlayerIndex) {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
+    /**
+     * called only at the starting of the game, it starts the first turn
+     */
     public void initGame() {
         notifyObservers(new GameInformationEvent(players));
         notifyObservers(new GameStartedEvent());
@@ -115,6 +120,10 @@ public class Game extends Observable<Event> {
     }
 
     //TODO Make sure the transition is smooth - an error seemed to be present during one of our tests
+
+    /**
+     * removes the TurnPlayer from the game and ends the game if there's only one player left
+     */
     public void removeTurnPlayer() {
         Player playerToRemove = turnPlayer;
 
@@ -134,6 +143,9 @@ public class Game extends Observable<Event> {
         turnPhase.stateInit();
     }
 
+    /**
+     * called after a player's victory, it stops the game
+     */
     public void endGame() {
         Player winner = players.stream()
                 .filter(player -> player.getIsWinner())
@@ -144,6 +156,9 @@ public class Game extends Observable<Event> {
         System.exit(0);
     }
 
+    /**
+     * called after the end of the turn, it changes the current turnPlayer to the next one
+     */
     public void setNextTurnPlayer() {
         this.turnPlayer = players.get(getNextPlayerIndex());
     }
@@ -153,14 +168,15 @@ public class Game extends Observable<Event> {
         return currentPlayerIndex % players.size();
     }
 
-
     public Player getTurnPlayer() {
         if (turnPlayer == null)
             turnPlayer = players.get(currentPlayerIndex);
         return turnPlayer;
     }
 
-
+    /**
+     * @return a list of all god's names
+     */
     public List<String> getGodPowers() {
         return godPowers
                 .stream()
@@ -176,6 +192,10 @@ public class Game extends Observable<Event> {
         .collect(Collectors.toList());
     }
 
+    /**
+     * this method removes the given god from the GodsList
+     * @param selectedGod
+     */
     public void removeGodPowerFromAvailableGods(String selectedGod) {
         this.godPowers = this.godPowers
             .stream()
@@ -201,6 +221,12 @@ public class Game extends Observable<Event> {
         return this.field;
     }
 
+    /**
+     *runs the currentPhase
+     * @param inputString usually indicates a cell's position, it may indicate actions or constructible items
+     * @throws IllegalFormatException when parameter isn't recognised from the phase
+     * @throws InvalidSelectionException when the parameter indicates a non permitted action
+     */
     public void runPhase(String inputString) throws IllegalFormatException, InvalidSelectionException {
         this.turnPhase.run(inputString);
         turnPhase.stateEnd();
@@ -210,6 +236,11 @@ public class Game extends Observable<Event> {
         turnPhase.stateInit();
     }
 
+    /**
+     * assigns the given god to the given player
+     * @param selectedGod
+     * @param choosingPlayer
+     */
     public void assignSelectedGodPowerToPlayer(String selectedGod, Player choosingPlayer) {
         God godToBeAssigned = godPowers
             .stream()

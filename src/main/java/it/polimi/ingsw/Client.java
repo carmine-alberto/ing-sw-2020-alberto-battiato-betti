@@ -22,6 +22,7 @@ import java.util.Map;
  */
 public class Client {
     public static void main(String[] args) {
+
         System.out.println("Ce la faremo! " + Client.class.getClassLoader().getResource("copertina_santorini_2016.jpg"));
 
         View.launchView();

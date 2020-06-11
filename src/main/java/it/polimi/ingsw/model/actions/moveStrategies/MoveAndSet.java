@@ -2,14 +2,10 @@ package it.polimi.ingsw.model.actions.moveStrategies;
 
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.actions.Action;
 import it.polimi.ingsw.model.actions.Move;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 public class MoveAndSet extends Move implements Action {
     private BiPredicate<FieldCell, GameWorker> predicate;
@@ -18,6 +14,11 @@ public class MoveAndSet extends Move implements Action {
         this.predicate = predicate;
     }
 
+    /**
+     * this strategy sets an "outerPredicate" to the current Turn Player if it does a specific action
+     * @param cell where the worker moves
+     * @param gw which moves
+     */
     @Override
     public void run(FieldCell cell, GameWorker gw) {
 

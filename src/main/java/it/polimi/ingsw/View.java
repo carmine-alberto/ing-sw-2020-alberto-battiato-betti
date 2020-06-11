@@ -36,6 +36,11 @@ public class View extends Application {
         launch();
     }
 
+    /**
+     * This function is used to get the view started, it creates a loginView state and launches it
+     *
+     * @param stage The stage you want the client to be shown
+     */
     @Override
     public void start(Stage stage) throws Exception {
         this.rendererChoice = "";
@@ -46,6 +51,14 @@ public class View extends Application {
         viewState.render();
 
     }
+
+    /**
+     * This function is used to set infos of the players, those will be used to show player's info in the view
+     *
+     * @param player List of the player's nickname
+     * @param god List of the player's god chosen
+     * @param color List of the player's color chosen
+     */
 
     public void setPlayerInfos(List<String> player, List<String> god, List<String> color) {
         this.playerInfos = new HashMap<>();
