@@ -1,6 +1,6 @@
 # Prova Finale Ingegneria del Software 2020
 
-## Gruppo AM00
+## Gruppo AM49
 
 - ###   10603433    Filippo Betti ([@FilippoBetti98](https://github.com/FilippoBetti98))<br>filippo.betti@mail.polimi.it
 - ###   10560934    Carmine Alberto ([@carmine-alberto](https://github.com/carmine-alberto))<br>carmine.alberto@mail.polimi.it
