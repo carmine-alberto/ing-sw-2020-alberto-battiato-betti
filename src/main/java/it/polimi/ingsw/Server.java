@@ -1,10 +1,9 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.model.Game;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,13 +19,14 @@ public class Server {
     static ServerSocket serverSocket;
     static ExecutorService executor;
     public static Boolean acceptNextPlayer;
+    static Integer PORT = 1200;
 
 
     public static void main(String[] args){
         games = new ArrayList<>();
         games.add(new Game());
         controller = new Controller(games.get(0));
-        startServer(1200);
+        startServer(PORT);
         listenToNewGameConnections();
     }
 
