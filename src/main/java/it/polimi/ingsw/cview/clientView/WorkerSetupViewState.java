@@ -10,6 +10,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -48,22 +49,14 @@ public class WorkerSetupViewState extends GUIViewState {
         StackPane cell;
 
         if (boardRep != null) {
-            /*colorPicker = new ColorPicker();
-            colorPicker.getCustomColors();
-            colorPicker.setValue(Color.ORANGE);*/
-
-            colors = new ComboBox<Rectangle>();
-
-            Rectangle blue = new Rectangle(60 , 10);
-            blue.setFill(Color.BLUE);
-
+            colors = new ComboBox<>();
+            Rectangle cyan = new Rectangle(60 , 10);
+            cyan.setFill(Color.CYAN);
             Rectangle magenta = new Rectangle(60 , 10);
             magenta.setFill(Color.MAGENTA);
-
             Rectangle yellow = new Rectangle(60 , 10);
             yellow.setFill(Color.YELLOW);
-
-            colors.getItems().addAll(blue, yellow, magenta);
+            colors.getItems().addAll(cyan, yellow, magenta);
             colors.getSelectionModel().selectFirst();
 
             Button confirmSelections = new Button("Confirm");
@@ -109,8 +102,7 @@ public class WorkerSetupViewState extends GUIViewState {
     }
 
     private void handleConfirmation(Button source) {
-        Rectangle selectedColor = (Rectangle) colors.getValue();
-        String color = selectedColor.getFill().toString();
+        String color = colors.getValue().getFill().toString();
 
         for (Integer i = 0; i < BOARD_SIZE; i++)
             for (Integer j = 0; j < BOARD_SIZE; j++)
