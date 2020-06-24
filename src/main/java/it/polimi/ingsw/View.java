@@ -2,6 +2,8 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.cview.ViewState;
 import it.polimi.ingsw.cview.clientView.LoginViewState;
+import it.polimi.ingsw.cview.clientViewCLI.LoginViewStateCLI;
+import it.polimi.ingsw.cview.clientViewCLI.TerminalEventHandler;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,12 +44,16 @@ public class View extends Application {
      * @param stage The stage you want the client to be shown
      */
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         this.rendererChoice = "";
         Platform.setImplicitExit(false); //When the stage is closed, the thread keeps running in background - necessary to make the CLI work on the JavaFX thread
         //TODO Handle manual termination of the GUI thread - it's not done at mainStage.close() when the above statement is applied.
         //stage.setFullScreen(true); TODO Should users be able to select it?
-        this.viewState = new LoginViewState(stage, clientSocket, this);
+        this.viewState = new LoginViewState(stage, clientSocket, this, null);
+
+        Thread CLIListener = new Thread(new TerminalEventHandler(this));
+        CLIListener.start();
+
         viewState.render();
 
     }

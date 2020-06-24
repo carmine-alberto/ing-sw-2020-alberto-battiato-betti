@@ -38,7 +38,6 @@ public class ChallengerSelectionController extends ControllerState {
                 moveToNextState(currentGame);
         } catch (InvalidSelectionException e) {
             senderView.showMessage(e.getMessage());
-            senderView.terminate();
         }
 
         System.out.println(mainController.getCurrentGame().getPlayers().stream().map(player -> player.getNickname()).collect(Collectors.toList()));

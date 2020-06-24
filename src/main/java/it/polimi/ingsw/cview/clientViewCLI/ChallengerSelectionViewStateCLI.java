@@ -113,4 +113,13 @@ public class ChallengerSelectionViewStateCLI extends CLIViewState {
     private String getNumOfPlayersMessage() {
         return "Enter the number of the players (2 or 3): ";
     }
+
+    @Override
+    public void showWarning(String message) {
+        super.showWarning(message);
+        if (currentState == InternalState.IDLE) {
+            currentState =  InternalState.NUM_OF_PLAYERS_SELECTION;
+            this.render();
+        }
+    }
 }

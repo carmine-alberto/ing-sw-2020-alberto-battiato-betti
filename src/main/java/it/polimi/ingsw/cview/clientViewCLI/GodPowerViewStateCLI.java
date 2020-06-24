@@ -57,4 +57,12 @@ public class GodPowerViewStateCLI extends CLIViewState {
         );
     }
 
+    @Override
+    public void showWarning(String message) {
+        super.showWarning(message);
+        if (currentState == InternalState.IDLE) {
+            currentState = InternalState.GOD_SELECTION;
+            this.render();
+        }
+    }
 }

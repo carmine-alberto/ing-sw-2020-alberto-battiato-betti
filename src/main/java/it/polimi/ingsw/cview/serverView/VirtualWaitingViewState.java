@@ -13,7 +13,7 @@ public class VirtualWaitingViewState extends VirtualViewStateState {
 
     @Override
     public String toString() {
-        return "WaitingView";
+        return "WaitingViewState";
     }
 
     @Override

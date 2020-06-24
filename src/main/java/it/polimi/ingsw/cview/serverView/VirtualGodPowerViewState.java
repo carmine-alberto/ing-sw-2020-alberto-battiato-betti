@@ -18,6 +18,6 @@ public class VirtualGodPowerViewState extends VirtualViewStateState {
 
     @Override
     public String toString() {
-        return "GodPowerView";
+        return "GodPowerViewState";
     }
 }

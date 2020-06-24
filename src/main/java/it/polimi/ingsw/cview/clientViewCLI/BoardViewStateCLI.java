@@ -29,4 +29,14 @@ public class BoardViewStateCLI extends CLIViewState {
     public void handleCLIInput(String input) {
         notify(new UserInputEvent(input));
     }
+
+    @Override
+    public synchronized void showWarning(String message) {
+        super.showWarning(message);
+    }
+
+    @Override
+    public synchronized void showMessage(String message) {
+        super.showMessage(message);
+    }
 }

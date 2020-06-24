@@ -42,8 +42,8 @@ public class BoardViewState extends GUIViewState {
 
             board = new TilePane();
             FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
-            mainStage.getScene().heightProperty().addListener(e -> updateProperty(tileSideLength));
-            mainStage.getScene().widthProperty().addListener(e -> updateProperty(tileSideLength));
+            mainStage.getScene().heightProperty().addListener(e -> {updateProperty(tileSideLength); this.render();});
+            mainStage.getScene().widthProperty().addListener(e -> {updateProperty(tileSideLength); this.render();});
 
             board.setOrientation(Orientation.HORIZONTAL);
             board.setPrefRows(5);

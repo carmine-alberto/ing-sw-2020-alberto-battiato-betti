@@ -14,7 +14,7 @@ public class VirtualChallengerSelectionViewState extends VirtualViewStateState {
 
     @Override
     public String toString() {
-        return "ChallengerSelectionView";
+        return "ChallengerSelectionViewState";
     }
 
     @Override

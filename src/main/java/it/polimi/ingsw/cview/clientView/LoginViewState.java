@@ -2,8 +2,6 @@ package it.polimi.ingsw.cview.clientView;
 
 import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.LoginEvent;
-import it.polimi.ingsw.cview.ViewEventHandler;
-import it.polimi.ingsw.cview.clientViewCLI.TerminalEventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,10 +15,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class LoginViewState extends GUIViewState {
@@ -29,7 +24,7 @@ public class LoginViewState extends GUIViewState {
     private TextField serverIPInput;
     private TextField portInput;
 
-    public LoginViewState(Stage stage, Socket clientSocket, View view) {
+    public LoginViewState(Stage stage, Socket clientSocket, View view, Object o) {
         super(stage, clientSocket, view, null);
     }
 
@@ -56,7 +51,7 @@ public class LoginViewState extends GUIViewState {
 
         Label port = new Label("Port:         ");
         portInput = new TextField();
-        portInput.setText("1200"); //TODO Remove hardcoded value
+        portInput.setText("1201"); //TODO Remove hardcoded value
         HBox portBox = new HBox(18, port, portInput);
         portBox.setAlignment(Pos.CENTER);
 
@@ -87,8 +82,6 @@ public class LoginViewState extends GUIViewState {
     private void sendDataToServer() {
         if (cliGUIChoice.getValue().equals("CLI")) {
             view.setRendererChoice("CLI");
-            Thread CLIListener = new Thread(new TerminalEventHandler(view));
-            CLIListener.start();
         } else
             view.setRendererChoice("");
 
@@ -96,18 +89,13 @@ public class LoginViewState extends GUIViewState {
         String serverIP = serverIPInput.getText();
         Integer portNumber = Integer.parseInt(portInput.getText());
 
-        try {
-            clientSocket = new Socket(serverIP, portNumber);
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
-            ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-            Thread serverListener = new Thread(new ViewEventHandler(view, clientInputStream));
-            serverListener.start();
-            System.out.println("Thread started");
+        try {
+            setupConnectionToServer(serverIP, portNumber);
 
             view.setMyName(username);
 
-            out.writeObject(new LoginEvent(username));
+            notify(new LoginEvent(username));
 
         } catch (IOException ex) {
             connectionClosedHandler();

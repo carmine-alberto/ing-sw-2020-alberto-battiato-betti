@@ -14,7 +14,7 @@ public class VirtualLoginViewState extends VirtualViewStateState {
 
     @Override
     public String toString() {
-        return "LoginView";
+        return "LoginViewState";
     }
 
     @Override

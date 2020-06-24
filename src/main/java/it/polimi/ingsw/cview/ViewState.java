@@ -4,9 +4,12 @@ import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 import javafx.application.Platform;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
@@ -57,15 +60,28 @@ public abstract class ViewState {
                 String rendererChoice = view.getRendererChoice();
                 if (rendererChoice.equals("CLI"))  //TODO So awful if left here alone - needed for LoginView: if the username is rejected, we need the stage to be open in order to perform a second attempt.
                     mainStage.close();
-                ViewState newState = (ViewState) Class.forName("it.polimi.ingsw.cview.clientView" + rendererChoice + "."  +  nextState + "State" + rendererChoice)
+                ViewState newState = (ViewState) Class.forName(ViewState.class.getPackageName() + ".clientView" + rendererChoice + "."  +  nextState  + rendererChoice)
                         .getConstructors()[0]
                         .newInstance(mainStage, clientSocket, view, out);
                 view.setViewState(newState);
             } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace(); //TODO Handle exception properly
             }
+            if (mainStage.getScene() == null) {
+                mainStage.setScene(new Scene(new Group(), 700, 600));
+            }
             view.getViewState().render();
         });
+    }
+
+
+    protected void setupConnectionToServer(String serverIP, Integer serverPort) throws IOException {
+        clientSocket = new Socket(serverIP, serverPort);
+        out = new ObjectOutputStream(clientSocket.getOutputStream());
+        ObjectInputStream clientInputStream = new ObjectInputStream(clientSocket.getInputStream());
+
+        Thread serverListener = new Thread(new ViewEventHandler(view, clientInputStream));
+        serverListener.start();
     }
 
     /**
@@ -81,6 +97,12 @@ public abstract class ViewState {
             } catch (IOException ex) {
                 connectionClosedHandler();
             }
+        });
+    }
+
+    public void showStage() {
+        Platform.runLater( () -> {
+            mainStage.show();
         });
     }
 

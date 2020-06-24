@@ -22,8 +22,6 @@ public class ViewEventHandler implements Runnable {
     public ViewEventHandler(View view, ObjectInputStream in) throws IOException {
         this.view = view;
         this.in = in;
-        System.out.println("Thread created");
-
     }
 
     /**
@@ -88,7 +86,7 @@ public class ViewEventHandler implements Runnable {
 
     public void handle(GameStartedEvent gameStartedEvent) {
         Platform.runLater(() -> {
-            view.getViewState().next("BoardView");
+            view.getViewState().next("BoardViewState");
             view.getViewState().render();
         });
     }

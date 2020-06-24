@@ -15,7 +15,7 @@ public class VirtualBoardViewState extends VirtualViewStateState implements Obse
 
     @Override
     public String toString() {
-        return "BoardView";
+        return "BoardViewState";
     }
 
     @Override
