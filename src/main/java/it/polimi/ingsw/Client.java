@@ -23,7 +23,14 @@ import java.util.Map;
 public class Client {
     public static void main(String[] args) {
 
+        View myView = new View();
+
         System.out.println("Ce la faremo! " + Client.class.getClassLoader().getResource("copertina_santorini_2016.jpg"));
+
+        if(args.length > 0)
+            myView.setRendererChoice(args[0].substring(1));
+        else
+            myView.setRendererChoice("");
 
         View.launchView();
 

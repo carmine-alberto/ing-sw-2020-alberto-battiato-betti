@@ -28,7 +28,7 @@ public class View extends Application {
     private LocalDateTime pingTimestamp;
     private Map<String, List<String>> playerInfos;
     private String myName;
-    private String rendererChoice;
+    private static String rendererChoice;
 
 
 
@@ -43,13 +43,14 @@ public class View extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        this.rendererChoice = "";
+
         Platform.setImplicitExit(false); //When the stage is closed, the thread keeps running in background - necessary to make the CLI work on the JavaFX thread
         //TODO Handle manual termination of the GUI thread - it's not done at mainStage.close() when the above statement is applied.
         //stage.setFullScreen(true); TODO Should users be able to select it?
-        this.viewState = new LoginViewState(stage, clientSocket, this);
-        viewState.render();
 
+
+        this.viewState = new LoginViewState(stage, clientSocket, this, null);
+        this.viewState.next("LoginView");
     }
 
     /**

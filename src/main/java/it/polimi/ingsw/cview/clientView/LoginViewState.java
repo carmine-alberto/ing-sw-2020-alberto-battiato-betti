@@ -32,7 +32,7 @@ public class LoginViewState extends GUIViewState {
     static String IP = "127.0.0.1";
     static String PORT = "1200";
 
-    public LoginViewState(Stage stage, Socket clientSocket, View view) {
+    public LoginViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
         super(stage, clientSocket, view, null);
     }
 
