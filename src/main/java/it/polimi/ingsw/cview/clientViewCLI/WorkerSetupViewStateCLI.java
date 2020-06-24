@@ -61,11 +61,11 @@ public class WorkerSetupViewStateCLI extends CLIViewState {
     }
 
     private String getSelectColourMessage() {
-        return "Choose a color for your workers (available: red, green, yellow): ";
+        return "Choose a color for your workers (available: cyan, magenta, yellow): ";
     }
 
     private void handleColorSelection(String input) {
-        if (!List.of("RED", "GREEN", "YELLOW").contains(input.toUpperCase())){
+        if (!List.of("CYAN", "MAGENTA", "YELLOW").contains(input.toUpperCase())){
             showWarning("The selected color is not available, try again");
             return;
         }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.cview.ViewState;
 import it.polimi.ingsw.cview.utility.CLIFormatter;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Platform;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
@@ -56,7 +57,7 @@ public abstract class CLIViewState extends ViewState {
         5║ o0 ║ o0 ║ o0 ║ o0 ║ o0 ║
          ╚════════════════════════╝
         */
-        String color;
+        Color color;
         FieldCell x;
 
         showMessage("""
@@ -88,18 +89,14 @@ public abstract class CLIViewState extends ViewState {
                     if (x.getHasDome())
                         System.out.print("d" + board[i][j].getHeight() + " ");
                     else {
-                        color = x.getWorker().getOwner().getColour();
-                        switch (color.toUpperCase()) {
-                            case "RED":
-                                System.out.print(ANSI_RED + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                                break;
-                            case "GREEN":
-                                System.out.print(ANSI_GREEN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                                break;
-                            default: //todo assign proper color when we don't find the precise one
-                                //case "YELLOW":
-                                System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
-                                break;
+                        color = Color.valueOf(x.getWorker().getOwner().getColour());
+
+                        if (Color.MAGENTA.equals(color)) {
+                            System.out.print(ANSI_MAGENTA + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                        } else if (Color.YELLOW.equals(color)) {
+                            System.out.print(ANSI_YELLOW + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
+                        } else if (Color.CYAN.equals(color)) {
+                            System.out.print(ANSI_CYAN + "w" + ANSI_RESET + board[i][j].getHeight() + " ");
                         }
                     }
                 }

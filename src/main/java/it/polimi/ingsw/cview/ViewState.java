@@ -1,5 +1,6 @@
 package it.polimi.ingsw.cview;
 
+import it.polimi.ingsw.Client;
 import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.cview.serverView.VirtualView;

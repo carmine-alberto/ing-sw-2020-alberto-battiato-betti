@@ -10,7 +10,8 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -22,8 +23,8 @@ import java.net.Socket;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.Y;
 import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.X;
+import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.Y;
 
 public class WorkerSetupViewState extends GUIViewState {
     enum CellCoordinate {
@@ -34,7 +35,8 @@ public class WorkerSetupViewState extends GUIViewState {
     final Integer BOARD_SIZE = 5;
     final Integer NUM_OF_WORKERS = 2;
 
-    private ColorPicker colorPicker;
+   // private ColorPicker colorPicker;
+    private ComboBox<Rectangle> colors;
     private TilePane board;
 
     public WorkerSetupViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
@@ -47,13 +49,20 @@ public class WorkerSetupViewState extends GUIViewState {
         StackPane cell;
 
         if (boardRep != null) {
-            colorPicker = new ColorPicker();
-            colorPicker.setValue(Color.ORANGE);
+            colors = new ComboBox<>();
+            Rectangle cyan = new Rectangle(60 , 10);
+            cyan.setFill(Color.CYAN);
+            Rectangle magenta = new Rectangle(60 , 10);
+            magenta.setFill(Color.MAGENTA);
+            Rectangle yellow = new Rectangle(60 , 10);
+            yellow.setFill(Color.YELLOW);
+            colors.getItems().addAll(cyan, yellow, magenta);
+            colors.getSelectionModel().selectFirst();
 
             Button confirmSelections = new Button("Confirm");
             confirmSelections.setOnAction(e -> handleConfirmation((Button) e.getSource()));
 
-            HBox colorPickerBox = new HBox(10, colorPicker, confirmSelections);
+            HBox colorPickerBox = new HBox(10, colors, confirmSelections);
 
             board = new TilePane();
             FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
@@ -93,11 +102,11 @@ public class WorkerSetupViewState extends GUIViewState {
     }
 
     private void handleConfirmation(Button source) {
-        String color = colorPicker.getValue().toString();
+        String color = colors.getValue().getFill().toString();
 
         for (Integer i = 0; i < BOARD_SIZE; i++)
             for (Integer j = 0; j < BOARD_SIZE; j++)
-                if(view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().equals(colorPicker.getValue().toString())) {
+                if(view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().equals(color)) {
                     this.showMessage("One of your opponents already chose this color, pick another one!");
                     return;
                 }

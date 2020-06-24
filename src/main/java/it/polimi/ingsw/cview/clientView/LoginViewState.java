@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class LoginViewState extends GUIViewState {
@@ -24,8 +25,12 @@ public class LoginViewState extends GUIViewState {
     private TextField serverIPInput;
     private TextField portInput;
 
-    public LoginViewState(Stage stage, Socket clientSocket, View view, Object o) {
-        super(stage, clientSocket, view, null);
+    static String USERNAME = "testUsername";
+    static String IP = "127.0.0.1";
+    static String PORT = "1200";
+
+    public LoginViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
+        super(stage, clientSocket, view, out);
     }
 
     @Override
@@ -39,19 +44,20 @@ public class LoginViewState extends GUIViewState {
 
         Label username = new Label("Username: ");
         usernameInput = new TextField();
-        usernameInput.setText("testUsername"); //TODO Remove hardcoded value
+        usernameInput.setText(USERNAME);
         HBox usernameBox = new HBox(10, username, usernameInput);
         usernameBox.setAlignment(Pos.CENTER);
 
         Label serverIP = new Label("Server IP: ");
         serverIPInput = new TextField();
-        serverIPInput.setText("127.0.0.1"); //TODO Remove hardcoded value
+        serverIPInput.setText(IP);
         HBox serverIPBox = new HBox(18, serverIP, serverIPInput);
         serverIPBox.setAlignment(Pos.CENTER);
 
         Label port = new Label("Port:         ");
         portInput = new TextField();
-        portInput.setText("1201"); //TODO Remove hardcoded value
+        portInput.setText(PORT);
+
         HBox portBox = new HBox(18, port, portInput);
         portBox.setAlignment(Pos.CENTER);
 

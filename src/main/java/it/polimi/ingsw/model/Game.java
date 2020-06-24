@@ -92,6 +92,11 @@ public class Game extends Observable<Event> {
         return field[x][y];
     }
 
+    /**
+     *
+     * @param player
+     * @throws InvalidSelectionException
+     */
     public void addPlayer(Player player) throws InvalidSelectionException {
        for (Player tmp : players)
            if (tmp.getNickname().equals(player.getNickname()))
