@@ -14,7 +14,8 @@ public class FieldCell implements Serializable {
     private GameWorker occupyingWorker;
     private Integer posX, posY, height;
     private Boolean hasDome;
-    private static int MAX_HEIGHT = 3;
+    private static Integer MAX_HEIGHT = 3;
+    static final Integer FIELD = 5;
 
     public FieldCell(Game currentGame, Integer posX, Integer posY) {
         this.occupyingWorker = null;
@@ -110,8 +111,8 @@ public class FieldCell implements Serializable {
         Integer i = Math.max(this.getPosX() - 1, 0);
         Integer k = Math.max(this.getPosY() - 1, 0);
 
-        for (;  i <= this.getPosX() + 1 &&  i < 5 ; i++)
-            for (Integer j = k; j <= this.getPosY() + 1 && j < 5; j++)
+        for (;  i <= this.getPosX() + 1 &&  i < FIELD ; i++)
+            for (Integer j = k; j <= this.getPosY() + 1 && j < FIELD; j++)
                 adjacentCells.add(this.currentGame.getCell(i, j));
 
         adjacentCells.remove(this);

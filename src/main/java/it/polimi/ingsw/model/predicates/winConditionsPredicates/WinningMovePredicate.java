@@ -7,6 +7,8 @@ import java.util.function.BiPredicate;
 
 public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
 
+    static final Integer HEIGHT_LEVEL = 2;
+
     /**
      * We check if the considered gameWorker has won, this winningMove is a move
      * from a certain level into another one.
@@ -22,7 +24,7 @@ public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
     }
 
     private boolean movedFromLevel2ToLevel3(Game game, GameWorker gameWorker) {
-        return gameWorker != null && gameWorker.getCell().getHeight() == 2
+        return gameWorker != null && gameWorker.getCell().getHeight() == HEIGHT_LEVEL
                             &&
                 game.getTurnPlayer().getPlayerState().getSelectedCell() != null
                 &&

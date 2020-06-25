@@ -7,6 +7,8 @@ import java.util.function.BiPredicate;
 
 public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, GameWorker> {
 
+    static final int MAX_HEIGHT = 2;
+
     /**
      * This function is used to check if a certain gameWorker can build a BLOCK under itself
      *

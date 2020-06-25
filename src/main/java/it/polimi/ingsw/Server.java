@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT;
+import static it.polimi.ingsw.GameSettings.PORT_NUMBER;
+
 public class Server {
     static List<Game> games;
     static Game lastGame;
@@ -19,14 +22,13 @@ public class Server {
     static ServerSocket serverSocket;
     static ExecutorService executor;
     public static Boolean acceptNextPlayer;
-    static Integer PORT = 1200;
 
 
     public static void main(String[] args){
         games = new ArrayList<>();
         games.add(new Game());
-        controller = new Controller(games.get(0));
-        startServer(PORT);
+        controller = new Controller(games.get(FIRST_ELEMENT));
+        startServer(PORT_NUMBER);
         listenToNewGameConnections();
     }
 

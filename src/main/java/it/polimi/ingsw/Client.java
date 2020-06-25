@@ -23,12 +23,13 @@ import java.util.Map;
 public class Client {
     public static final String CLI = "CLI";
     public static final String GUI = "";
+    public static final Integer FIRST = 0;
 
     public static void main(String[] args) {
         System.out.println("Ce la faremo! " + Client.class.getClassLoader().getResource("copertina_santorini_2016.jpg"));
 
-        if (args.length > 0 && args[0].equals("-" + CLI))
-            View.setRendererChoice(args[0].substring(1));
+        if (args.length > 0 && args[FIRST].equals("-" + CLI))
+            View.setRendererChoice(args[FIRST].substring(1));
         else
             View.setRendererChoice(GUI);
 
