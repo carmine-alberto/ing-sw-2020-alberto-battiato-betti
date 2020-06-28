@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
+import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
 import static it.polimi.ingsw.cview.utility.CLIFormatter.*;
 
 public abstract class CLIViewState extends ViewState {
@@ -71,17 +72,17 @@ public abstract class CLIViewState extends ViewState {
         );
 
         System.out.print(" ");
-        for (int c = 1; c <= BOARD_SIZE; c++)
+        for (int c = 1; c <= FIELD_SIZE; c++)
             System.out.print("  " + c);
 
         System.out.print("\n" + " ╔");
-        for (int c = 1; c <= BOARD_SIZE + 3; c++)
+        for (int c = 1; c <= FIELD_SIZE + 3; c++)
             System.out.print("══");
         System.out.println("╗");
 
-        for(int i = 0; i < BOARD_SIZE; i++, System.out.println("║")) {
+        for(int i = 0; i < FIELD_SIZE; i++, System.out.println("║")) {
             System.out.print((i + 1) + "║ ");
-            for (int j = 0; j < BOARD_SIZE; j++) {
+            for (int j = 0; j < FIELD_SIZE; j++) {
                 x = board[i][j];
                 if (x.isFree())
                     System.out.print("o" + board[i][j].getHeight() + " ");
@@ -103,7 +104,7 @@ public abstract class CLIViewState extends ViewState {
             }
         }
         System.out.print(" ╚");
-        for (int c = 1; c <= BOARD_SIZE + 3; c++)
+        for (int c = 1; c <= FIELD_SIZE + 3; c++)
             System.out.print("══");
         System.out.println("╝");
     }

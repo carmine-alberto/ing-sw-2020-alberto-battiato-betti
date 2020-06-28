@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT;
-import static it.polimi.ingsw.GameSettings.PORT_NUMBER;
+import static it.polimi.ingsw.GameSettings.*;
 
 public class Server {
     static List<Game> games;
@@ -52,7 +51,7 @@ public class Server {
      * This function is used to set the server waiting for connections
      */
     private static void listenToNewGameConnections() {
-        lastGame = games.get(games.size() - 1);
+        lastGame = games.get(games.size() - CORRECTION);
         while (true) {
             try {
                 System.out.println("Server ready, players: " + lastGame.getPlayers().size() + " of " + lastGame.NUM_OF_PLAYERS);

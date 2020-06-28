@@ -23,6 +23,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
 import static it.polimi.ingsw.GameSettings.NUM_OF_WORKERS;
 import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.X;
 import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.Y;
@@ -74,8 +75,8 @@ public class WorkerSetupViewState extends GUIViewState {
             board.prefTileWidthProperty().bind(tileSideLength);
             board.prefTileHeightProperty().bind(tileSideLength);
 
-            for (Integer i = 1; i < 6; i++)
-                for (Integer j = 1; j < 6; j++) {
+            for (Integer i = 1; i <= FIELD_SIZE; i++)
+                for (Integer j = 1; j < FIELD_SIZE; j++) {
                     cell = new StackPane();
                     cell.setId(i.toString() + " " + j.toString());
                     cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -103,8 +104,20 @@ public class WorkerSetupViewState extends GUIViewState {
     private void handleConfirmation(Button source) {
         String color = colors.getValue().getFill().toString();
 
-        for (Integer i = 0; i < BOARD_SIZE; i++)
-            for (Integer j = 0; j < BOARD_SIZE; j++)
+        switch (color) {
+            case "0xff00ffff":
+                color = "cyan";
+                break;
+            case "0xffffff00":
+                color = "yellow";
+                break;
+            case "0xffff00ff":
+                color = "magenta";
+                break;
+        }
+
+        for (Integer i = 0; i < FIELD_SIZE; i++)
+            for (Integer j = 0; j < FIELD_SIZE; j++)
                 if(view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().equals(color)) {
                     this.showMessage("One of your opponents already chose this color, pick another one!");
                     return;

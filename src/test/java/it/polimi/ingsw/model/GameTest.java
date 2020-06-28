@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GameTest {
 
@@ -57,11 +59,9 @@ class GameTest {
         Player alreadyExistingPlayer = new Player("Es3" , null);
 
         List<Player> allPlayers = List.of(player1, player2, player3);
-        try {
-            game.addPlayer(alreadyExistingPlayer);
-        } catch (InvalidSelectionException e) {
-            e.printStackTrace();
-        }
+
+        Assertions.assertThrows(InvalidSelectionException.class, () -> game.addPlayer(alreadyExistingPlayer));
+
         assertEquals(allPlayers, game.getPlayers());
     }
 

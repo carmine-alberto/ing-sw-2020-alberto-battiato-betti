@@ -33,12 +33,14 @@ public class GodPowerViewState extends GUIViewState {
         godsIcons.setAlignment(Pos.CENTER);
         godsIcons.setHgap(H_GAP);
         godsIcons.setVgap(V_GAP);
+
         if (godsList != null)
             for (String god : godsList) {
                 Button godButton = new Button(god);
                 godButton.setOnAction(e -> sendSelectionToServer((Button) e.getSource()));
                 godsIcons.getChildren().add(godButton);
             }
+
         VBox selectGodBox = new VBox(V_BOX, selectGodLabel, godsIcons);
         selectGodBox.setAlignment(Pos.CENTER);
 
