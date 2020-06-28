@@ -76,7 +76,7 @@ public class WorkerSetupViewState extends GUIViewState {
             board.prefTileHeightProperty().bind(tileSideLength);
 
             for (Integer i = 1; i <= FIELD_SIZE; i++)
-                for (Integer j = 1; j < FIELD_SIZE; j++) {
+                for (Integer j = 1; j <= FIELD_SIZE; j++) {
                     cell = new StackPane();
                     cell.setId(i.toString() + " " + j.toString());
                     cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -105,20 +105,20 @@ public class WorkerSetupViewState extends GUIViewState {
         String color = colors.getValue().getFill().toString();
 
         switch (color) {
-            case "0xff00ffff":
-                color = "cyan";
+            case "0x00ffffff":
+                color = "CYAN";
                 break;
             case "0xffffff00":
-                color = "yellow";
+                color = "YELLOW";
                 break;
             case "0xffff00ff":
-                color = "magenta";
+                color = "MAGENTA";
                 break;
         }
 
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
-                if(view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().equals(color)) {
+                if(view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(color)) {
                     this.showMessage("One of your opponents already chose this color, pick another one!");
                     return;
                 }

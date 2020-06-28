@@ -10,8 +10,7 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.CORRECTION;
-import static it.polimi.ingsw.GameSettings.FIRST_PLAYER_INDEX;
+import static it.polimi.ingsw.GameSettings.*;
 
 public class ChallengerSelectionController extends ControllerState {
     public ChallengerSelectionController(Controller mainController) {
@@ -29,7 +28,7 @@ public class ChallengerSelectionController extends ControllerState {
         Player newPlayer;
 
         try {
-            if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() == 1 || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
+            if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() < TWO  || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
                 newPlayer = new Player(loginEvent.playerUsername, senderView);
                 currentGame.addPlayer(newPlayer);
                 newPlayer.getPlayerView().changeView(new VirtualWaitingViewState());
@@ -62,7 +61,7 @@ public class ChallengerSelectionController extends ControllerState {
 
     private void moveToNextState(Game currentGame) {
         currentGame.getPlayers().get(FIRST_PLAYER_INDEX).getPlayerView().changeView(new VirtualWaitingViewState());
-        currentGame.getPlayers().get(FIRST_PLAYER_INDEX).getPlayerView().changeView(new VirtualGodPowerViewState());
+        currentGame.getPlayers().get(SECOND_PLAYER_INDEX).getPlayerView().changeView(new VirtualGodPowerViewState());
         mainController.controllerState = new GodPowerController(mainController);
     }
 

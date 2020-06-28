@@ -52,8 +52,8 @@ public class BoardViewState extends GUIViewState {
             board.prefTileWidthProperty().bind(tileSideLength);
             board.prefTileHeightProperty().bind(tileSideLength);
 
-            for (Integer i = 1; i < FIELD_SIZE + 1; i++)
-                for (Integer j = 1; j < FIELD_SIZE + 1; j++) {
+            for (Integer i = 1; i <= FIELD_SIZE; i++)
+                for (Integer j = 1; j <= FIELD_SIZE; j++) {
                     cell = new StackPane();
                     cell.setId(i.toString() + " " + j.toString());
                     cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
