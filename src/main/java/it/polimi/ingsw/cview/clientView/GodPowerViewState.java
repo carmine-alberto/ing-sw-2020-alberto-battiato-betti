@@ -16,6 +16,10 @@ import java.util.List;
 public class GodPowerViewState extends GUIViewState {
     private FlowPane godsIcons;
 
+    static final Integer H_GAP = 8;
+    static final Integer V_GAP = 10;
+    static final Integer V_BOX = 30;
+
     public GodPowerViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
         super(stage, clientSocket, view, out);
     }
@@ -27,15 +31,15 @@ public class GodPowerViewState extends GUIViewState {
 
         godsIcons = new FlowPane();
         godsIcons.setAlignment(Pos.CENTER);
-        godsIcons.setHgap(8);
-        godsIcons.setVgap(10);
+        godsIcons.setHgap(H_GAP);
+        godsIcons.setVgap(V_GAP);
         if (godsList != null)
             for (String god : godsList) {
                 Button godButton = new Button(god);
                 godButton.setOnAction(e -> sendSelectionToServer((Button) e.getSource()));
                 godsIcons.getChildren().add(godButton);
             }
-        VBox selectGodBox = new VBox(30, selectGodLabel, godsIcons);
+        VBox selectGodBox = new VBox(V_BOX, selectGodLabel, godsIcons);
         selectGodBox.setAlignment(Pos.CENTER);
 
         mainStage.getScene().setRoot(selectGodBox);

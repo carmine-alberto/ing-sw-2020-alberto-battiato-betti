@@ -12,6 +12,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import static it.polimi.ingsw.GameSettings.ONE_SECOND;
+
 public class VirtualView implements Runnable {
         private Socket socket;
         private Controller controller;
@@ -58,7 +60,7 @@ public class VirtualView implements Runnable {
                     terminate();
                 }
                 try {
-                    Thread.sleep((long) (TIMEOUT * 1000));
+                    Thread.sleep((long) (TIMEOUT * ONE_SECOND));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

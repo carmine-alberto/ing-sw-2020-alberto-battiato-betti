@@ -22,6 +22,12 @@ public class ChallengerSelectionViewState extends GUIViewState {
     private ToggleGroup startingPlayer;
     private FlowPane godsIcons;
 
+    static final Integer HBOX_LENGHT = 5;
+    static final Integer H_GAP = 8;
+    static final Integer V_GAP = 10;
+    static final Integer HBOX_GODS = 10;
+    static final Integer PAD = 20;
+    static final Integer HBOX_USERS = 50;
 
     public ChallengerSelectionViewState(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
         super(stage, clientSocket, view, out);
@@ -40,7 +46,7 @@ public class ChallengerSelectionViewState extends GUIViewState {
         threePlayers.setToggleGroup(numberOfPlayers);
         numberOfPlayers.selectToggle(twoPlayers);
 
-        HBox numberOfPlayersBox = new HBox(5, numberOfPlayersLabel, twoPlayers, threePlayers);
+        HBox numberOfPlayersBox = new HBox(HBOX_LENGHT, numberOfPlayersLabel, twoPlayers, threePlayers);
         numberOfPlayersBox.setAlignment(Pos.CENTER);
 
 
@@ -59,15 +65,15 @@ public class ChallengerSelectionViewState extends GUIViewState {
 
         startingPlayer.selectToggle(firstToConnect);
 
-        HBox startingPlayerBox = new HBox(5, startingPlayerLabel, firstToConnect, secondToConnect, thirdToConnect);
+        HBox startingPlayerBox = new HBox(HBOX_LENGHT, startingPlayerLabel, firstToConnect, secondToConnect, thirdToConnect);
         startingPlayerBox.setAlignment(Pos.CENTER);
 
 
         Label godPowersLabel = new Label("Select the God Powers to be used: ");
 
         godsIcons = new FlowPane();
-        godsIcons.setHgap(8);
-        godsIcons.setVgap(10);
+        godsIcons.setHgap(H_GAP);
+        godsIcons.setVgap(V_GAP);
 
         List<String> godsList = view.getAvailableGods();
         if (godsList != null)
@@ -75,15 +81,15 @@ public class ChallengerSelectionViewState extends GUIViewState {
                 godsIcons.getChildren().add(new CheckBox(god));
 
 
-        HBox godPowersBox = new HBox(10, godPowersLabel, godsIcons);
+        HBox godPowersBox = new HBox(HBOX_GODS, godPowersLabel, godsIcons);
         godPowersBox.setAlignment(Pos.CENTER);
 
         Button sendSelectionButton = new Button("Continue");
         sendSelectionButton.setOnAction(e -> sendDataToServer());
 
-        VBox userSelectionsBox = new VBox(50, numberOfPlayersBox, startingPlayerBox, godPowersBox, sendSelectionButton);
+        VBox userSelectionsBox = new VBox(HBOX_USERS, numberOfPlayersBox, startingPlayerBox, godPowersBox, sendSelectionButton);
         userSelectionsBox.setAlignment(Pos.CENTER);
-        userSelectionsBox.setPadding(new Insets(20));
+        userSelectionsBox.setPadding(new Insets(PAD));
 
         mainStage.getScene().rootProperty().set(userSelectionsBox);
 

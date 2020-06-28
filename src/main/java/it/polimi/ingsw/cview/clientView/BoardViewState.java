@@ -20,10 +20,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.GameSettings.*;
+
 
 public class BoardViewState extends GUIViewState {
-    final Integer edgeTolerance = 20;
-    final Integer BOARD_SIZE = 5;
+    static final Integer EDGE_TOLERANCE = 20;
 
     private TilePane board;
 
@@ -41,18 +42,18 @@ public class BoardViewState extends GUIViewState {
             StackPane cell;
 
             board = new TilePane();
-            FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - edgeTolerance, (float) mainStage.getScene().getHeight() / 5 - edgeTolerance));
+            FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / FIELD_SIZE - EDGE_TOLERANCE, (float) mainStage.getScene().getHeight() / FIELD_SIZE - EDGE_TOLERANCE));
             mainStage.getScene().heightProperty().addListener(e -> {updateProperty(tileSideLength); this.render();});
             mainStage.getScene().widthProperty().addListener(e -> {updateProperty(tileSideLength); this.render();});
 
             board.setOrientation(Orientation.HORIZONTAL);
-            board.setPrefRows(5);
-            board.setPrefColumns(5);
+            board.setPrefRows(FIELD_SIZE);
+            board.setPrefColumns(FIELD_SIZE);
             board.prefTileWidthProperty().bind(tileSideLength);
             board.prefTileHeightProperty().bind(tileSideLength);
 
-            for (Integer i = 1; i < 6; i++)
-                for (Integer j = 1; j < 6; j++) {
+            for (Integer i = 1; i < FIELD_SIZE + 1; i++)
+                for (Integer j = 1; j < FIELD_SIZE + 1; j++) {
                     cell = new StackPane();
                     cell.setId(i.toString() + " " + j.toString());
                     cell.setBackground(new Background(new BackgroundFill(Color.web("#41FA0E", 0.9), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -66,11 +67,11 @@ public class BoardViewState extends GUIViewState {
                     board.getChildren().add(cell);
                 }
 
-            Label selectedGodPower = new Label(view.getMyName() + ", your selected God Power is: " + view.getPlayerInfos().get(view.getMyName()).get(0));
+            Label selectedGodPower = new Label(view.getMyName() + ", your selected God Power is: " + view.getPlayerInfos().get(view.getMyName()).get(FIRST_PLAYER_INDEX));
 
             VBox interfaceBox;
-            interfaceBox = new VBox(20, board, selectedGodPower, new Circle(17.5, Color.web(view.getPlayerInfos().get(view.getMyName()).get(1))));
-            interfaceBox.setPadding(new Insets(20));
+            interfaceBox = new VBox(EDGE_TOLERANCE, board, selectedGodPower, new Circle(17.5, Color.web(view.getPlayerInfos().get(view.getMyName()).get(SECOND_PLAYER_INDEX))));
+            interfaceBox.setPadding(new Insets(EDGE_TOLERANCE));
             interfaceBox.setAlignment(Pos.CENTER);
             interfaceBox.setFillWidth(false);
 
@@ -121,7 +122,7 @@ public class BoardViewState extends GUIViewState {
     }
 
     private void updateProperty(FloatProperty tileSideLength) {
-        tileSideLength.set(Math.min((float)mainStage.getScene().getWidth()/5 - edgeTolerance,(float)mainStage.getScene().getHeight()/5 - edgeTolerance));
+        tileSideLength.set(Math.min((float)mainStage.getScene().getWidth()/FIELD_SIZE - EDGE_TOLERANCE,(float)mainStage.getScene().getHeight()/FIELD_SIZE - EDGE_TOLERANCE));
     }
 
     private void handleCellClick(StackPane clickedCell) {
@@ -130,7 +131,7 @@ public class BoardViewState extends GUIViewState {
 
     private void toggleCell(StackPane clickedCell) {
         if (clickedCell.getBorder().getStrokes().get(0).getLeftStroke().equals(Color.BLACK)) {
-            clickedCell.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+            clickedCell.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(FIELD_SIZE))));
         } else {
             clickedCell.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         }

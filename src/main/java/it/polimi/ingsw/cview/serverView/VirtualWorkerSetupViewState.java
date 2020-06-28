@@ -16,7 +16,7 @@ public class VirtualWorkerSetupViewState extends VirtualViewStateState implement
     @Override
     public String toString() {
         return "WorkerSetupViewState";
-    } //TODO Use getClass().getName().replace("Virtual", "");
+    } //TODO Use getClass().getName().replace("Virtual", ""); in other classes too
 
     @Override
     public void render() {

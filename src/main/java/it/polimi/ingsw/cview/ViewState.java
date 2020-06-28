@@ -1,6 +1,5 @@
 package it.polimi.ingsw.cview;
 
-import it.polimi.ingsw.Client;
 import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.cview.serverView.VirtualView;
@@ -16,8 +15,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.List;
 
+import static it.polimi.ingsw.GameSettings.CLI;
+
 public abstract class ViewState {
-    protected static Integer BOARD_SIZE = 5;
     protected Stage mainStage;
     protected Socket clientSocket;
     protected View view;
@@ -59,7 +59,7 @@ public abstract class ViewState {
         Platform.runLater(() -> {
             try {
                 String rendererChoice = view.getRendererChoice();
-                if (rendererChoice.equals("CLI"))  //TODO So awful if left here alone - needed for LoginView: if the username is rejected, we need the stage to be open in order to perform a second attempt.
+                if (rendererChoice.equals(CLI))  //TODO So awful if left here alone - needed for LoginView: if the username is rejected, we need the stage to be open in order to perform a second attempt.
                     mainStage.close();
                 ViewState newState = (ViewState) Class.forName(ViewState.class.getPackageName() + ".clientView" + rendererChoice + "."  +  nextState  + rendererChoice)
                         .getConstructors()[0]

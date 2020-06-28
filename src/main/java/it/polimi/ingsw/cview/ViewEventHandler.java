@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
+import static it.polimi.ingsw.GameSettings.ONE_SECOND;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class ViewEventHandler implements Runnable {
@@ -137,7 +138,7 @@ public class ViewEventHandler implements Runnable {
                     view.getViewState().terminate();
                 }
                 try {
-                    Thread.sleep((long) (scalingFactor * TIMEOUT * 1000));
+                    Thread.sleep((long) (scalingFactor * TIMEOUT * ONE_SECOND));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

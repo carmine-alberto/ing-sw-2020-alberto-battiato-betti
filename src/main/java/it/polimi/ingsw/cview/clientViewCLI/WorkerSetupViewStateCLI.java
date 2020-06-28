@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
+
 public class WorkerSetupViewStateCLI extends CLIViewState {
     private enum InternalState {
         COLOR_SELECTION,
@@ -70,8 +72,8 @@ public class WorkerSetupViewStateCLI extends CLIViewState {
             return;
         }
 
-        for (Integer i = 0; i < BOARD_SIZE; i++)
-            for (Integer j = 0; j < BOARD_SIZE; j++)
+        for (Integer i = 0; i < FIELD_SIZE; i++)
+            for (Integer j = 0; j < FIELD_SIZE; j++)
                 if (view.getBoard()[i][j].getWorker() != null && view.getBoard()[i][j].getWorker().getOwner().getColour().toUpperCase().equals(input.toUpperCase())) {
                     showWarning("One of your opponents already chose this color, pick another one!");
                     return;
@@ -116,7 +118,7 @@ public class WorkerSetupViewStateCLI extends CLIViewState {
     }
 
     private boolean isOutOfBounds(Integer coordinate) {
-        return coordinate < 1 || coordinate > 5;
+        return coordinate < 1 || coordinate > FIELD_SIZE;
     }
 }
 

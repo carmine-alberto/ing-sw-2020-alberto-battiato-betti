@@ -23,6 +23,8 @@ public class GameSettings {
 
     public static final Integer NUM_OF_WORKERS = 2;
 
+    public static final Integer ONE_SECOND = 1000;
+
     public static final String CLI = "CLI";
     public static final String GUI = "";
 }

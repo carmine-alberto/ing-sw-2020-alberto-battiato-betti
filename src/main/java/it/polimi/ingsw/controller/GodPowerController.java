@@ -9,6 +9,9 @@ import it.polimi.ingsw.model.Player;
 
 import java.util.List;
 
+import static it.polimi.ingsw.GameSettings.FIRST_PLAYER_INDEX;
+import static it.polimi.ingsw.GameSettings.SECOND_PLAYER_INDEX;
+
 public class GodPowerController extends ControllerState {
     private Integer choosingPlayerIndex;
 
@@ -20,7 +23,7 @@ public class GodPowerController extends ControllerState {
 
     public GodPowerController(Controller mainController) {
         super(mainController);
-        choosingPlayerIndex = 1; //The player selecting the first godPower is always the second to join the game
+        choosingPlayerIndex = SECOND_PLAYER_INDEX; //The player selecting the first godPower is always the second to join the game
         notifySelectedGods(mainController.getCurrentGame().getPlayers().get(choosingPlayerIndex));
     }
 
@@ -46,8 +49,8 @@ public class GodPowerController extends ControllerState {
             choosingPlayer.getPlayerView().changeView(new VirtualWaitingViewState());
             choosingPlayerIndex++;
             if (choosingPlayerIndex % currentGame.NUM_OF_PLAYERS == 0) {
-                currentGame.assignSelectedGodPowerToPlayer(godPowersList.get(0), currentGame.getPlayers().get(0));
-                currentGame.removeGodPowerFromAvailableGods(godPowersList.get(0));
+                currentGame.assignSelectedGodPowerToPlayer(godPowersList.get(FIRST_PLAYER_INDEX), currentGame.getPlayers().get(FIRST_PLAYER_INDEX));
+                currentGame.removeGodPowerFromAvailableGods(godPowersList.get(FIRST_PLAYER_INDEX));
                 moveToNextState();
             } else {
                 choosingPlayer = currentGame.getPlayers().get(choosingPlayerIndex);

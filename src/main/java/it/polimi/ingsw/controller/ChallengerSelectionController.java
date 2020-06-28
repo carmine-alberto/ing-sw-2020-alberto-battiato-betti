@@ -10,6 +10,9 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.GameSettings.CORRECTION;
+import static it.polimi.ingsw.GameSettings.FIRST_PLAYER_INDEX;
+
 public class ChallengerSelectionController extends ControllerState {
     public ChallengerSelectionController(Controller mainController) {
         super(mainController);
@@ -26,7 +29,7 @@ public class ChallengerSelectionController extends ControllerState {
         Player newPlayer;
 
         try {
-            if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() < 2 || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
+            if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() == 1 || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
                 newPlayer = new Player(loginEvent.playerUsername, senderView);
                 currentGame.addPlayer(newPlayer);
                 newPlayer.getPlayerView().changeView(new VirtualWaitingViewState());
@@ -45,11 +48,11 @@ public class ChallengerSelectionController extends ControllerState {
     }
 
     public void handle(ChallengerSelectionEvent event, VirtualView senderView) { //TODO Check legality of choices
-        mainController.getCurrentGame().setCurrentPlayerIndex(event.selectedStartingPlayerIndex - 1);
+        mainController.getCurrentGame().setCurrentPlayerIndex(event.selectedStartingPlayerIndex - CORRECTION);
         mainController.getCurrentGame().NUM_OF_PLAYERS = event.selectedNumberOfPlayers;
         mainController.getCurrentGame().setGodPowers(event.selectedGods);
 
-        mainController.getCurrentGame().getPlayers().get(0).getPlayerView().changeView(new VirtualWaitingViewState());
+        mainController.getCurrentGame().getPlayers().get(FIRST_PLAYER_INDEX).getPlayerView().changeView(new VirtualWaitingViewState());
 
         if (mainController.getCurrentGame().getPlayers().size() == mainController.getCurrentGame().NUM_OF_PLAYERS) {
             moveToNextState(mainController.getCurrentGame());
@@ -58,8 +61,8 @@ public class ChallengerSelectionController extends ControllerState {
     }
 
     private void moveToNextState(Game currentGame) {
-        currentGame.getPlayers().get(0).getPlayerView().changeView(new VirtualWaitingViewState());
-        currentGame.getPlayers().get(1).getPlayerView().changeView(new VirtualGodPowerViewState());
+        currentGame.getPlayers().get(FIRST_PLAYER_INDEX).getPlayerView().changeView(new VirtualWaitingViewState());
+        currentGame.getPlayers().get(FIRST_PLAYER_INDEX).getPlayerView().changeView(new VirtualGodPowerViewState());
         mainController.controllerState = new GodPowerController(mainController);
     }
 

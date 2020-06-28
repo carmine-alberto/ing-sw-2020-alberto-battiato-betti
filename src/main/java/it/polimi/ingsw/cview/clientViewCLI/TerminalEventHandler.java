@@ -4,6 +4,8 @@ import it.polimi.ingsw.View;
 
 import java.util.Scanner;
 
+import static it.polimi.ingsw.GameSettings.CLI;
+
 public class TerminalEventHandler implements Runnable {
     private Scanner in;
     private View view;
@@ -18,7 +20,7 @@ public class TerminalEventHandler implements Runnable {
     public void run() {
         while (true) {
             String nextLine = in.nextLine();
-            if (view.getRendererChoice().equals("CLI")) {
+            if (view.getRendererChoice().equals(CLI)) {
                 if (nextLine.equals(SWITCH)) {
                     switchToGUI();
                 } else {
@@ -33,7 +35,7 @@ public class TerminalEventHandler implements Runnable {
         view.setRendererChoice("");
 
         String[] classPath = view.getViewState().getClass().getName().split("\\.");
-        view.getViewState().next(classPath[classPath.length - 1].replace("CLI", ""));
+        view.getViewState().next(classPath[classPath.length - 1].replace(CLI, ""));
         view.getViewState().showStage();
     }
 }
