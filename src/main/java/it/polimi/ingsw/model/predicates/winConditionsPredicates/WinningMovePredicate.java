@@ -5,9 +5,11 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
+import static it.polimi.ingsw.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
+import static it.polimi.ingsw.GameSettings.SECOND_LEVEL;
+
 public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
 
-    static final Integer HEIGHT_LEVEL = 2;
 
     /**
      * We check if the considered gameWorker has won, this winningMove is a move
@@ -24,10 +26,10 @@ public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
     }
 
     private boolean movedFromLevel2ToLevel3(Game game, GameWorker gameWorker) {
-        return gameWorker != null && gameWorker.getCell().getHeight() == HEIGHT_LEVEL
+        return gameWorker != null && gameWorker.getCell().getHeight().equals(SECOND_LEVEL)
                             &&
                 game.getTurnPlayer().getPlayerState().getSelectedCell() != null
                 &&
-               game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight() == 3;
+                game.getTurnPlayer().getPlayerState().getSelectedCell().getHeight().equals(MAX_HEIGHT_WITHOUT_DOME);
     }
 }

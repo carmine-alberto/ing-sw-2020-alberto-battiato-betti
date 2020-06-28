@@ -8,6 +8,8 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.function.BiPredicate;
 
+import static it.polimi.ingsw.GameSettings.*;
+
 
 public class ChooseWorkerPhase extends TurnPhase {
 
@@ -40,10 +42,10 @@ public class ChooseWorkerPhase extends TurnPhase {
 
 
     private GameWorker extractWorkerFromCoordinates(String coordinates) throws InvalidSelectionException {
-        Integer x = Integer.parseInt(coordinates.substring(0, 1));
-        Integer y = Integer.parseInt(coordinates.substring(2, 3));
+        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT, ONE));
+        Integer y = Integer.parseInt(coordinates.substring(TWO, THREE));
 
-        GameWorker extractedWorker = currentGame.getCell(x-1, y-1).getWorker();
+        GameWorker extractedWorker = currentGame.getCell(x - CORRECTION, y - CORRECTION).getWorker();
 
         if (extractedWorker == null)
             throw new InvalidSelectionException("The selected cell contains no worker. Try again!");

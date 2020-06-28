@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
+import static it.polimi.ingsw.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
+
 public class FieldCell implements Serializable {
     private transient Game currentGame;
     private GameWorker occupyingWorker;
     private Integer posX, posY, height;
     private Boolean hasDome;
-    private static Integer MAX_HEIGHT = 3;
-    static final Integer FIELD = 5;
 
     public FieldCell(Game currentGame, Integer posX, Integer posY) {
         this.occupyingWorker = null;
@@ -50,7 +51,7 @@ public class FieldCell implements Serializable {
      */
     public void incrementHeight() {
         try {
-            if (height >= MAX_HEIGHT)
+            if (height >= MAX_HEIGHT_WITHOUT_DOME)
                 throw new MaxHeightReachedException("Impossibile costruire un altro blocco. Altezza massima raggiunta.");
             height++;
             currentGame.notifyObservers(new BoardUpdate(currentGame.getField()));
@@ -89,7 +90,7 @@ public class FieldCell implements Serializable {
      * @return tre if the cell is complete, false otherwise
      */
     public Boolean isComplete() {
-        return this.hasDome && this.getHeight() == MAX_HEIGHT;
+        return this.hasDome && this.getHeight() == MAX_HEIGHT_WITHOUT_DOME;
     }
 
     public Boolean getHasDome() {
@@ -111,8 +112,8 @@ public class FieldCell implements Serializable {
         Integer i = Math.max(this.getPosX() - 1, 0);
         Integer k = Math.max(this.getPosY() - 1, 0);
 
-        for (;  i <= this.getPosX() + 1 &&  i < FIELD ; i++)
-            for (Integer j = k; j <= this.getPosY() + 1 && j < FIELD; j++)
+        for (;  i <= this.getPosX() + 1 &&  i < FIELD_SIZE ; i++)
+            for (Integer j = k; j <= this.getPosY() + 1 && j < FIELD_SIZE; j++)
                 adjacentCells.add(this.currentGame.getCell(i, j));
 
         adjacentCells.remove(this);

@@ -23,6 +23,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.GameSettings.NUM_OF_WORKERS;
 import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.X;
 import static it.polimi.ingsw.cview.clientView.WorkerSetupViewState.CellCoordinate.Y;
 
@@ -32,8 +33,6 @@ public class WorkerSetupViewState extends GUIViewState {
     }
 
     final Integer edgeTolerance = 20;
-    final Integer BOARD_SIZE = 5;
-    final Integer NUM_OF_WORKERS = 2;
 
    // private ColorPicker colorPicker;
     private ComboBox<Rectangle> colors;

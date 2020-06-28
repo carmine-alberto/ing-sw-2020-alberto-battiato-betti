@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.GameWorker;
 import java.util.function.BiPredicate;
 
 public class IsDeltaHeightLessThanPredicate implements BiPredicate<FieldCell, GameWorker> {
-    private Integer delta;
+    private final Integer delta;
 
     public IsDeltaHeightLessThanPredicate(Integer delta) {
         this.delta = delta;

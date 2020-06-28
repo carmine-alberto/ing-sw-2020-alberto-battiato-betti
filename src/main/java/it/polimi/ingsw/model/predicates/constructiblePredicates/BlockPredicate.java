@@ -5,9 +5,10 @@ import it.polimi.ingsw.model.Player;
 
 import java.util.function.BiPredicate;
 
+import static it.polimi.ingsw.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
+
 public class BlockPredicate implements BiPredicate<Player, Constructible> {
     private Integer minimumHeight;
-    private static int MAX_HEIGHT = 3;
 
     public BlockPredicate(Integer min){
         minimumHeight = min;
@@ -25,7 +26,7 @@ public class BlockPredicate implements BiPredicate<Player, Constructible> {
     @Override
     public boolean test(Player player, Constructible constructible) {
         Integer height = player.getPlayerState().getSelectedCell().getHeight();
-        return ((constructible.equals(Constructible.BLOCK) && height < MAX_HEIGHT) || (constructible.equals(constructible.DOME) && height >= minimumHeight));
+        return ((constructible.equals(Constructible.BLOCK) && height < MAX_HEIGHT_WITHOUT_DOME) || (constructible.equals(constructible.DOME) && height >= minimumHeight));
     }
 
 }

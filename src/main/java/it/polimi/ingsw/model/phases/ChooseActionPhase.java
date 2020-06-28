@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT;
+import static it.polimi.ingsw.GameSettings.ONE;
+
 public class ChooseActionPhase extends TurnPhase {
     private List<ActionEnum> availableActions;
 
@@ -29,14 +32,14 @@ public class ChooseActionPhase extends TurnPhase {
                 .filter(action -> phasePredicate.test(action, turnPlayer))
                 .collect(Collectors.toList());
 
-        if (availableActions.size() > 1) {
+        if (availableActions.size() > ONE) {
             //currentGame.notifyTurnPlayer(new PhaseUpdate("Select the action to perform")); //TODO Fix MessageBox overlapping with ChoiceBox
 
             currentGame.notifyTurnPlayer(new AvailableChoicesUpdate(stringify(availableActions)));
         }
         else
             try {
-                currentGame.runPhase(availableActions.get(0).toString());
+                currentGame.runPhase(availableActions.get(FIRST_ELEMENT).toString());
             } catch (Exception e) {
                 //Never thrown since the passed string is well-formatted
             }

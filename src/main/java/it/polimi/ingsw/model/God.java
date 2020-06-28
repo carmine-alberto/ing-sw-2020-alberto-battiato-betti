@@ -16,6 +16,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.function.BiPredicate;
 
+import static it.polimi.ingsw.GameSettings.*;
+
 public class God implements Serializable {
 
     private String name;
@@ -56,7 +58,7 @@ public class God implements Serializable {
             BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate(); // TODO fix
             // l'idea è, di usare, per le fasi standard, i predicati presenti nel god, facendo un controllo sul phasePredicate. se è diverso da null va usato quest'ultimo
             TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases." + nextPhase)
-                    .getConstructors()[0]
+                    .getConstructors()[FIRST_ELEMENT]
                     .newInstance(currentGame, phasePredicate);
 
             return newPhase;
@@ -74,7 +76,7 @@ public class God implements Serializable {
      * @param currentGame The game you're playing
      */
     public void setNextPhase(Game currentGame) {
-        if (currentPhaseNode.getChildren().size() > 1) {
+        if (currentPhaseNode.getChildren().size() > ONE) {
             String selectedAction = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();
 
             currentPhaseNode = currentPhaseNode
@@ -84,8 +86,8 @@ public class God implements Serializable {
                     .findFirst()
                     .get();
         }
-        else if (currentPhaseNode.getChildren().size() == 1)
-            currentPhaseNode =  currentPhaseNode.getChildren().get(0);
+        else if (currentPhaseNode.getChildren().size() == ONE)
+            currentPhaseNode =  currentPhaseNode.getChildren().get(FIRST_ELEMENT);
         else { //Leaf Node - we are in the EndPhase
 
             reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
@@ -331,10 +333,10 @@ public class God implements Serializable {
          * @return the god built
          */
         public God getCompleteGod() {
-            if(tempGod.phasesTree.getChildren().size() == 0)
+            if(tempGod.phasesTree.getChildren().size() == EMPTY)
                 setBasePhases();
             //We're assuming it's the only one, since every turn starts with WorkerSelection
-            tempGod.phasesTree = tempGod.phasesTree.getChildren().get(0);   //Root is null, set the first child as new root.
+            tempGod.phasesTree = tempGod.phasesTree.getChildren().get(FIRST_ELEMENT);   //Root is null, set the first child as new root.
             tempGod.currentPhaseNode = tempGod.phasesTree;
 
 

@@ -11,6 +11,8 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.GameSettings.*;
+
 
 public abstract class TurnPhase {
     protected Game currentGame;
@@ -72,12 +74,12 @@ public abstract class TurnPhase {
      * @throws IllegalFormatException if the format is not recognised
      */
     protected void parseCoordinatesArg(String arg) throws IllegalFormatException {
-        if (arg.length() == 3) {
+        if (arg.length() == THREE) {
             try {
                 Integer x = Integer.parseInt(arg.substring(0, 1));
                 Integer y = Integer.parseInt(arg.substring(2, 3));
 
-                if (x < 6 && x > 0 && y < 6 && y > 0)
+                if (x <= FIELD_SIZE && x > ZERO && y <= FIELD_SIZE && y > ZERO)
                     return;
             } catch (NumberFormatException e) {
                 throw new IllegalFormatException("Your selection's format was not recognized; try again");
@@ -112,10 +114,10 @@ public abstract class TurnPhase {
      * @throws InvalidSelectionException if the selection is out of bound
      */
     protected FieldCell extractCellFromCoordinates(String coordinates) throws InvalidSelectionException {
-        Integer x = Integer.parseInt(coordinates.substring(0, 1));
-        Integer y = Integer.parseInt(coordinates.substring(2, 3));
+        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT, ONE));
+        Integer y = Integer.parseInt(coordinates.substring(TWO, THREE));
 
-        return currentGame.getCell(x-1, y-1);
+        return currentGame.getCell(x - CORRECTION, y - CORRECTION);
 
     }
 

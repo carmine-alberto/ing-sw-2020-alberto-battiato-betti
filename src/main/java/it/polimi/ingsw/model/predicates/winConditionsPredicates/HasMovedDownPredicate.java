@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.GameWorker;
 import java.util.function.BiPredicate;
 
 public class HasMovedDownPredicate implements BiPredicate<Game, GameWorker> {
-    private Integer minimumDescent; // do we need getter and setter?
+    private final Integer minimumDescent; // do we need getter and setter?
 
     public HasMovedDownPredicate(Integer n){
         this.minimumDescent = n;

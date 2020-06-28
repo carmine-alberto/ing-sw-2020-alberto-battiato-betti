@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.GameSettings.CORRECTION;
+import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
+
 public class Game extends Observable<Event> {
     public Integer NUM_OF_PLAYERS;
 
@@ -32,7 +35,6 @@ public class Game extends Observable<Event> {
 
     private FieldCell[][] field = new FieldCell[FIELD_SIZE][FIELD_SIZE];
 
-    public static Integer FIELD_SIZE = 5;
 
     /**
      * Constructor for class Game, it creates the board and the list of available gods
@@ -45,7 +47,7 @@ public class Game extends Observable<Event> {
         //godPowers = buildDefaultGods();
 
 
-        NUM_OF_PLAYERS = -1; //TODO Refactor into proper private variable + accessor
+        NUM_OF_PLAYERS = -CORRECTION; //TODO Refactor into proper private variable + accessor
 
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)

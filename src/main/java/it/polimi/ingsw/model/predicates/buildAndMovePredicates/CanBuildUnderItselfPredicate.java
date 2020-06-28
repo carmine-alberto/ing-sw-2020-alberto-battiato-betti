@@ -5,9 +5,9 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
-public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, GameWorker> {
+import static it.polimi.ingsw.GameSettings.TWO;
 
-    static final int MAX_HEIGHT = 2;
+public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, GameWorker> {
 
     /**
      * This function is used to check if a certain gameWorker can build a BLOCK under itself
@@ -19,7 +19,7 @@ public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, Game
      */
     @Override
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
-        return !(fieldCell.getHeight() > 2) && fieldCell.equals(gameWorker.getCell());
+        return !(fieldCell.getHeight() > TWO) && fieldCell.equals(gameWorker.getCell());
     }
 
 }

@@ -72,7 +72,7 @@ public class ChallengerSelectionViewState extends GUIViewState {
         List<String> godsList = view.getAvailableGods();
         if (godsList != null)
             for (String god : godsList)
-                godsIcons.getChildren().add(new ToggleButton(god));
+                godsIcons.getChildren().add(new CheckBox(god));
 
 
         HBox godPowersBox = new HBox(10, godPowersLabel, godsIcons);
@@ -92,8 +92,8 @@ public class ChallengerSelectionViewState extends GUIViewState {
     private void sendDataToServer() {
         List<String> selectedGods = godsIcons.getChildren()
                 .stream()
-                .filter(godButton -> ((ToggleButton) godButton).isSelected())
-                .map(godButton -> ((ToggleButton) godButton).getText())
+                .filter(godCheckBox -> ((CheckBox) godCheckBox).isSelected())
+                .map(godCheckBox -> ((CheckBox) godCheckBox).getText())
                 .collect(Collectors.toList());
 
         Integer selectedNumberOfPlayers = Integer.parseInt(

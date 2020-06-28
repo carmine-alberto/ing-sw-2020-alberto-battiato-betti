@@ -5,9 +5,11 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
+import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
+
+
 public class CompleteTowersPredicate implements BiPredicate<Game, GameWorker> {
-    private Integer n;  // do we need getter and setter?
-    public static Integer FIELD_SIZE = 5;
+    private final Integer n;  // do we need getter and setter?
 
     public  CompleteTowersPredicate (Integer n){
         this.n = n;
