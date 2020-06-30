@@ -107,13 +107,15 @@ public class WorkerSetupViewState extends GUIViewState {
             case "0x00ffffff":
                 color = "CYAN";
                 break;
-            case "0xffffff00":
-                color = "YELLOW";
-                break;
-            case "0xffff00ff":
+            //case "0xffffff00":
+            case "0xff00ffff":
                 color = "MAGENTA";
                 break;
+            case "0xffff00ff":
+                color = "YELLOW";
+                break;
         }
+
 
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
