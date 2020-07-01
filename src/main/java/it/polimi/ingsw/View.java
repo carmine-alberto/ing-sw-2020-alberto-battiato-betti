@@ -1,8 +1,8 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.cview.ReceivedEvent;
 import it.polimi.ingsw.cview.ViewState;
 import it.polimi.ingsw.cview.clientView.LoginViewState;
-import it.polimi.ingsw.cview.clientViewCLI.LoginViewStateCLI;
 import it.polimi.ingsw.cview.clientViewCLI.TerminalEventHandler;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Application;
@@ -53,7 +53,7 @@ public class View extends Application {
         Thread CLIListener = new Thread(new TerminalEventHandler(this));
         CLIListener.start();
 
-        this.viewState.next("LoginViewState");
+        this.viewState.next(ReceivedEvent.LOGIN_VIEW_STATE);
 
     }
 

@@ -47,8 +47,16 @@ public class ViewEventHandler implements Runnable {
     }
 
     public void handle(ChangeViewEvent event) {
-        view.getViewState().next(event.viewState);
+        ReceivedEvent receivedEvent = stringToEnum(event.viewState);
+        view.getViewState().next(receivedEvent);
         System.out.println(view.getViewState().getClass());
+    }
+
+    private ReceivedEvent stringToEnum (String event){
+        event = event
+          .replaceAll("(.)([A-Z])", "$1_$2")
+          .toUpperCase();
+        return ReceivedEvent.valueOf(event);
     }
 
     public void handle(WarningEvent event) {
@@ -87,7 +95,7 @@ public class ViewEventHandler implements Runnable {
 
     public void handle(GameStartedEvent gameStartedEvent) {
         Platform.runLater(() -> {
-            view.getViewState().next("BoardViewState");
+            view.getViewState().next(ReceivedEvent.BOARD_VIEW_STATE);
             view.getViewState().render();
         });
     }

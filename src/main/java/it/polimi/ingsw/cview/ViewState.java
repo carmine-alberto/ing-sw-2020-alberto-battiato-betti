@@ -2,6 +2,8 @@ package it.polimi.ingsw.cview;
 
 import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.Event;
+import it.polimi.ingsw.cview.clientView.*;
+import it.polimi.ingsw.cview.clientViewCLI.*;
 import it.polimi.ingsw.cview.serverView.VirtualView;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -11,7 +13,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.List;
 
@@ -55,9 +56,79 @@ public abstract class ViewState {
      *
      * @param nextState The next state you want to enter to (red in the phasesTree)
      */
-    public void next(String nextState) {
+    public void next(ReceivedEvent nextState) {
         Platform.runLater(() -> {
-            try {
+            ViewState newState = new BoardViewState(mainStage, clientSocket, view, out);
+            String rendererChoice = view.getRendererChoice();
+            if (rendererChoice.equals(CLI))  //TODO So awful if left here alone - needed for LoginView: if the username is rejected, we need the stage to be open in order to perform a second attempt.
+                mainStage.close();
+
+            switch (rendererChoice) {
+                case (CLI): {
+                    switch (nextState) {
+                        case BOARD_VIEW_STATE -> {
+                            newState = new BoardViewStateCLI(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case CHALLENGER_SELECTION_VIEW_STATE -> {
+                            newState = new ChallengerSelectionViewStateCLI(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case GOD_POWER_VIEW_STATE -> {
+                            newState = new GodPowerViewStateCLI(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case LOGIN_VIEW_STATE -> {
+                            newState = new LoginViewStateCLI(mainStage, clientSocket, view, out);
+                            break;
+                            //case TERMINAL_EVENT_HANDLER -> newState = new TerminalEventHandler(mainStage, clientSocket, view, out); //TODO ?
+                        }
+                        case WAITING_VIEW_STATE -> {
+                            newState = new WaitingViewStateCLI(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case WORKER_SETUP_VIEW_STATE -> {
+                            newState = new WorkerSetupViewStateCLI(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                    }
+                    break;
+                }
+                default:{   //GUI
+                    switch (nextState) {
+                        case BOARD_VIEW_STATE -> {
+                            newState = new BoardViewState(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case CHALLENGER_SELECTION_VIEW_STATE -> {
+                            newState = new ChallengerSelectionViewState(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case GOD_POWER_VIEW_STATE -> {
+                            newState = new GodPowerViewState(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case LOGIN_VIEW_STATE -> {
+                            newState = new LoginViewState(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case VIEW_STATE3_D -> {
+                            newState = new ViewState3D(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case WAITING_VIEW_STATE -> {
+                            newState = new WaitingViewState(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                        case WORKER_SETUP_VIEW_STATE -> {
+                            newState = new WorkerSetupViewState(mainStage, clientSocket, view, out);
+                            break;
+                        }
+                    }
+                }
+            }
+
+           /* try {
                 String rendererChoice = view.getRendererChoice();
                 if (rendererChoice.equals(CLI))  //TODO So awful if left here alone - needed for LoginView: if the username is rejected, we need the stage to be open in order to perform a second attempt.
                     mainStage.close();
@@ -67,10 +138,11 @@ public abstract class ViewState {
                 view.setViewState(newState);
             } catch (InstantiationException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace(); //TODO Handle exception properly
-            }
+            }*/
             if (mainStage.getScene() == null) {
                 mainStage.setScene(new Scene(new Group(), 700, 600));
             }
+            view.setViewState(newState);
             view.getViewState().render();
         });
     }

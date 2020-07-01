@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import static it.polimi.ingsw.GameSettings.CLI;
+import static it.polimi.ingsw.GameSettings.GUI;
+
 public class LoginViewState extends GUIViewState {
     private ChoiceBox<String> cliGUIChoice;
     private TextField usernameInput;
@@ -86,15 +89,14 @@ public class LoginViewState extends GUIViewState {
      * otherwise, we should split the Controller in ClientController - ServerController and decouple event handling
      */
     private void sendDataToServer() {
-        if (cliGUIChoice.getValue().equals("CLI")) {
-            view.setRendererChoice("CLI");
+        if (cliGUIChoice.getValue().equals(CLI)) {
+            view.setRendererChoice(CLI);
         } else
-            view.setRendererChoice("");
+            view.setRendererChoice(GUI);
 
         String username = usernameInput.getText();
         String serverIP = serverIPInput.getText();
         Integer portNumber = Integer.parseInt(portInput.getText());
-
 
         try {
             setupConnectionToServer(serverIP, portNumber);
