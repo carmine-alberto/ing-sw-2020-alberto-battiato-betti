@@ -9,7 +9,7 @@ import static it.polimi.ingsw.GameSettings.*;
 public class Client {
 
     public static void main(String[] args) {
-        System.out.println("Ce la faremo! " + Client.class.getClassLoader().getResource("copertina_santorini_2016.jpg"));
+        System.out.println("Ce la faremo! "); //TODO È il caso di toglierla ?
 
         if (args.length > 0 && args[FIRST_ELEMENT].equals("-" + CLI))
             View.setRendererChoice(args[FIRST_ELEMENT].substring(1));

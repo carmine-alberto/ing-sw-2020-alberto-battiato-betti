@@ -23,6 +23,7 @@ public class ChallengerSelectionViewStateCLI extends CLIViewState {
         IDLE
     }
 
+
     private Integer selectedNumber;
     private List<String> availableGods;
     private List<String> selectedGods;

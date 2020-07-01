@@ -118,7 +118,7 @@ public class BoardViewState extends GUIViewState {
             if (fieldCell.getPosX().equals(availableXCoordinates.get(i))
                                         &&
                 fieldCell.getPosY().equals(availableYCoordinates.get(i)))
-                toggleCell(cell);
+                    toggleCell(cell);
     }
 
     private void updateProperty(FloatProperty tileSideLength) {

@@ -112,7 +112,7 @@ public class ViewEventHandler implements Runnable {
     public void handle(GameEndUpdate update) {
         view.getViewState().showMessage("The game is over. " +
                 update.winnerNickname + " is the winner!");
-        view.getViewState().terminate();
+        view.getViewState().terminate(); //TODO Fix
     }
 
     public void handle(PingEvent pingEvent) {
