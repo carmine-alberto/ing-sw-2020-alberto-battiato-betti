@@ -5,12 +5,13 @@ During this year final exam the partecipants were required to implement the game
 ## UML
 The UML documentation is avialable in two different versions, the initial one, created as soon as the problem was brought us, and the final one: created once completed the program. There are several and interesting differences.
 
-* [Initial UML](/http://linkUMLiniziale.com)
+* [Initial UML](https://github.com/carmine-alberto/ing-sw-2020-alberto-battiato-betti/blob/master/deliverables/UML/OldModelController.png)
 
-* [Final UML](/http://linkUMLfinale.com)
+* [Final UML](https://github.com/carmine-alberto/ing-sw-2020-alberto-battiato-betti/blob/master/deliverables/UML/UML_general.png)
+* [Final Model UML](https://github.com/carmine-alberto/ing-sw-2020-alberto-battiato-betti/blob/master/deliverables/UML/UML_model.png)
 
 ## JavaDoc
-The project is also provided with a Java documentation (JUnit 5) that covers almost every model's class.
+The project is also provided with a [Java documentation](https://github.com/carmine-alberto/ing-sw-2020-alberto-battiato-betti/blob/master/deliverables/JavaDoc/index.html) (JUnit 5) that covers almost every model's class.
 
 ## Implemented functionality
 | Functionality | State |
