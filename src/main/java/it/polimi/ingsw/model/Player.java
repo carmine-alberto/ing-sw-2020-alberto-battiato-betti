@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
-import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,13 +14,9 @@ public class Player implements Serializable {
     private transient Game currentGame;
     private transient VirtualView playerView;
     private List<GameWorker> workers;
-    private String selectedGodPower; //TODO Refactor into proper type
     private God selectedGod;
 
     private transient PlayerState playerState;
-
-    //Predicates
-    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
 
     public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
@@ -83,10 +77,6 @@ public class Player implements Serializable {
         return currentGame.getPlayers().stream()
                 .filter(player -> !player.equals(this))
                 .collect(Collectors.toList());
-    }
-
-    public String getSelectedGodPower() {
-        return selectedGodPower;
     }
 
     public PlayerState getPlayerState() {

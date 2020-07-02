@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.events.BoardUpdate;
 import it.polimi.ingsw.model.exceptions.MaxHeightReachedException;
-import javafx.concurrent.Worker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class FieldCell implements Serializable {
         return this.posY;
     }
 
-    public void setOccupyingWorker(GameWorker worker){ //TODO Are we calling this function to set the occupying worker to null when he leaves the cell?
+    public void setOccupyingWorker(GameWorker worker){
         this.occupyingWorker = worker;
         if (worker != null && !worker.getCell().equals(this))
             worker.setPosition(this);
@@ -121,7 +120,9 @@ public class FieldCell implements Serializable {
         return adjacentCells;
     }
 
-    //Todo: javadoc on this one ?
+    /**
+     *  this method indicates if a FieldCell is equal to the given one
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

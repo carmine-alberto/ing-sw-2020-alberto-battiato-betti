@@ -47,7 +47,7 @@ public class Game extends Observable<Event> {
         //godPowers = buildDefaultGods();
 
 
-        NUM_OF_PLAYERS = -CORRECTION; //TODO Refactor into proper private variable + accessor
+        NUM_OF_PLAYERS = -CORRECTION;
 
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
@@ -95,9 +95,9 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     *
-     * @param player
-     * @throws InvalidSelectionException
+     *  this method adds a new player to the game
+     * @param player the player to add
+     * @throws InvalidSelectionException if the player's name is already in use
      */
     public void addPlayer(Player player) throws InvalidSelectionException {
        for (Player tmp : players)
@@ -201,7 +201,7 @@ public class Game extends Observable<Event> {
 
     /**
      * this method removes the given god from the GodsList
-     * @param selectedGod
+     * @param selectedGod the given god
      */
     public void removeGodPowerFromAvailableGods(String selectedGod) {
         this.godPowers = this.godPowers
@@ -210,10 +210,18 @@ public class Game extends Observable<Event> {
             .collect(Collectors.toList());
     }
 
+    /**
+     * this method notifies the observer
+     * @param e the event to pass the observer
+     */
     public void notifyObservers(Event e) {
         this.notify(e);
     }
 
+    /**
+     * this method notifies the turnPlayer
+     * @param event the event to pass the observer
+     */
     public void notifyTurnPlayer(Event event) {
         if (!observers.isEmpty())
             this.notify(observers
@@ -258,6 +266,9 @@ public class Game extends Observable<Event> {
         choosingPlayer.setSelectedGod(godToBeAssigned);
     }
 
+    /**
+     * this method deletes all observers
+     */
     public void detachObservers() {
         observers.clear();
     }

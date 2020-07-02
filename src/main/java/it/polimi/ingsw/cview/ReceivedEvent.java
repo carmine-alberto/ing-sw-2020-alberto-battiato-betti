@@ -1,5 +1,8 @@
 package it.polimi.ingsw.cview;
 
+/**
+ * every view is mapped into an enum
+ */
 public enum ReceivedEvent {
     BOARD_VIEW_STATE ,
     CHALLENGER_SELECTION_VIEW_STATE,
