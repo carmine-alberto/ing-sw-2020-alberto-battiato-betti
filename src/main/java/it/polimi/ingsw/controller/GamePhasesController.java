@@ -18,11 +18,22 @@ public class GamePhasesController extends ControllerState {
         currentGame = mainController.getCurrentGame();
     }
 
+    /**
+     *
+     * @param event The event the controller has to handle
+     * @param view The current view
+     */
     @Override
     public synchronized void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
+    /**
+     * This is the specific handle function used to handle the userInputEvent
+     *
+     * @param event The userInputEvent
+     * @param view The currentView
+     */
     public void handle(UserInputEvent event, VirtualView view) {
         try {
             turnPlayer = currentGame.getTurnPlayer();

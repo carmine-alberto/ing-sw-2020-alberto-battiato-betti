@@ -79,7 +79,6 @@ public class BoardViewState extends GUIViewState {
         }
     }
 
-
     private void fillCell(StackPane cell, FieldCell fieldCell) {
         List<Integer> availableXCoordinates = view.getAvailableCellsX();
         List<Integer> availableYCoordinates = view.getAvailableCellsY();

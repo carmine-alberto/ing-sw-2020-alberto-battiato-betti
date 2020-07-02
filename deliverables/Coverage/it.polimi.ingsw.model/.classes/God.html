@@ -1,0 +1,484 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: God</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: God (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">God</td>
+<td class="coverageStat">
+  <span class="percent">
+    71,4%
+  </span>
+  <span class="absValue">
+    (10/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    65,2%
+  </span>
+  <span class="absValue">
+    (30/ 46)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">God$GodBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,1%
+  </span>
+  <span class="absValue">
+    (16/ 17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,7%
+  </span>
+  <span class="absValue">
+    (54/ 57)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    83,9%
+  </span>
+  <span class="absValue">
+    (26/ 31)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81,6%
+  </span>
+  <span class="absValue">
+    (84/ 103)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.actions.Action;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.actions.Build;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.actions.Move;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.phases.Node;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.phases.TurnPhase;
+<i>9</i>&nbsp;import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
+<i>10</i>&nbsp;import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
+<i>11</i>&nbsp;import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
+<i>12</i>&nbsp;import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
+<i>13</i>&nbsp;import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import java.io.Serializable;
+<i>16</i>&nbsp;import java.util.HashMap;
+<i>17</i>&nbsp;import java.util.function.BiPredicate;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;import static it.polimi.ingsw.GameSettings.*;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;public class God implements Serializable {
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    private String name;
+<i>24</i>&nbsp;    private transient BiPredicate&lt;Game, GameWorker&gt; winConditionPredicate;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    private transient Action moveStrategy;
+<i>27</i>&nbsp;    private transient Action buildStrategy;
+<i>28</i>&nbsp;    private transient Node phasesTree; //Pointing to root, ALWAYS
+<i>29</i>&nbsp;    private transient Node currentPhaseNode; //Pointing to the current phase
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    private transient HashMap&lt;String, BiPredicate&gt; outerPredicatesHashmap;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    private transient BiPredicate&lt;FieldCell, GameWorker&gt; buildPredicates;
+<i>34</i>&nbsp;    private transient BiPredicate&lt;Player, Constructible&gt; constructiblePredicates;
+<i>35</i>&nbsp;    private transient BiPredicate&lt;FieldCell, GameWorker&gt; movePredicates;
+<i>36</i>&nbsp;    private transient BiPredicate&lt;ActionEnum, Player&gt; actionPredicates;
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;    private God() {</b>
+<b class="fc"><i>39</i>&nbsp;        winConditionPredicate = new WinningMovePredicate();</b>
+<b class="fc"><i>40</i>&nbsp;        buildPredicates = new IsCellFreePredicate();</b>
+<b class="fc"><i>41</i>&nbsp;        constructiblePredicates = new BlockPredicate(3);</b>
+<b class="fc"><i>42</i>&nbsp;        movePredicates = new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2));</b>
+<b class="fc"><i>43</i>&nbsp;        actionPredicates = new CanMovePredicate();</b>
+<b class="fc"><i>44</i>&nbsp;        buildStrategy = new Build();</b>
+<b class="fc"><i>45</i>&nbsp;        moveStrategy = new Move();</b>
+<b class="fc"><i>46</i>&nbsp;        outerPredicatesHashmap = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>47</i>&nbsp;    }</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * This function is used to get the next turnPhase form the phaseTree of the selected god.
+<i>51</i>&nbsp;     *
+<i>52</i>&nbsp;     * @param currentGame The game you&#39;re playing
+<i>53</i>&nbsp;     * @return Return the following phase (or null if something goes wrong)
+<i>54</i>&nbsp;     */
+<i>55</i>&nbsp;    public TurnPhase getNextPhase(Game currentGame) {
+<i>56</i>&nbsp;        try {
+<b class="fc"><i>57</i>&nbsp;            String nextPhase = currentPhaseNode.getPhase();</b>
+<b class="fc"><i>58</i>&nbsp;            BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate(); // TODO fix</b>
+<i>59</i>&nbsp;            // l&#39;idea è, di usare, per le fasi standard, i predicati presenti nel god, facendo un controllo sul phasePredicate. se è diverso da null va usato quest&#39;ultimo
+<b class="fc"><i>60</i>&nbsp;            TurnPhase newPhase = (TurnPhase) Class.forName(&quot;it.polimi.ingsw.model.phases.&quot; + nextPhase)</b>
+<b class="fc"><i>61</i>&nbsp;                    .getConstructors()[FIRST_ELEMENT]</b>
+<b class="fc"><i>62</i>&nbsp;                    .newInstance(currentGame, phasePredicate);</b>
+<i>63</i>&nbsp;
+<b class="fc"><i>64</i>&nbsp;            return newPhase;</b>
+<b class="nc"><i>65</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>66</i>&nbsp;            e.printStackTrace(); //TODO Handle exception properly</b>
+<b class="nc"><i>67</i>&nbsp;            return null;</b>
+<i>68</i>&nbsp;        }
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * Assumption: the only node with more than 1 child is the ChooseActionPhase node
+<i>74</i>&nbsp;     * if this assumption holds, the method works
+<i>75</i>&nbsp;     *
+<i>76</i>&nbsp;     * @param currentGame The game you&#39;re playing
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    public void setNextPhase(Game currentGame) {
+<b class="fc"><i>79</i>&nbsp;        if (currentPhaseNode.getChildren().size() &gt; ONE) {</b>
+<b class="nc"><i>80</i>&nbsp;            String selectedAction = currentGame.getTurnPlayer().getPlayerState().getSelectedAction().toString();</b>
+<i>81</i>&nbsp;
+<b class="nc"><i>82</i>&nbsp;            currentPhaseNode = currentPhaseNode</b>
+<b class="nc"><i>83</i>&nbsp;                    .getChildren()</b>
+<b class="nc"><i>84</i>&nbsp;                    .stream()</b>
+<b class="nc"><i>85</i>&nbsp;                    .filter(node -&gt; node.getPhase().toUpperCase().startsWith(selectedAction.toUpperCase()))</b>
+<b class="nc"><i>86</i>&nbsp;                    .findFirst()</b>
+<b class="nc"><i>87</i>&nbsp;                    .get();</b>
+<b class="nc"><i>88</i>&nbsp;        }</b>
+<b class="fc"><i>89</i>&nbsp;        else if (currentPhaseNode.getChildren().size() == ONE)</b>
+<b class="fc"><i>90</i>&nbsp;            currentPhaseNode =  currentPhaseNode.getChildren().get(FIRST_ELEMENT);</b>
+<i>91</i>&nbsp;        else { //Leaf Node - we are in the EndPhase
+<i>92</i>&nbsp;
+<b class="fc"><i>93</i>&nbsp;            reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph</b>
+<i>94</i>&nbsp;        }
+<b class="fc"><i>95</i>&nbsp;    }</b>
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    /**
+<i>98</i>&nbsp;     * This function returns the biPredicate, assigned in the outerPredicateHashMap of the god
+<i>99</i>&nbsp;     * @param predicateClass String key of the hashMap value
+<i>100</i>&nbsp;     * @return biPredicate assigned to that key
+<i>101</i>&nbsp;     */
+<i>102</i>&nbsp;    public BiPredicate getOuterPredicate(String predicateClass){
+<b class="fc"><i>103</i>&nbsp;        return outerPredicatesHashmap.get(predicateClass);</b>
+<i>104</i>&nbsp;    }
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    private void reset() {
+<b class="fc"><i>107</i>&nbsp;        currentPhaseNode = phasesTree;</b>
+<b class="fc"><i>108</i>&nbsp;    }</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    public String getName() {
+<b class="fc"><i>111</i>&nbsp;        return name;</b>
+<i>112</i>&nbsp;    }
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;    public void setMovePredicates(BiPredicate&lt;FieldCell, GameWorker&gt; movePredicates) {
+<b class="nc"><i>115</i>&nbsp;        this.movePredicates = movePredicates;</b>
+<b class="nc"><i>116</i>&nbsp;    }</b>
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    public Action getMoveStrategy() {
+<b class="fc"><i>119</i>&nbsp;        return this.moveStrategy;</b>
+<i>120</i>&nbsp;    }
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;    public Action getBuildStrategy() {
+<b class="fc"><i>123</i>&nbsp;        return this.buildStrategy;</b>
+<i>124</i>&nbsp;    }
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    public BiPredicate&lt;FieldCell, GameWorker&gt; getBuildPredicates() {
+<b class="nc"><i>127</i>&nbsp;        return buildPredicates;</b>
+<i>128</i>&nbsp;    }
+<i>129</i>&nbsp;
+<i>130</i>&nbsp;    public BiPredicate&lt;Player, Constructible&gt; getConstructiblePredicates() {
+<b class="nc"><i>131</i>&nbsp;        return constructiblePredicates;</b>
+<i>132</i>&nbsp;    }
+<i>133</i>&nbsp;
+<i>134</i>&nbsp;    public BiPredicate&lt;FieldCell, GameWorker&gt; getMovePredicates() {
+<b class="nc"><i>135</i>&nbsp;        return movePredicates;</b>
+<i>136</i>&nbsp;    }
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;    public BiPredicate&lt;Game, GameWorker&gt; getWinCondition() {
+<b class="fc"><i>139</i>&nbsp;        return winConditionPredicate;</b>
+<i>140</i>&nbsp;    }
+<i>141</i>&nbsp;
+<i>142</i>&nbsp;    /**
+<i>143</i>&nbsp;     * This function sets the biPredicate to a string (meaning the predicate class) in the outerPredicateHashMap of the god
+<i>144</i>&nbsp;     * @param predicate key of the hashMap
+<i>145</i>&nbsp;     * @param biPredicate value of the hashMap
+<i>146</i>&nbsp;     */
+<i>147</i>&nbsp;    public void setOuterPredicate(String predicate, BiPredicate biPredicate) {
+<b class="fc"><i>148</i>&nbsp;        this.outerPredicatesHashmap.put(predicate, biPredicate);</b>
+<b class="fc"><i>149</i>&nbsp;    }</b>
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * The tree is built in DFS-like order: first whole branch is read from file,
+<i>155</i>&nbsp;     * refNode must be saved upon reading &quot;phases&quot; and restored upon exit;
+<i>156</i>&nbsp;     * then, second branch is read, and so on
+<i>157</i>&nbsp;     */
+<i>158</i>&nbsp;    static class GodBuilder {
+<i>159</i>&nbsp;        private God tempGod;
+<i>160</i>&nbsp;        private Node refNode;
+<i>161</i>&nbsp;        private Node currNode;
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;
+<b class="fc"><i>164</i>&nbsp;        GodBuilder() {</b>
+<b class="fc"><i>165</i>&nbsp;            reset();</b>
+<b class="fc"><i>166</i>&nbsp;        }</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;        public GodBuilder name(String name) {
+<b class="fc"><i>169</i>&nbsp;            tempGod.name = name;</b>
+<b class="fc"><i>170</i>&nbsp;            return this;</b>
+<i>171</i>&nbsp;        }
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;        /**
+<i>174</i>&nbsp;         * This function adds a phase to the phaseTree. If it has a specific biPredicate it is assigned,
+<i>175</i>&nbsp;         * otherwise the &quot;standard&quot; biPredicate of that phase is assigned. In that case the biPredicate has to be null
+<i>176</i>&nbsp;         *
+<i>177</i>&nbsp;         * @param phaseName Is the string the predicate has to be assigned to
+<i>178</i>&nbsp;         * @param phasePredicate The specific biPredicate of the phase, if null ,teh standard biPredicate is used
+<i>179</i>&nbsp;         *
+<i>180</i>&nbsp;         * @return the node just added to the phasesTree
+<i>181</i>&nbsp;         */
+<i>182</i>&nbsp;        public GodBuilder addPhase(String phaseName, BiPredicate phasePredicate) {
+<b class="fc"><i>183</i>&nbsp;            if (phasePredicate == null)</b>
+<b class="fc"><i>184</i>&nbsp;                    phasePredicate = getPhasePredicate(phaseName);</b>
+<i>185</i>&nbsp;
+<b class="fc"><i>186</i>&nbsp;            Node newNode = new Node(currNode, phaseName, phasePredicate);</b>
+<b class="fc"><i>187</i>&nbsp;            currNode.addChild(newNode);</b>
+<b class="fc"><i>188</i>&nbsp;            currNode = newNode;</b>
+<i>189</i>&nbsp;
+<b class="fc"><i>190</i>&nbsp;            return this;</b>
+<i>191</i>&nbsp;        }
+<i>192</i>&nbsp;
+<i>193</i>&nbsp;        private BiPredicate getPhasePredicate(String name) {
+<b class="fc"><i>194</i>&nbsp;            return switch (name) {</b>
+<b class="nc"><i>195</i>&nbsp;                case &quot;ChooseActionPhase&quot; -&gt; tempGod.actionPredicates;</b>
+<b class="fc"><i>196</i>&nbsp;                case &quot;MovePhase&quot; -&gt; tempGod.movePredicates;</b>
+<b class="fc"><i>197</i>&nbsp;                case &quot;BuildPhase&quot; -&gt; tempGod.buildPredicates;</b>
+<b class="fc"><i>198</i>&nbsp;                case &quot;ChooseBlockPhase&quot; -&gt; tempGod.constructiblePredicates;</b>
+<b class="fc"><i>199</i>&nbsp;                default -&gt; (arg1, arg2) -&gt; true;</b>
+<i>200</i>&nbsp;            };
+<i>201</i>&nbsp;
+<i>202</i>&nbsp;        }
+<i>203</i>&nbsp;
+<i>204</i>&nbsp;        /**
+<i>205</i>&nbsp;         * This function adds the values to the outerHashMap, with the meaning of the key for the string and value for the biPredicate
+<i>206</i>&nbsp;         *
+<i>207</i>&nbsp;         * @param turnPhase The name of the turnPhase the outerHashMap has to modify
+<i>208</i>&nbsp;         * @param biPredicate The biPredicate that has to be added to the turnPhase inserted as first value
+<i>209</i>&nbsp;         *
+<i>210</i>&nbsp;         * @return actually useless
+<i>211</i>&nbsp;         */
+<i>212</i>&nbsp;        //todo refactor return
+<i>213</i>&nbsp;        public GodBuilder addOuterHashMap(String turnPhase, BiPredicate biPredicate){
+<b class="fc"><i>214</i>&nbsp;            tempGod.outerPredicatesHashmap.put(turnPhase, biPredicate); //todo gestire le concatenazioni con predicates multipli</b>
+<b class="fc"><i>215</i>&nbsp;            return this;</b>
+<i>216</i>&nbsp;        }
+<i>217</i>&nbsp;
+<i>218</i>&nbsp;        /**
+<i>219</i>&nbsp;         * This function is used to save the node, usually the one where the turnTree divides
+<i>220</i>&nbsp;         *
+<i>221</i>&nbsp;         * @return the node saved
+<i>222</i>&nbsp;         */
+<i>223</i>&nbsp;        public GodBuilder saveRefNode() {
+<b class="fc"><i>224</i>&nbsp;            refNode = currNode;</b>
+<b class="fc"><i>225</i>&nbsp;            return this;</b>
+<i>226</i>&nbsp;        }
+<i>227</i>&nbsp;
+<i>228</i>&nbsp;        /**
+<i>229</i>&nbsp;         * This function is used to get back to the saved node, the division of the two branches in the turnTree
+<i>230</i>&nbsp;         *
+<i>231</i>&nbsp;         * @return the node saved before
+<i>232</i>&nbsp;         */
+<i>233</i>&nbsp;        public GodBuilder restoreRefNode() {
+<b class="fc"><i>234</i>&nbsp;            currNode = refNode;</b>
+<b class="fc"><i>235</i>&nbsp;            return this;</b>
+<i>236</i>&nbsp;        }
+<i>237</i>&nbsp;
+<i>238</i>&nbsp;        /**
+<i>239</i>&nbsp;         * This function sets the biPredicate given as winConditionPredicate of the god, if you want to have
+<i>240</i>&nbsp;         * multiple biPredicate, you have to concatenate them externally
+<i>241</i>&nbsp;         *
+<i>242</i>&nbsp;         * @param winConditionPredicate the biPredicate you want to add as winConditionPredicate
+<i>243</i>&nbsp;         *
+<i>244</i>&nbsp;         * @return the godBuilder in the actual state
+<i>245</i>&nbsp;         */
+<i>246</i>&nbsp;        public GodBuilder winConditionPredicate(BiPredicate&lt;Game, GameWorker&gt; winConditionPredicate) {
+<b class="fc"><i>247</i>&nbsp;            this.tempGod.winConditionPredicate = winConditionPredicate;</b>
+<b class="fc"><i>248</i>&nbsp;            return this;</b>
+<i>249</i>&nbsp;        }
+<i>250</i>&nbsp;
+<i>251</i>&nbsp;        /**
+<i>252</i>&nbsp;         * This function sets the biPredicate given as movePredicate of the god, if you want to have
+<i>253</i>&nbsp;         * multiple biPredicate, you have to concatenate them externally
+<i>254</i>&nbsp;         *
+<i>255</i>&nbsp;         * @param movePredicate the biPredicate you want to add as movePredicate
+<i>256</i>&nbsp;         *
+<i>257</i>&nbsp;         * @return the godBuilder in the actual state
+<i>258</i>&nbsp;         */
+<i>259</i>&nbsp;        public GodBuilder movePredicate(BiPredicate&lt;FieldCell, GameWorker&gt; movePredicate){
+<b class="fc"><i>260</i>&nbsp;            this.tempGod.movePredicates = movePredicate;</b>
+<b class="fc"><i>261</i>&nbsp;            return this;</b>
+<i>262</i>&nbsp;        }
+<i>263</i>&nbsp;
+<i>264</i>&nbsp;        /**
+<i>265</i>&nbsp;         * This function sets the biPredicate given as buildPredicate of the god, if you want to have
+<i>266</i>&nbsp;         * multiple biPredicate, you have to concatenate them externally
+<i>267</i>&nbsp;         *
+<i>268</i>&nbsp;         * @param buildPredicate the biPredicate you want to add as buildPredicate
+<i>269</i>&nbsp;         *
+<i>270</i>&nbsp;         * @return the godBuilder in the actual state
+<i>271</i>&nbsp;         */
+<i>272</i>&nbsp;        public GodBuilder buildPredicate(BiPredicate&lt;FieldCell, GameWorker&gt; buildPredicate) {
+<b class="fc"><i>273</i>&nbsp;            this.tempGod.buildPredicates = buildPredicate;</b>
+<b class="fc"><i>274</i>&nbsp;            return this;</b>
+<i>275</i>&nbsp;        }
+<i>276</i>&nbsp;
+<i>277</i>&nbsp;        /**
+<i>278</i>&nbsp;         * This function sets the biPredicate given as constructibleBiPredicate of the god, if you want to have
+<i>279</i>&nbsp;         * multiple biPredicate, you have to concatenate them externally
+<i>280</i>&nbsp;         *
+<i>281</i>&nbsp;         * @param constructibleBiPredicate the biPredicate you want to add as constructibleBiPredicate
+<i>282</i>&nbsp;         *
+<i>283</i>&nbsp;         * @return the godBuilder in the actual state
+<i>284</i>&nbsp;         */
+<i>285</i>&nbsp;        public GodBuilder constructiblePredicate(BiPredicate&lt;Player, Constructible&gt; constructibleBiPredicate){
+<b class="fc"><i>286</i>&nbsp;            this.tempGod.constructiblePredicates =  constructibleBiPredicate;</b>
+<b class="fc"><i>287</i>&nbsp;            return this;</b>
+<i>288</i>&nbsp;        }
+<i>289</i>&nbsp;
+<i>290</i>&nbsp;        /**
+<i>291</i>&nbsp;         * This function sets the biPredicate given as moveStrategy of the god, if you want to have
+<i>292</i>&nbsp;         * multiple biPredicate, you have to concatenate them externally
+<i>293</i>&nbsp;         *
+<i>294</i>&nbsp;         * @param moveStrategy the biPredicate you want to add as moveStrategy
+<i>295</i>&nbsp;         *
+<i>296</i>&nbsp;         * @return the godBuilder in the actual state
+<i>297</i>&nbsp;         */
+<i>298</i>&nbsp;        public GodBuilder moveStrategy(Action moveStrategy) {//todo non è meglio usare getter e setter separati ?
+<b class="fc"><i>299</i>&nbsp;            this.tempGod.moveStrategy = moveStrategy;</b>
+<b class="fc"><i>300</i>&nbsp;            return this;</b>
+<i>301</i>&nbsp;        }
+<i>302</i>&nbsp;
+<i>303</i>&nbsp;        /**
+<i>304</i>&nbsp;         * This function sets the biPredicate given as actionPredicate of the god, if you want to have
+<i>305</i>&nbsp;         * multiple biPredicate, you have to concatenate them externally
+<i>306</i>&nbsp;         *
+<i>307</i>&nbsp;         * @param actionEnumBiPredicate the biPredicate you want to add as actionPredicate
+<i>308</i>&nbsp;         *
+<i>309</i>&nbsp;         * @return the godBuilder in the actual state
+<i>310</i>&nbsp;         */
+<i>311</i>&nbsp;        public GodBuilder actionPredicate(BiPredicate&lt;ActionEnum, Player&gt; actionEnumBiPredicate){
+<b class="nc"><i>312</i>&nbsp;            this.tempGod.actionPredicates = actionEnumBiPredicate;</b>
+<b class="nc"><i>313</i>&nbsp;            return this;</b>
+<i>314</i>&nbsp;        }
+<i>315</i>&nbsp;
+<i>316</i>&nbsp;        /**
+<i>317</i>&nbsp;         * This function sets the biPredicate given as buildStrategy of the god, if you want to have
+<i>318</i>&nbsp;         * multiple biPredicate, you have to concatenate them externally
+<i>319</i>&nbsp;         *
+<i>320</i>&nbsp;         * @param buildStrategy the biPredicate you want to add as buildStrategy
+<i>321</i>&nbsp;         *
+<i>322</i>&nbsp;         * @return the godBuilder in the actual state
+<i>323</i>&nbsp;         */
+<i>324</i>&nbsp;        public GodBuilder buildStrategy(Action buildStrategy) {
+<b class="fc"><i>325</i>&nbsp;            this.tempGod.buildStrategy = buildStrategy;</b>
+<b class="fc"><i>326</i>&nbsp;            return this;</b>
+<i>327</i>&nbsp;        }
+<i>328</i>&nbsp;
+<i>329</i>&nbsp;        /**
+<i>330</i>&nbsp;         * This function is used to extract the god built with all the settings given,
+<i>331</i>&nbsp;         * if the phasesTree is empty it will be filled with the basePhasesTree
+<i>332</i>&nbsp;         *
+<i>333</i>&nbsp;         * @return the god built
+<i>334</i>&nbsp;         */
+<i>335</i>&nbsp;        public God getCompleteGod() {
+<b class="fc"><i>336</i>&nbsp;            if(tempGod.phasesTree.getChildren().size() == EMPTY)</b>
+<b class="fc"><i>337</i>&nbsp;                setBasePhases();</b>
+<i>338</i>&nbsp;            //We&#39;re assuming it&#39;s the only one, since every turn starts with WorkerSelection
+<b class="fc"><i>339</i>&nbsp;            tempGod.phasesTree = tempGod.phasesTree.getChildren().get(FIRST_ELEMENT);   //Root is null, set the first child as new root.</b>
+<b class="fc"><i>340</i>&nbsp;            tempGod.currentPhaseNode = tempGod.phasesTree;</b>
+<i>341</i>&nbsp;
+<i>342</i>&nbsp;
+<b class="fc"><i>343</i>&nbsp;            God completeGod = tempGod;</b>
+<b class="fc"><i>344</i>&nbsp;            reset();</b>
+<i>345</i>&nbsp;
+<b class="fc"><i>346</i>&nbsp;            return completeGod;</b>
+<i>347</i>&nbsp;        }
+<i>348</i>&nbsp;
+<i>349</i>&nbsp;        private void setBasePhases() {
+<i>350</i>&nbsp;
+<b class="fc"><i>351</i>&nbsp;            this</b>
+<b class="fc"><i>352</i>&nbsp;                    .addPhase(&quot;ChooseWorkerPhase&quot;, (arg1, arg2) -&gt; true)</b>
+<b class="fc"><i>353</i>&nbsp;                    .addPhase(&quot;ChooseActionPhase&quot;, tempGod.actionPredicates)</b>
+<b class="fc"><i>354</i>&nbsp;                    .addPhase(&quot;MovePhase&quot;, tempGod.movePredicates)</b>
+<b class="fc"><i>355</i>&nbsp;                    .addPhase(&quot;BuildPhase&quot;, tempGod.buildPredicates)</b>
+<b class="fc"><i>356</i>&nbsp;                    .addPhase(&quot;ChooseBlockPhase&quot;, tempGod.constructiblePredicates)</b>
+<b class="fc"><i>357</i>&nbsp;                    .addPhase(&quot;EndPhase&quot;, (arg1, arg2) -&gt; true);</b>
+<i>358</i>&nbsp;
+<b class="fc"><i>359</i>&nbsp;        }</b>
+<i>360</i>&nbsp;
+<i>361</i>&nbsp;        /**
+<i>362</i>&nbsp;         * This function is used to reset the godBuilder, it is already called in getCompleteGod(),
+<i>363</i>&nbsp;         * but can also be called externally for any needs.
+<i>364</i>&nbsp;         */
+<i>365</i>&nbsp;        public void reset() {
+<b class="fc"><i>366</i>&nbsp;            tempGod = new God();</b>
+<b class="fc"><i>367</i>&nbsp;            tempGod.phasesTree = new Node(null, null, null); //ROOT - Modified by the GodBuilder</b>
+<b class="fc"><i>368</i>&nbsp;            refNode = tempGod.phasesTree;</b>
+<b class="fc"><i>369</i>&nbsp;            currNode = tempGod.phasesTree;</b>
+<b class="fc"><i>370</i>&nbsp;        }</b>
+<i>371</i>&nbsp;    }
+<i>372</i>&nbsp;
+<i>373</i>&nbsp;
+<i>374</i>&nbsp;
+<i>375</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:07</div>
+</div>
+</body>
+</html>

@@ -15,6 +15,11 @@ import static it.polimi.ingsw.GameSettings.SECOND_PLAYER_INDEX;
 public class GodPowerController extends ControllerState {
     private Integer choosingPlayerIndex;
 
+    /**
+     *
+     * @param event The event the controller has to handle
+     * @param view The current view
+     */
     @Override
     public void handle(Event event, VirtualView view) {
         event.visit(this, view);
@@ -37,6 +42,10 @@ public class GodPowerController extends ControllerState {
     }
 
 
+    /**
+     * This is the specific handle function used to handle the loginEvent
+     * @param event The godSelectionEvent
+     */
     public void handle(GodSelectionEvent event) {
         Game currentGame = mainController.getCurrentGame();
         List<String> godPowersList = currentGame.getGodPowers();

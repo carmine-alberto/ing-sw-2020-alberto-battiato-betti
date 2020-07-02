@@ -23,6 +23,11 @@ public class ChallengerSelectionController extends ControllerState {
         event.visit(this, view);
     }
 
+    /**
+     * This is the specific handle function used to handle the loginEvent sent by the other player (someone else is now connected)
+     * @param loginEvent
+     * @param senderView
+     */
     public void handle(LoginEvent loginEvent, VirtualView senderView) {
         Game currentGame = mainController.getCurrentGame();
         Player newPlayer;
@@ -46,6 +51,12 @@ public class ChallengerSelectionController extends ControllerState {
 
     }
 
+    /**
+     * This is the specific handle function used to handle the challengerSelectionEvent
+     *
+     * @param event The challengerSelectionEvent
+     * @param senderView
+     */
     public void handle(ChallengerSelectionEvent event, VirtualView senderView) { //TODO Check legality of choices
         mainController.getCurrentGame().setCurrentPlayerIndex(event.selectedStartingPlayerIndex - CORRECTION);
         mainController.getCurrentGame().NUM_OF_PLAYERS = event.selectedNumberOfPlayers;

@@ -6,7 +6,12 @@ import it.polimi.ingsw.cview.serverView.VirtualView;
 
 import java.io.Serializable;
 
+/**
+ * This interface is used to implement the visitor pattern, every specific event
+ * overrides a visit function it's going to use and implements Event
+ */
 public interface Event extends Serializable {
+
     default void visit(LoginController eventHandler, VirtualView view) {
         view.showMessage("Operation not permitted!");
     }

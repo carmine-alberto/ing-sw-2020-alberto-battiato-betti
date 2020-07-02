@@ -21,27 +21,46 @@ public abstract class CLIViewState extends ViewState {
         super(stage, clientSocket, view, out);
     }
 
+    /**
+     * This function is used whenever someone  closes the game connection
+     */
     @Override
     protected void connectionClosedHandler() {
         CLIFormatter.print("Connection closed - Restart the client and try again!");
         System.exit(1);
     }
 
+    /**
+     * Shows general message
+     * @param message You want to be shown
+     */
     @Override
     public void showMessage(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Shows a warning
+     * @param message You want to be shown
+     */
     @Override
     public void showWarning(String message) {
         System.out.println(ANSI_RED + message + ANSI_RESET);
     }
 
+    /**
+     * Shows some some possible choices
+     * @param availableChoices You choices to be shown
+     */
     @Override
     public void showChoices(List<String> availableChoices) {
         System.out.println("Pick one: " + CLIFormatter.formatStringList(availableChoices));
     }
 
+    /**
+     * This function is used to show the gameBoard
+     * @param board
+     */
     protected void showBoard(FieldCell[][] board) {
         /* Esempio di scacchiera a video
 
@@ -109,11 +128,13 @@ public abstract class CLIViewState extends ViewState {
         System.out.println("╝");
     }
 
+    /**
+     * Used when the game stops, to close the game
+     */
     public void terminate() {
         Platform.exit();
         System.exit(0);
     }
-
 
     public abstract void handleCLIInput(String input);
 }

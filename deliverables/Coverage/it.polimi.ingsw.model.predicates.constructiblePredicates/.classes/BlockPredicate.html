@@ -1,0 +1,115 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BlockPredicate</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.predicates.constructiblePredicates</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BlockPredicate (it.polimi.ingsw.model.predicates.constructiblePredicates)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BlockPredicate</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.predicates.constructiblePredicates;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Constructible;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Player;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.function.BiPredicate;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import static it.polimi.ingsw.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;public class BlockPredicate implements BiPredicate&lt;Player, Constructible&gt; {
+<i>11</i>&nbsp;    private Integer minimumHeight;
+<i>12</i>&nbsp;
+<b class="fc"><i>13</i>&nbsp;    public BlockPredicate(Integer min){</b>
+<b class="fc"><i>14</i>&nbsp;        minimumHeight = min;</b>
+<b class="fc"><i>15</i>&nbsp;    }</b>
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /**
+<i>18</i>&nbsp;     * This blockPredicate checks if the constructible inserted as second paramete
+<i>19</i>&nbsp;     * can actually be built. If the constructible is a BLOCK the cell height has to be lowe than MAX_HEIGHT,
+<i>20</i>&nbsp;     * if it is a DOME it has to be at least minimumHeight (parameter set by the constructor)
+<i>21</i>&nbsp;     *
+<i>22</i>&nbsp;     * @param player the player whose worker wants to build
+<i>23</i>&nbsp;     * @param constructible the type of constructible that the player wants to build
+<i>24</i>&nbsp;     * @return true if the constructible can be built there, false otherwise.
+<i>25</i>&nbsp;     */
+<i>26</i>&nbsp;    @Override
+<i>27</i>&nbsp;    public boolean test(Player player, Constructible constructible) {
+<b class="fc"><i>28</i>&nbsp;        Integer height = player.getPlayerState().getSelectedCell().getHeight();</b>
+<b class="fc"><i>29</i>&nbsp;        return ((constructible.equals(Constructible.BLOCK) &amp;&amp; height &lt; MAX_HEIGHT_WITHOUT_DOME) || (constructible.equals(constructible.DOME) &amp;&amp; height &gt;= minimumHeight));</b>
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:07</div>
+</div>
+</body>
+</html>

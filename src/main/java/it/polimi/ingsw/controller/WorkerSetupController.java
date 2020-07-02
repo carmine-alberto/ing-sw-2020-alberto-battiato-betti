@@ -20,12 +20,22 @@ public class WorkerSetupController extends ControllerState {
         promptTurnPlayer();
     }
 
-
+    /**
+     *
+     * @param event The event the controller has to handle
+     * @param view The current view
+     */
     @Override
     public synchronized void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
+    /**
+     * This function handles the selection of a worker
+     *
+     * @param workerSelectionEvent
+     * @param view
+     */
     public void handle(WorkerSelectionEvent workerSelectionEvent, VirtualView view) {
         Player turnPlayer = mainController.getCurrentGame().getTurnPlayer();
         List<GameWorker> playerWorkers = new ArrayList<>(); //TODO Call Player builder

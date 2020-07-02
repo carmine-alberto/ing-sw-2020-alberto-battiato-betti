@@ -29,9 +29,9 @@ The project is also provided with a Java documentation (JUnit 5) that covers alm
 For both client and server jars is required [Java 14.0.1 JDK](https://jdk.java.net/14/) version.
 
 ### Server
-Once found the server jar, the it will be enough to type  <code> java --enable-preview -jar .\AM49-Server.jar <code>
+Once found the server jar, the it will be enough to type  <code> java --enable-preview -jar .\AM49-Server.jar
 ### Client
-Once found the client jar, the it will be enough to type  <code> java --enable-preview -jar .\AM49-Client.jar <code>
+Once found the client jar, the it will be enough to type  <code> java --enable-preview -jar .\AM49-Client.jar
 - CLI 
 In order to use this game mode it will be necessary to insert the parameter -CLI during the execution of the jar file
 - GUI

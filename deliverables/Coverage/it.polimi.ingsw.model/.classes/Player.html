@@ -1,0 +1,195 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Player</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Player (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Player</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73,7%
+  </span>
+  <span class="absValue">
+    (14/ 19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76,5%
+  </span>
+  <span class="absValue">
+    (26/ 34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.cview.serverView.VirtualView;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.io.Serializable;
+<i>8</i>&nbsp;import java.util.List;
+<i>9</i>&nbsp;import java.util.function.BiPredicate;
+<i>10</i>&nbsp;import java.util.stream.Collectors;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;public class Player implements Serializable {
+<i>13</i>&nbsp;    private String nickname;
+<i>14</i>&nbsp;    private String colour;
+<i>15</i>&nbsp;    private Boolean isWinner;
+<i>16</i>&nbsp;    private transient Game currentGame;
+<i>17</i>&nbsp;    private transient VirtualView playerView;
+<i>18</i>&nbsp;    private List&lt;GameWorker&gt; workers;
+<i>19</i>&nbsp;    private String selectedGodPower; //TODO Refactor into proper type
+<i>20</i>&nbsp;    private God selectedGod;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    private transient PlayerState playerState;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    //Predicates
+<b class="fc"><i>25</i>&nbsp;    private transient BiPredicate&lt;Game, GameWorker&gt; winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());</b>
+<i>26</i>&nbsp;
+<b class="fc"><i>27</i>&nbsp;    public Player(String nickname, VirtualView playerView) {</b>
+<b class="fc"><i>28</i>&nbsp;        this.nickname = nickname;</b>
+<b class="fc"><i>29</i>&nbsp;        this.playerView = playerView;</b>
+<b class="fc"><i>30</i>&nbsp;        this.playerState = new PlayerState(this);</b>
+<b class="fc"><i>31</i>&nbsp;        this.isWinner = false;</b>
+<b class="fc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public BiPredicate&lt;Game, GameWorker&gt; getWinConditions() {
+<b class="fc"><i>35</i>&nbsp;        return selectedGod.getWinCondition();</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public List&lt;GameWorker&gt; getWorkers() {
+<b class="fc"><i>39</i>&nbsp;        return workers;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    public void setWorkers(List&lt;GameWorker&gt; workers) {
+<b class="fc"><i>43</i>&nbsp;        this.workers = workers;</b>
+<b class="fc"><i>44</i>&nbsp;    }</b>
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    public Boolean getIsWinner(){
+<b class="fc"><i>47</i>&nbsp;        return this.isWinner;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    public void setIsWinner(Boolean tmp){
+<b class="nc"><i>51</i>&nbsp;        isWinner = tmp;</b>
+<b class="nc"><i>52</i>&nbsp;    }</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    public String getNickname() {
+<b class="fc"><i>55</i>&nbsp;        return nickname;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    public void setNickname(String nickname) {
+<b class="nc"><i>59</i>&nbsp;        this.nickname = nickname;</b>
+<b class="nc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    public String getColour() {
+<b class="fc"><i>63</i>&nbsp;        return colour;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    public void setColour(String colour) {
+<b class="nc"><i>67</i>&nbsp;        this.colour = colour;</b>
+<b class="nc"><i>68</i>&nbsp;    }</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    public Game getCurrentGame() {
+<b class="fc"><i>71</i>&nbsp;        return currentGame;</b>
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;    public void setCurrentGame(Game currentGame) {
+<b class="fc"><i>75</i>&nbsp;        this.currentGame = currentGame;</b>
+<b class="fc"><i>76</i>&nbsp;    }</b>
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    public VirtualView getPlayerView() {
+<b class="nc"><i>79</i>&nbsp;        return playerView;</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    public List&lt;Player&gt; getOpponents(){
+<b class="fc"><i>83</i>&nbsp;        return currentGame.getPlayers().stream()</b>
+<b class="fc"><i>84</i>&nbsp;                .filter(player -&gt; !player.equals(this))</b>
+<b class="fc"><i>85</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    public String getSelectedGodPower() {
+<b class="nc"><i>89</i>&nbsp;        return selectedGodPower;</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    public PlayerState getPlayerState() {
+<b class="fc"><i>93</i>&nbsp;        return this.playerState;</b>
+<i>94</i>&nbsp;    }
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    public God getSelectedGod() {
+<b class="fc"><i>97</i>&nbsp;        return selectedGod;</b>
+<i>98</i>&nbsp;    }
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    void setSelectedGod(God selectedGod) {
+<b class="fc"><i>101</i>&nbsp;        this.selectedGod = selectedGod;</b>
+<b class="fc"><i>102</i>&nbsp;    }</b>
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * Setting the worker &quot;position&quot; attribute to null is pointless;
+<i>106</i>&nbsp;     * it&#39;s never used if a worker is removed from the board
+<i>107</i>&nbsp;     */
+<i>108</i>&nbsp;    public void removeWorkersFromBoard() {
+<b class="fc"><i>109</i>&nbsp;        workers.forEach(worker -&gt; worker.getCell().setOccupyingWorker(null));</b>
+<b class="fc"><i>110</i>&nbsp;    }</b>
+<i>111</i>&nbsp;}
+<i>112</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:07</div>
+</div>
+</body>
+</html>

@@ -14,11 +14,22 @@ public class LoginController extends ControllerState {
         super(mainController);
     }
 
+    /**
+     * This functions handles the event
+     *
+     * @param event The event the controller has to handle
+     * @param view The current view
+     */
     @Override
     public void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
+    /**
+     * This is the specific handle function used to handle the loginEvent
+     * @param loginEvent
+     * @param senderView
+     */
     public void handle(LoginEvent loginEvent, VirtualView senderView) {
         Player newPlayer = new Player(loginEvent.playerUsername, senderView);
 

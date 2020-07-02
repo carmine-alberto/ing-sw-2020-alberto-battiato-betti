@@ -14,6 +14,12 @@ public class ChoiceWindow {
     static Stage stage;
     static String choice;
 
+    /**
+     * This function is used to show a new window possible choices
+     * @param title The new window title
+     * @param choices The list of the possibilities
+     * @return The choice chosen
+     */
     public static String show(String title, List<String> choices) {
         stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
