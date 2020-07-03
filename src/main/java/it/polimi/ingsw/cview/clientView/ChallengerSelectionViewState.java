@@ -6,6 +6,8 @@ import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -77,11 +79,23 @@ public class ChallengerSelectionViewState extends GUIViewState {
 
         List<String> godsList = view.getAvailableGods();
         if (godsList != null)
-            for (String god : godsList)
-                godsIcons.getChildren().add(new CheckBox(god));
+            for (String god : godsList){
+                Image godImage = new Image(this.getClass().getClassLoader().getResource("godCards").toString() + god + ".png");
+                ImageView imageView = new ImageView(godImage);
+                imageView.setFitHeight(280);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                ToggleButton godButton = new ToggleButton("", imageView);
+                godButton.setId(god);
 
+                godsIcons.getChildren().add(godButton);
+            }
 
-        HBox godPowersBox = new HBox(HBOX_GODS, godPowersLabel, godsIcons);
+        ScrollPane scrollPane = new ScrollPane(godsIcons);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        HBox godPowersBox = new HBox(HBOX_GODS, godPowersLabel, scrollPane);
         godPowersBox.setAlignment(Pos.CENTER);
 
         Button sendSelectionButton = new Button("Continue");
@@ -98,8 +112,8 @@ public class ChallengerSelectionViewState extends GUIViewState {
     private void sendDataToServer() {
         List<String> selectedGods = godsIcons.getChildren()
                 .stream()
-                .filter(godCheckBox -> ((CheckBox) godCheckBox).isSelected())
-                .map(godCheckBox -> ((CheckBox) godCheckBox).getText())
+                .filter(godCheckBox -> ((ToggleButton) godCheckBox).isSelected())
+                .map(godCheckBox -> ((ToggleButton) godCheckBox).getId())
                 .collect(Collectors.toList());
 
         Integer selectedNumberOfPlayers = Integer.parseInt(

@@ -20,7 +20,8 @@ public abstract class GUIViewState extends ViewState {
 
     @Override
     public void render() {
-        Platform.runLater(this::fXRender);
+        Platform.runLater(this::
+                fXRender);
     }
 
     protected abstract void fXRender();

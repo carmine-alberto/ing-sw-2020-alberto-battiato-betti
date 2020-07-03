@@ -5,6 +5,8 @@ import it.polimi.ingsw.controller.events.GodSelectionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -36,7 +38,14 @@ public class GodPowerViewState extends GUIViewState {
 
         if (godsList != null)
             for (String god : godsList) {
-                Button godButton = new Button(god);
+                Image godImage = new Image(this.getClass().getClassLoader().getResource("godCards").toString() + god + ".png");
+                ImageView imageView = new ImageView(godImage);
+                imageView.setFitHeight(300);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                Button godButton = new Button("", imageView);
+                godButton.setId(god);
+
                 godButton.setOnAction(e -> sendSelectionToServer((Button) e.getSource()));
                 godsIcons.getChildren().add(godButton);
             }
@@ -48,6 +57,6 @@ public class GodPowerViewState extends GUIViewState {
     }
 
     private void sendSelectionToServer(Button pressedButton) {
-        notify(new GodSelectionEvent(pressedButton.getText()));
+        notify(new GodSelectionEvent(pressedButton.getId()));
     }
 }
