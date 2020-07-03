@@ -80,7 +80,7 @@ public class ChallengerSelectionViewState extends GUIViewState {
         List<String> godsList = view.getAvailableGods();
         if (godsList != null)
             for (String god : godsList){
-                Image godImage = new Image(this.getClass().getClassLoader().getResource("godCards").toString() + god + ".png");
+                Image godImage = new Image(this.getClass().getClassLoader().getResource(god + ".png").toString() );
                 ImageView imageView = new ImageView(godImage);
                 imageView.setFitHeight(280);
                 imageView.setPreserveRatio(true);

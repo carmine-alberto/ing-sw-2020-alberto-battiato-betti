@@ -58,6 +58,7 @@ C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\ma
 C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\main\java\it\polimi\ingsw\model\predicates\buildAndMovePredicates\NotInOldBuildPositionPredicate.java
 C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\main\java\it\polimi\ingsw\model\predicates\winConditionsPredicates\NotOnPerimeterPredicate.java
 C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\main\java\it\polimi\ingsw\cview\serverView\VirtualViewStateState.java
+C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\main\java\it\polimi\ingsw\cview\ReceivedEvent.java
 C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\main\java\it\polimi\ingsw\model\actions\moveStrategies\MoveAndShiftBack.java
 C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\main\java\it\polimi\ingsw\controller\events\UserInputEvent.java
 C:\Users\buby9\OneDrive\Documenti\Fork\ing-sw-2020-alberto-battiato-betti\src\main\java\it\polimi\ingsw\Observer.java

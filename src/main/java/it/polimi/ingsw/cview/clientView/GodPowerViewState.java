@@ -38,7 +38,7 @@ public class GodPowerViewState extends GUIViewState {
 
         if (godsList != null)
             for (String god : godsList) {
-                Image godImage = new Image(this.getClass().getClassLoader().getResource("godCards").toString() + god + ".png");
+                Image godImage = new Image(this.getClass().getClassLoader().getResource(god + ".png").toString());
                 ImageView imageView = new ImageView(godImage);
                 imageView.setFitHeight(300);
                 imageView.setPreserveRatio(true);
