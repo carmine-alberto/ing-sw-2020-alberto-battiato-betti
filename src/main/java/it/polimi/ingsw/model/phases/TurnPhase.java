@@ -15,7 +15,6 @@ import static it.polimi.ingsw.GameSettings.*;
 
 
 public abstract class TurnPhase {
-    private static final Integer OFFSET = 1;
     protected Game currentGame;
     protected Player turnPlayer;
     protected BiPredicate phasePredicate;
@@ -39,48 +38,46 @@ public abstract class TurnPhase {
     }
 
     /**
-     * This function is used to start the phase and set the phasePredicate opportunely
+     * Function used to calculate availableObjects or send notifications to the turnPlayer
      */
     public abstract void stateInit();
 
     /**
      * This function is called to get the turnPhase running
      *
-     * @param arg The string used in the Phase
+     * @param arg The user selection, varying depending on the Phase
      * @throws IllegalFormatException If the format of the string does not fit the required one
      * @throws InvalidSelectionException If the selection is invalid
      */
     public abstract void run(String arg) throws IllegalFormatException, InvalidSelectionException;
 
     /**
-     * This function is called to end the phase
+     * Checks the winCondition for each player and sets the next phase
      */
     public void stateEnd() {
         currentGame.getPlayers().forEach(this::checkIsWinner);
         turnPlayer.getSelectedGod().setNextPhase(currentGame);
-        //TODO Send notifications - not needed though
-
     }
 
     /**
-     * this function checks the players' specific Win Conditions
+     * Checks player-specific winConditions
      */
     protected void checkWinConditions() {
         currentGame.getPlayers().forEach(this::checkPlayerWinConditions);
     }
 
     /**
-     * this method is used to check the validity of the user Input
-     * @param arg the coordinates
+     * Checks the validity of the user-input coordinates
+     * @param arg The coordinates
      * @throws IllegalFormatException if the format is not recognised
      */
     protected void parseCoordinatesArg(String arg) throws IllegalFormatException {
-        if (arg.length() == THREE) {
+        if (arg.length() == EXPECTED_LENGTH) {
             try {
                 Integer x = Integer.parseInt(arg.substring(0, 1));
                 Integer y = Integer.parseInt(arg.substring(2, 3));
 
-                if (x <= FIELD_SIZE && x > ZERO && y <= FIELD_SIZE && y > ZERO)
+                if (x <= FIELD_SIZE && x > LOWER_BOUND && y <= FIELD_SIZE && y > LOWER_BOUND)
                     return;
             } catch (NumberFormatException e) {
                 throw new IllegalFormatException("Your selection's format was not recognized; try again");
@@ -90,14 +87,14 @@ public abstract class TurnPhase {
     }
 
     /**
-     * this method is called when the player has no available actions left
+     * Removes the player from the game. Called when they have no actions left
      */
     protected void removeTurnPlayerFromGame() {
         currentGame.removeTurnPlayer();
     }
 
     /**
-     * this method is used to convert the given list into a list of actions
+     * Converts a list of enums into a list of strings
      * @param availableEnumItems Enum list
      * @return converted list
      */
@@ -109,14 +106,13 @@ public abstract class TurnPhase {
     }
 
     /**
-     * this method converts the given user input into the model's coordinates system
+     * Extracts the game cell matching the passed coordinates
      * @param coordinates given from user
      * @return the recognised coordinates
-     * @throws InvalidSelectionException if the selection is out of bound
      */
-    protected FieldCell extractCellFromCoordinates(String coordinates) throws InvalidSelectionException {
-        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT_INDEX, ONE));
-        Integer y = Integer.parseInt(coordinates.substring(TWO, THREE));
+    protected FieldCell extractCellFromCoordinates(String coordinates)  {
+        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT_INDEX, X_STARTING_POSITION));
+        Integer y = Integer.parseInt(coordinates.substring(Y_STARTING_POSITION, EXPECTED_LENGTH));
 
         return currentGame.getCell(x - OFFSET, y - OFFSET);
 

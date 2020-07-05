@@ -1,11 +1,11 @@
 package it.polimi.ingsw.view.clientView;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.view.ViewState;
-import it.polimi.ingsw.view.utility.ChoiceWindow;
-import it.polimi.ingsw.view.utility.MessageWindow;
+import it.polimi.ingsw.view.viewUtility.ChoiceWindow;
+import it.polimi.ingsw.view.viewUtility.MessageWindow;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
@@ -24,16 +24,28 @@ public abstract class GUIViewState extends ViewState {
         super(stage, clientSocket, view, out);
     }
 
+    /**
+     * Shows the current viewState.
+     * Created implementing a pseudo-Template Method pattern
+     */
     @Override
     public void render() {
         Platform.runLater(this::fXRender);
     }
 
+    /**
+     * Part of the Template Method pattern - must be implemented by subclasses to define the rendering behaviour
+     */
     protected abstract void fXRender();
 
+    /**
+     * Fills the cell using data contained in the corresponding fieldCell
+     * @param cell The GUI component to be filled
+     * @param fieldCell The rep component to draw data from
+     */
     protected void fillCell(StackPane cell, FieldCell fieldCell) {
-        final Double BASE_SCALING_FACTOR = 0.82;
-        final Double RECURSIVE_SCALING_FACTOR = 0.85;
+        final Double BASE_SCALING_FACTOR = 0.80;
+        final Double RECURSIVE_SCALING_FACTOR = 0.86;
 
         Double baseWidth = BASE_SCALING_FACTOR * cell.getPrefWidth();
 
@@ -68,7 +80,7 @@ public abstract class GUIViewState extends ViewState {
 
     @Override
     protected void connectionClosedHandler() {
-       terminate("The server is no longer available - The connection will be closed!");
+       terminate("The server is no longer available - The game will be terminated!");
     }
 
     @Override

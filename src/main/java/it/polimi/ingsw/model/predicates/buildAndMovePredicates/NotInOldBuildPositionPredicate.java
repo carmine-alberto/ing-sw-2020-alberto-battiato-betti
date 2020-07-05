@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.GameWorker;
 import java.util.function.BiPredicate;
 
 public class NotInOldBuildPositionPredicate implements BiPredicate<FieldCell, GameWorker> {
-    // TODO evaluate only latest positions
     /**
      * We check if the inserted fieldCell is one of the previous positions where the gameWorker built
      *

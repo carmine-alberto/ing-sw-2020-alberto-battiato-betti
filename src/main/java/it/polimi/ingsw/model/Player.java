@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.view.serverView.VirtualView;
-import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
-import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
+import it.polimi.ingsw.view.serverView.VirtualView;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -22,9 +20,7 @@ public class Player implements Serializable {
     private God selectedGod;
     private transient PlayerState playerState;
 
-    //Predicates
 
-    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
     public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
@@ -107,12 +103,11 @@ public class Player implements Serializable {
         this.selectedGod = selectedGod;
     }
 
-    /**
-     * Setting the worker "position" attribute to null is pointless;
-     * it's never used if a worker is removed from the board
-     */
     public void removeWorkersFromBoard() {
+        /* Setting the worker "position" attribute to null is pointless;
+        it's never used if a worker is removed from the board */
         workers.forEach(worker -> worker.getCell().setOccupyingWorker(null));
+
     }
 }
 

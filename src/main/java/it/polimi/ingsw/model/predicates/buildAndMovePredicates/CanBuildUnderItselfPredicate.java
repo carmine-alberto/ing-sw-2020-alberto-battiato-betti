@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
-import static it.polimi.ingsw.GameSettings.TWO;
+import static it.polimi.ingsw.GameSettings.Y_STARTING_POSITION;
 
 public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, GameWorker> {
 
@@ -19,7 +19,7 @@ public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, Game
      */
     @Override
     public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
-        return !(fieldCell.getHeight() > TWO) && fieldCell.equals(gameWorker.getCell());
+        return !(fieldCell.getHeight() > Y_STARTING_POSITION) && fieldCell.equals(gameWorker.getCell());
     }
 
 }

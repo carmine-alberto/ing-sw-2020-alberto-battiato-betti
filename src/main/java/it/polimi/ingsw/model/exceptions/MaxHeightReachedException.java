@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.exceptions;
 public class MaxHeightReachedException extends Exception {
 
     /**
-     * thrown when the player tryes to build on a cell of level higher than 3
-     * @param message
+     * Thrown when the player tries to build on a cell of level higher than MAX_HEIGHT
+     * @param message the detail message.
      */
     public MaxHeightReachedException(String message) {
         super(message);

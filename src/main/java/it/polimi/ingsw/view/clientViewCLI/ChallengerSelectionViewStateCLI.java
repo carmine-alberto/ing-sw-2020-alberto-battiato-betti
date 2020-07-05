@@ -1,8 +1,8 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.ChallengerSelectionEvent;
-import it.polimi.ingsw.view.utility.CLIFormatter;
+import it.polimi.ingsw.view.viewUtility.CLIFormatter;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;

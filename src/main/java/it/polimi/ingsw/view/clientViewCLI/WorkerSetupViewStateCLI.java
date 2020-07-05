@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.stage.Stage;
@@ -13,6 +13,11 @@ import java.util.List;
 import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
 
 public class WorkerSetupViewStateCLI extends CLIViewState {
+    /**
+     * Solution viable because of the little number of microstates.
+     * The State pattern has been applied to the macroCLIStates,
+     * a simpler old-school enum state machine to the microCLIStates
+     */
     private enum InternalState {
         COLOR_SELECTION,
         WORKER_SELECTION,

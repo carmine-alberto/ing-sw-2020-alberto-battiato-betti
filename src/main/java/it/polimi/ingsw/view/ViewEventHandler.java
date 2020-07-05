@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.View;
 import it.polimi.ingsw.controller.events.*;
 import javafx.application.Platform;
 
@@ -14,6 +13,10 @@ import java.util.ArrayList;
 import static it.polimi.ingsw.GameSettings.GRANULARITY;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
+/**
+ * Used to handle events received from the server.
+ * Events are dispatched to the proper handle() method using the Visitor pattern
+ */
 public class ViewEventHandler implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -25,9 +28,6 @@ public class ViewEventHandler implements Runnable {
         this.in = in;
     }
 
-    /**
-     *
-     */
     @Override
     public void run() {
         while (true) {

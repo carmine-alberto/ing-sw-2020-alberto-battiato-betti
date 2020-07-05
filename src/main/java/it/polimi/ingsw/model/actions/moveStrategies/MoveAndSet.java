@@ -15,7 +15,7 @@ public class MoveAndSet extends Move implements Action {
     }
 
     /**
-     * this strategy sets an "outerPredicate" to the current Turn Player if it does a specific action
+     * This strategy sets an "outerPredicate" to the current TurnPlayer.
      * @param cell where the worker moves
      * @param gw which moves
      */
@@ -25,7 +25,7 @@ public class MoveAndSet extends Move implements Action {
         if (cell.getHeight() - gw.getCell().getHeight() < 1)   // if gw doesn't move up...
             gw.getOwner().getSelectedGod().setOuterPredicate("movePredicate", null);
         else
-            gw.getOwner().getSelectedGod().setOuterPredicate("movePredicate", predicate); //todo ci sono dei casi in cui sovrascrive (gestire and e or)
+            gw.getOwner().getSelectedGod().setOuterPredicate("movePredicate", predicate);
 
         super.run(cell, gw);
     }

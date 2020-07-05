@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.clientView;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.beans.property.FloatProperty;
@@ -14,20 +14,19 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.CheckedOutputStream;
 
 import static it.polimi.ingsw.GameSettings.*;
 
 
 public class BoardViewState extends GUIViewState {
     private static final Integer EDGE_TOLERANCE = 30;
+    private static final Integer PADDING_SIZE = 8;
     private static final Paint NEUTRAL_STATE_COLOR = Color.TRANSPARENT;
     private static final Paint FOCUSED_STATE_COLOR = Color.RED;
 
@@ -49,7 +48,7 @@ public class BoardViewState extends GUIViewState {
             StackPane cell;
 
             board = new TilePane();
-            board.setPadding(new Insets(8));
+            board.setPadding(new Insets(PADDING_SIZE));
 
             boardBackground  = new Image(this.getClass().getClassLoader().getResource("SantoriniBoardCut.png").toString());
             BackgroundSize backGroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true);
@@ -57,8 +56,8 @@ public class BoardViewState extends GUIViewState {
             board.setBackground(new Background(bGImage));
 
             FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / FIELD_SIZE - EDGE_TOLERANCE, (float) mainStage.getScene().getHeight() / FIELD_SIZE - EDGE_TOLERANCE));
-            mainStage.getScene().heightProperty().addListener(e -> {updateProperty(tileSideLength); this.render();});
-            mainStage.getScene().widthProperty().addListener(e -> {updateProperty(tileSideLength); this.render();});
+            mainStage.getScene().heightProperty().addListener(e -> {updateProperty(tileSideLength); });
+            mainStage.getScene().widthProperty().addListener(e -> {updateProperty(tileSideLength); });
 
             board.setOrientation(Orientation.HORIZONTAL);
             board.setPrefRows(FIELD_SIZE);
@@ -84,7 +83,7 @@ public class BoardViewState extends GUIViewState {
             Label selectedGodPower = new Label(view.getMyName() + ", your selected God Power is: " + view.getPlayerInfos().get(view.getMyName()).get(FIRST_PLAYER_INDEX));
 
             VBox interfaceBox;
-            interfaceBox = new VBox(10, board, selectedGodPower, new Circle(17.5, Color.web(view.getPlayerInfos().get(view.getMyName()).get(SECOND_PLAYER_INDEX))));
+            interfaceBox = new VBox(10, board, selectedGodPower, new Circle(17.5, Color.web(view.getPlayerInfos().get(view.getMyName()).get(SECOND_ELEMENT_INDEX))));
             interfaceBox.setPadding(new Insets(EDGE_TOLERANCE));
             interfaceBox.setAlignment(Pos.CENTER);
             interfaceBox.setFillWidth(false);
@@ -92,7 +91,6 @@ public class BoardViewState extends GUIViewState {
             mainStage.getScene().setRoot(interfaceBox);
         }
     }
-
 
     protected void fillCell(StackPane cell, FieldCell fieldCell) {
         List<Integer> availableXCoordinates = view.getAvailableCellsX();

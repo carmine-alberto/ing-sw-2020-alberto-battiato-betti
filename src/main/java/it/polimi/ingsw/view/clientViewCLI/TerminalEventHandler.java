@@ -1,12 +1,15 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ReceivedViewState;
 
 import java.util.Scanner;
 
 import static it.polimi.ingsw.GameSettings.CLI;
 
+/**
+ * Used to handle input from the client received as terminal strings
+ */
 public class TerminalEventHandler implements Runnable {
     private Scanner in;
     private View view;

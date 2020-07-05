@@ -1,8 +1,8 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.GodSelectionEvent;
-import it.polimi.ingsw.view.utility.CLIFormatter;
+import it.polimi.ingsw.view.viewUtility.CLIFormatter;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;
@@ -10,6 +10,11 @@ import java.net.Socket;
 import java.util.List;
 
 public class GodPowerViewStateCLI extends CLIViewState {
+    /**
+     * Solution viable because of the little number of microstates.
+     * The State pattern has been applied to the macroCLIStates,
+     * a simpler old-school enum state machine to the microCLIStates
+     */
     private enum InternalState {
         GOD_SELECTION,
         IDLE

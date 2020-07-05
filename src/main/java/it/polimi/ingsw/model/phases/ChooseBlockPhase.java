@@ -24,7 +24,7 @@ public class ChooseBlockPhase extends TurnPhase {
     }
 
     /**
-     * Here available constructibles are calculated. If there's more than one, it's sent a message to the current turn player
+     * Calculates available constructibles and, if more than one in quantity, sends them to the turnPlayer
      */
     @Override
     public void stateInit() {

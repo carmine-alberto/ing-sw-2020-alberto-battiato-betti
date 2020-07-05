@@ -8,6 +8,9 @@ import it.polimi.ingsw.view.serverView.VirtualView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller implemented using the State pattern: event handling is delegated to the substates
+ */
 public class Controller implements Observer<Event> {
     private Game currentGame;
     private List<VirtualView> connectedViews;
@@ -19,18 +22,33 @@ public class Controller implements Observer<Event> {
         this.connectedViews = new ArrayList<>();
     }
 
-
-    void next(ControllerState nextState) {
-        this.controllerState = nextState;
-    }
-
     @Override
     public synchronized <V> void update(Event event, V virtualView) {
         controllerState.handle(event, (VirtualView) virtualView);
     }
 
+    /**
+     * This method has to be called by the object creating the View for it to be set up properly inside the Controller
+     * @param connectedView The newly-created view
+     */
     public void handleConnectedView(VirtualView connectedView) {
         this.connectedViews.add(connectedView);
+    }
+
+    VirtualView getViewByOwner(String owner) {
+        return connectedViews
+                .stream()
+                .filter(view -> view.getOwnerName().equals(owner))
+                .findFirst()
+                .get();
+    }
+
+    List<VirtualView> getViews() {
+        return connectedViews;
+    }
+
+    void next(ControllerState nextState) {
+        this.controllerState = nextState;
     }
 
     void handleViewDisconnection(VirtualView disconnectedView) {
@@ -48,17 +66,5 @@ public class Controller implements Observer<Event> {
         virtualView.showMessage(virtualView.getOwnerName() + "has disconnected and the game has been terminated.");
         virtualView.terminate();
         virtualView.removeObserver(this);
-    }
-
-    public VirtualView getViewByOwner(String owner) {
-        return connectedViews
-                .stream()
-                .filter(view -> view.getOwnerName().equals(owner))
-                .findFirst()
-                .get();
-    }
-
-    public List<VirtualView> getViews() {
-        return connectedViews;
     }
 }

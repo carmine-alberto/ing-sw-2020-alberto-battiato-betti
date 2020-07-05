@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CanMoveBackPredicate</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.predicates.buildAndMovePredicates</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CanMoveBackPredicate (it.polimi.ingsw.model.predicates.buildAndMovePredicates)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CanMoveBackPredicate</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72,7%
+  </span>
+  <span class="absValue">
+    (8/ 11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.predicates.buildAndMovePredicates;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.FieldCell;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.GameWorker;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.function.BiPredicate;
+<i>7</i>&nbsp;
+<b class="fc"><i>8</i>&nbsp;public class CanMoveBackPredicate implements BiPredicate&lt;FieldCell, GameWorker&gt; {</b>
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    /**
+<i>11</i>&nbsp;     * This function is used to check if a given worker can make another one
+<i>12</i>&nbsp;     * move back from its position (fieldCell) into another cell in line with the one
+<i>13</i>&nbsp;     * where the gameWorker is occupying
+<i>14</i>&nbsp;     *
+<i>15</i>&nbsp;     * @param fieldCell the cell examined (that should contain another worker)
+<i>16</i>&nbsp;     * @param gameWorker the gameWorker that should move back the other worker
+<i>17</i>&nbsp;     *
+<i>18</i>&nbsp;     * @return true if the other worker can move back, false otherwise
+<i>19</i>&nbsp;     */
+<i>20</i>&nbsp;    @Override
+<i>21</i>&nbsp;    public boolean test(FieldCell fieldCell, GameWorker gameWorker) {
+<b class="fc"><i>22</i>&nbsp;        if (fieldCell.isOnPerimeter() &amp;&amp; !gameWorker.getCell().isOnPerimeter())</b>
+<b class="nc"><i>23</i>&nbsp;                return false;</b>
+<i>24</i>&nbsp;
+<b class="fc"><i>25</i>&nbsp;        Integer gapX = fieldCell.getPosX() - gameWorker.getCell().getPosX();</b>
+<b class="fc"><i>26</i>&nbsp;        Integer gapY = fieldCell.getPosY() - gameWorker.getCell().getPosY();</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;        try { //TODO ingconti, please love us
+<b class="fc"><i>29</i>&nbsp;            return gameWorker</b>
+<b class="fc"><i>30</i>&nbsp;                    .getOwner()</b>
+<b class="fc"><i>31</i>&nbsp;                    .getCurrentGame()</b>
+<b class="fc"><i>32</i>&nbsp;                    .getCell(fieldCell.getPosX() + gapX, fieldCell.getPosY() + gapY).isFree();</b>
+<b class="nc"><i>33</i>&nbsp;        } catch (ArrayIndexOutOfBoundsException exception) {</b>
+<b class="nc"><i>34</i>&nbsp;            return false;</b>
+<i>35</i>&nbsp;        }
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:07</div>
+</div>
+</body>
+</html>

@@ -17,6 +17,11 @@ public class LoginController extends ControllerState {
         event.visit(this, view);
     }
 
+    /**
+     * This is the specific handle function used to handle the loginEvent - always called by the challenger
+     * @param loginEvent The challenger's loginEvent
+     * @param senderView The challenger's view
+     */
     public void handle(LoginEvent loginEvent, VirtualView senderView) {
         try {
             currentGame.addPlayer(loginEvent.playerUsername, senderView);

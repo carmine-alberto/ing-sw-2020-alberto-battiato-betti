@@ -27,6 +27,16 @@ public class Parser {
 
     private List<God> godsList = new ArrayList<>();
 
+    /**
+     * This function is used to get the parser going, it makes it read the file with the written gods
+     *
+     * @return the godsList just read
+     */
+    public List<God> getGodsList() {
+        read();
+        return this.godsList;
+    }
+
     private void read() {
         God.GodBuilder builder = new God.GodBuilder();
         // Add setters for the remaining God attributes in GodBuilder (SHOULD BE DONE)
@@ -52,7 +62,9 @@ public class Parser {
         }
     }
 
-    //used fot debugging purposes only
+    /**
+     * For debugging purposes only
+     */
     private void printNode(Node node, Integer level) {
         NodeList nList = node.getChildNodes();
         for (Integer i = 0; i < nList.getLength(); i++) {
@@ -143,8 +155,6 @@ public class Parser {
     private BiPredicate<Player, Constructible> readConstructiblePredicate(Node node) {
         Node child = node.getFirstChild();
 
-       /* if (child.getNodeValue() == null) usless
-            return readConstructiblePredicate(child);*/
         try {
             if (child.getNextSibling() != null)
                 if (isNumeric(child.getNextSibling().getFirstChild().getTextContent()))
@@ -174,9 +184,6 @@ public class Parser {
                         } else
                             winConditionPredicate = readWinCondition(nList.item(i), god, null);
                         break;
-                /*case "args":      //   QUESTO è CONTENUTO IN NAME(QUANDO C'è C'è SEMPRE ANCHE ARGS)
-                       movePredicate = readMovePredicates(nList.item(i), god, )
-                 */
                     case "winCondition":
                         winConditionPredicate = readWinCondition(nList.item(i), god, null);
                         break;
@@ -223,21 +230,14 @@ public class Parser {
                         } else
                             buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), null);
                         break;
-                /*case "args":      //   QUESTO è CONTENUTO IN NAME(QUANDO C'è C'è SEMPRE ANCHE ARGS)
-                       movePredicate = readMovePredicates(nList.item(i), god, )
-                 */
                     case "movePredicate":
                     case "buildPredicate":
                         buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), null);
                         break;
                     case "and":
-                        /*buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i),null)
-                                .and(readBuildAndMovePredicates(nList.item(i), -1));*/
                         buildAndMovePredicate = readConj(nList.item(i), "and");
                         break;
                     case "or":
-                        /*buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i).getChildNodes().item(0), null)
-                                .or(readBuildAndMovePredicates(nList.item(i).getChildNodes().item(1), null));*/
                         buildAndMovePredicate = readConj(nList.item(i), "or");
                         break;
                     case "negate":
@@ -313,7 +313,6 @@ public class Parser {
             case "MoveWithSwap":
                 return new MoveAndSwap();
             case "MoveAndSet": //note: move and set can only be provided with a move or build predicate
-                //if (child.getNextSibling() != null && child.getNextSibling().getNodeValue() != null)
                     if (child.getNextSibling().getNodeName().equals("arg")) {
                         BiPredicate<FieldCell, GameWorker> predicate;
                         predicate = readBuildAndMovePredicates(child.getNextSibling(), null);
@@ -345,9 +344,6 @@ public class Parser {
                                 secondPredicate = readBuildAndMovePredicates(nList.item(i), null);
                         }
                         break;
-                    /*case "args":      //   QUESTO è CONTENUTO IN NAME(QUANDO C'è C'è SEMPRE ANCHE ARGS)
-                           movePredicate = readMovePredicates(nList.item(i), god, )
-                     */
                     case "movePredicate":
                     case "buildPredicate":
                         if (i == FIRST_ELEMENT_INDEX)
@@ -402,7 +398,6 @@ public class Parser {
                     case "phases":   //new branch
                         god.saveRefNode();
                         buildPhases(node, god);
-                        //god.addPhase("EndPhase", (arg1, arg2) -> true); we read it from the file
                         god.restoreRefNode();
                         break;
                     case "name":   //phase introduces a new predicate
@@ -488,15 +483,7 @@ public class Parser {
         }
     }
 
-    /**
-     * This function is used to get the parser going, it makes it read the file with the written gods
-     *
-     * @return the godsList just red
-     */
-    public List<God> getGodsList() {
-        read();
-        return this.godsList;
-    }
+
 
     private void copyInputStreamToFile(InputStream input, File destination) {
 

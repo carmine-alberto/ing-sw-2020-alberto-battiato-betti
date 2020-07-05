@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 public class PlayerState {
-    private transient GameWorker selectedWorker;            //TODO Enhancement: refactor all the variables here into a Map<String, ?>, modifiable at runtime
+    private transient GameWorker selectedWorker;
     private transient FieldCell selectedCell;
     private transient Constructible selectedConstructible;
     private transient ActionEnum selectedAction;
@@ -44,7 +44,7 @@ public class PlayerState {
     }
 
     /**
-     * This function is used to clear all the settings (useful when changing players for any needs)
+     * Clears the playerState. Should be called at the end of each phase.
      */
     public void reset() {
         selectedWorker.getOldMovePositions().clear();

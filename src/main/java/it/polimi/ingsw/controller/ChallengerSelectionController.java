@@ -20,6 +20,11 @@ public class ChallengerSelectionController extends ControllerState {
         event.visit(this, view);
     }
 
+    /**
+     * This is the specific handle function used to handle the LoginEvent sent by the other players (someone else is now connected)
+     * @param loginEvent The received event
+     * @param senderView The view sending the event
+     */
     public void handle(LoginEvent loginEvent, VirtualView senderView) {
         try {
             if (!currentGame.isChallenger(senderView.getOwnerName())) {
@@ -43,6 +48,12 @@ public class ChallengerSelectionController extends ControllerState {
         }
     }
 
+    /**
+     * This is the specific handle function used to handle the challengerSelectionEvent
+     *
+     * @param event The challengerSelectionEvent
+     * @param senderView The view sending the event
+     */
     public void handle(ChallengerSelectionEvent event, VirtualView senderView) {
         try {
             if (currentGame.isChallenger(senderView.getOwnerName())) {
@@ -60,9 +71,8 @@ public class ChallengerSelectionController extends ControllerState {
         }
     }
 
-
     private void moveToNextState(Game currentGame) {
-        VirtualView nthPlayerView = controller.getViewByOwner(currentGame.getNthPlayer(SECOND_PLAYER_INDEX));
+        VirtualView nthPlayerView = controller.getViewByOwner(currentGame.getNthPlayer(SECOND_ELEMENT_INDEX));
         nthPlayerView.changeViewState(new VirtualGodPowerViewState(nthPlayerView));
         controller.next(new GodPowerController(controller, currentGame));
     }

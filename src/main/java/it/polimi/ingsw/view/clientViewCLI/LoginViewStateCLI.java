@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.LoginEvent;
 import javafx.stage.Stage;
 
@@ -17,7 +17,6 @@ public class LoginViewStateCLI extends CLIViewState {
      * The State pattern has been applied to the macroCLIStates,
      * a simpler old-school enum state machine to the microCLIStates
      */
-
     private enum InternalState {
         IP_SELECTION,
         PORT_SELECTION,

@@ -17,12 +17,17 @@ public class WorkerSetupController extends ControllerState {
         promptTurnPlayer();
     }
 
-
-    @Override
-    public synchronized void handle(Event event, VirtualView view) {
+    public void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
+
+    /**
+     * This function handles the selection of a worker
+     *
+     * @param workerSelectionEvent The event containing information about Workers and Player's color
+     * @param senderView The view sending the event
+     */
     public void handle(WorkerSelectionEvent workerSelectionEvent, VirtualView senderView) {
         String turnPlayerNickname = currentGame.getTurnPlayerNickname();
 

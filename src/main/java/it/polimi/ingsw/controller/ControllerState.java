@@ -17,10 +17,10 @@ public abstract class ControllerState {
     }
 
     /**
-     * This function just sends the event calling its visit function
+     * This function is necessary for the Visitor to work - substates implement it calling the Event's generic visit() function
      *
      * @param event The event the controller has to handle
-     * @param view The view in which the player is now
+     * @param view The view sending the event
      */
     public abstract void handle(Event event, VirtualView view);
 
@@ -32,6 +32,12 @@ public abstract class ControllerState {
         view.resetTimerFlag();
     }
 
+    /**
+     * This function is used to understand if the player is the turnPlayer
+     *
+     * @param view The view of the player you want to know about
+     * @return true if they're the turnPlayer, false otherwise
+     */
     protected Boolean isTurnPlayer(VirtualView view) {
         return currentGame.isTurnPlayer(view.getOwnerName());
     }

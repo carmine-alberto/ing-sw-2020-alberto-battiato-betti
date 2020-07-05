@@ -8,9 +8,9 @@ import it.polimi.ingsw.model.actions.Move;
 public class MoveAndShiftBack extends Move implements Action {
 
     /**
-     * this strategy makes the cell's occupying worker shift back of one position
-     * @param cell where the worker moves
-     * @param gw worker which moves in the given cell
+     * This strategy makes the cell's occupying worker shift back of one position
+     * @param cell Where the worker moves
+     * @param gw The worker that moves to the given cell
      */
     @Override
     public void run(FieldCell cell, GameWorker gw){

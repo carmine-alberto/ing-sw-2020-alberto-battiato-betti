@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.clientView;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Node;

@@ -1,10 +1,9 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.ViewState;
-import it.polimi.ingsw.view.utility.CLIFormatter;
+import it.polimi.ingsw.view.viewUtility.CLIFormatter;
 import it.polimi.ingsw.model.FieldCell;
-import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -13,7 +12,7 @@ import java.net.Socket;
 import java.util.List;
 
 import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
-import static it.polimi.ingsw.view.utility.CLIFormatter.*;
+import static it.polimi.ingsw.view.viewUtility.CLIFormatter.*;
 
 public abstract class CLIViewState extends ViewState {
 
@@ -21,27 +20,44 @@ public abstract class CLIViewState extends ViewState {
         super(stage, clientSocket, view, out);
     }
 
+
     @Override
     protected void connectionClosedHandler() {
         CLIFormatter.print("Connection closed - Restart the client and try again!");
         System.exit(1);
     }
 
+    /**
+     * Shows general message
+     * @param message You want to be shown
+     */
     @Override
     public void showMessage(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Shows a warning
+     * @param message You want to be shown
+     */
     @Override
     public void showWarning(String message) {
         System.out.println(ANSI_RED + message + ANSI_RESET);
     }
 
+    /**
+     * Shows some some possible choices
+     * @param availableChoices You choices to be shown
+     */
     @Override
     public void showChoices(List<String> availableChoices) {
         System.out.println("Pick one: " + CLIFormatter.formatStringList(availableChoices));
     }
 
+    /**
+     * This function is used to show the gameBoard
+     * @param board
+     */
     protected void showBoard(FieldCell[][] board) {
         /* Esempio di scacchiera a video
 
@@ -109,11 +125,16 @@ public abstract class CLIViewState extends ViewState {
         System.out.println("╝");
     }
 
+
+    /**
+     * Used when the game stops, to close the game
+     */
     public void terminate(String reason) {
         super.terminate(reason);
         showMessage(reason);
     }
 
+        public abstract void handleCLIInput(String input);
+    }
 
-    public abstract void handleCLIInput(String input);
-}
+

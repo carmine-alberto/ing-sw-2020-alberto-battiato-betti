@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.clientView;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.beans.property.FloatProperty;
@@ -15,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -37,6 +36,7 @@ public class WorkerSetupViewState extends GUIViewState {
     private static final Paint NEUTRAL_STATE_COLOR = Color.TRANSPARENT;
     private static final Paint FOCUSED_STATE_COLOR = Color.RED;
     private static final Integer EDGE_TOLERANCE = 20;
+    private static final Integer PADDING_SIZE = 8;
 
     private ComboBox<Rectangle> colors;
     private TilePane board;
@@ -69,7 +69,7 @@ public class WorkerSetupViewState extends GUIViewState {
             HBox colorPickerBox = new HBox(10, colors, confirmSelections);
 
             board = new TilePane();
-            board.setPadding(new Insets(8));
+            board.setPadding(new Insets(PADDING_SIZE));
 
             boardBackground  = new Image(this.getClass().getClassLoader().getResource("SantoriniBoardCut.png").toString());
             BackgroundSize backGroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true);

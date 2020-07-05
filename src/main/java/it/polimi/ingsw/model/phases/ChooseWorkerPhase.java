@@ -18,7 +18,7 @@ public class ChooseWorkerPhase extends TurnPhase {
     }
 
     /**
-     * here is sent a notification to the turn player
+     * Prompts the turnPlayer to select a worker
      */
     @Override
     public void stateInit() {
@@ -26,11 +26,11 @@ public class ChooseWorkerPhase extends TurnPhase {
     }
 
     /**
-     * Here is setted the player's selected worker
+     * Sets the player's selected worker
      *
-     * @param arg coordinates
-     * @throws IllegalFormatException If the format of the string does not fit the required one
-     * @throws InvalidSelectionException If the selection is invalid
+     * @param arg The worker selected by the turnPLayer
+     * @throws IllegalFormatException If the string format does not fit the required one
+     * @throws InvalidSelectionException If the selected cell doesn't contain any valid worker
      */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
@@ -42,8 +42,8 @@ public class ChooseWorkerPhase extends TurnPhase {
 
 
     private GameWorker extractWorkerFromCoordinates(String coordinates) throws InvalidSelectionException {
-        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT_INDEX, ONE));
-        Integer y = Integer.parseInt(coordinates.substring(TWO, THREE));
+        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT_INDEX, X_STARTING_POSITION));
+        Integer y = Integer.parseInt(coordinates.substring(Y_STARTING_POSITION, EXPECTED_LENGTH));
 
         GameWorker extractedWorker = currentGame.getCell(x - OFFSET, y - OFFSET).getWorker();
 

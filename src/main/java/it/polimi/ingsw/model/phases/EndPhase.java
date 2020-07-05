@@ -9,14 +9,13 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import java.util.function.BiPredicate;
 
 public class EndPhase extends TurnPhase {
-    private Player turnPlayer;
 
     public EndPhase(Game currentGame, BiPredicate phasePredicate) {
         super(currentGame);
     }
 
     /**
-     * here is run the phase
+     * Runs the body of the EndPhase - placed here for compatibility with TurnPhases
      */
     @Override
     public void stateInit() {
@@ -31,10 +30,10 @@ public class EndPhase extends TurnPhase {
     }
 
     /**
-     * here is sent a message to the player
-     * @param arg
-     * @throws IllegalFormatException
-     * @throws InvalidSelectionException
+     * Notifies the turnPlayer about the turn being over
+     * @param arg Not used - placed here for compatibility
+     * @throws IllegalFormatException Never thrown
+     * @throws InvalidSelectionException Never thrown
      */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
@@ -47,12 +46,11 @@ public class EndPhase extends TurnPhase {
     }
 
     /**
-     * here is set the next turn player
+     * Sets the next turnPlayer
      */
     @Override
     public void stateEnd() {
         super.stateEnd();
         currentGame.setNextTurnPlayer();
-        //TODO empty whatever structure needs to be emptied (e.g. OldMovePositions)
     }
 }

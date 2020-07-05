@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import javafx.stage.Stage;
 
 import java.io.ObjectOutputStream;

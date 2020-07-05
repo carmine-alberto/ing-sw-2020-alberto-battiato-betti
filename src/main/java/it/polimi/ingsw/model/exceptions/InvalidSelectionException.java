@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.exceptions;
 public class InvalidSelectionException extends Exception {
 
     /**
-     * thrown when the player tryes to do an invalid selection
-     * @param message
+     * Thrown when the player sends an event containing data which can be parsed but is not accepted by the current gameState
+     * @param message the detail message.
      */
     public InvalidSelectionException(String message) {
         super(message);

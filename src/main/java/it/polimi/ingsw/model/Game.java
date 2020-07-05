@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Observable;
 import it.polimi.ingsw.controller.events.*;
-import it.polimi.ingsw.view.serverView.VirtualBoardViewState;
 import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.model.actions.Build;
 import it.polimi.ingsw.model.actions.Move;
@@ -29,7 +28,7 @@ public class Game extends Observable<Event> {
 
     private Integer numberOfPlayers;
 
-    private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
+    private Player turnPlayer;
     private Integer currentPlayerIndex;
     private List<Player> players;
     private List<God> godPowers;
@@ -44,7 +43,6 @@ public class Game extends Observable<Event> {
      */
     public Game() {
         players = new ArrayList<>();
-
         numberOfPlayers = INITIAL_VALUE;
 
         for (Integer i = 0; i < FIELD_SIZE; i++)
@@ -66,9 +64,9 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     *
-     * @param newNickname
-     * @throws InvalidSelectionException
+     * Adds a new player to the game
+     * @param newNickname The nickname of the player to be added
+     * @throws InvalidSelectionException if the player's name is already in use
      */
     public void addPlayer(String newNickname, VirtualView playerView) throws InvalidSelectionException {
        for (Player tempPlayer : players)
@@ -84,16 +82,13 @@ public class Game extends Observable<Event> {
        playerView.setOwner(newPlayer.getNickname());
     }
 
-    /**
-     * Sets the currentPlayerIndex, used to extract the turnPlayers from the players list
-     * @param currentPlayerIndex as passed by view (incremented by one, to improve user experience)
-     */
     public void setCurrentPlayerIndex(Integer currentPlayerIndex) {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
     /**
-     * called only at the starting of the game, it starts the first turn
+     * Sends game information to players and starts the first turn.
+     * Called only at the starting of the game
      */
     public void initGame() {
         notifyObservers(new GameInformationEvent(players));
@@ -105,7 +100,7 @@ public class Game extends Observable<Event> {
     //TODO Make sure the transition is smooth - an error seemed to be present during one of our tests
 
     /**
-     * removes the TurnPlayer from the game and ends the game if there's only one player left
+     * Removes the turnPlayer from the game and ends the game if there's only one player left
      */
     public void removeTurnPlayer() {
         Player playerToRemove = turnPlayer;
@@ -127,7 +122,8 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     * Called after a player's victory, it stops the game and kills the server
+     * Stops the game and kills the server.
+     * Called after a player's victory
      */
     public void endGame() {
         Player winner = players.stream()
@@ -140,15 +136,11 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     * called after the end of the turn, it changes the current turnPlayer to the next one
+     * Changes the current turnPlayer to the next one.
+     * Called after the end of the turn
      */
     public void setNextTurnPlayer() {
         this.turnPlayer = players.get(getNextPlayerIndex());
-    }
-
-    private Integer getNextPlayerIndex() {
-        currentPlayerIndex++;
-        return currentPlayerIndex % players.size();
     }
 
     public Player getTurnPlayer() {
@@ -164,7 +156,7 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     * @return a list of all god's names
+     * @return a list of each god's name
      */
     public List<String> getGodPowers() {
         return godPowers
@@ -174,6 +166,10 @@ public class Game extends Observable<Event> {
 
     }
 
+    /**
+     * Sets the godPowers that will be available to players
+     * @param godPowers A list of strings representing god names
+     */
     public void setGodPowers(List<String> godPowers) {
         this.godPowers = this.godPowers
         .stream()
@@ -184,8 +180,8 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     * this method removes the given god from the GodsList
-     * @param selectedGod
+     * This method removes the given god from the gods available to players
+     * @param selectedGod The name of the god to remove
      */
     public void removeGodPowerFromAvailableGods(String selectedGod) {
         this.godPowers = this.godPowers
@@ -196,10 +192,18 @@ public class Game extends Observable<Event> {
         notifyObservers(new SelectedGodsUpdate(getGodPowers()));
     }
 
+    /**
+     * Sends a notification to all of the observers about a specific event
+     * @param e The event the observers will receive
+     */
     public void notifyObservers(Event e) {
         this.notify(e);
     }
 
+    /**
+     * Sends a notification to the turnPlayer about a specific event
+     * @param event The even the turnPlayer will receive
+     */
     public void notifyTurnPlayer(Event event) {
         if (!observers.isEmpty())
             this.notify(observers
@@ -215,10 +219,10 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     *runs the currentPhase
+     * Runs the currentPhase of the game
      * @param inputString usually indicates a cell's position, it may indicate actions or constructible items
-     * @throws IllegalFormatException when parameter isn't recognised from the phase
-     * @throws InvalidSelectionException when the parameter indicates a non permitted action
+     * @throws IllegalFormatException when the inpuString can't be parsed
+     * @throws InvalidSelectionException when the inputString is parsed to a non-permitted action
      */
     public void runPhase(String inputString) throws IllegalFormatException, InvalidSelectionException {
         this.turnPhase.run(inputString);
@@ -230,9 +234,9 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     * assigns the given god to the given player
-     * @param selectedGod
-     * @param choosingPlayer
+     * Assigns the god passed as a String representing its name to the player passed as a String representing their nickname
+     * @param selectedGod A String representing the god's name
+     * @param choosingPlayer A String representing the player's nickname
      */
     public void assignSelectedGodPowerToPlayer(String selectedGod, String choosingPlayer) throws InvalidSelectionException {
         God godToBeAssigned = godPowers
@@ -244,25 +248,142 @@ public class Game extends Observable<Event> {
         getPlayerByName(choosingPlayer).setSelectedGod(godToBeAssigned);
     }
 
-    public void detachObservers() {
-        observers.clear();
-    }
-
+    /**
+     * Checks whether the passed nickname belongs to the turnPlayer
+     * @param nickname A String representing a nickname
+     * @return true if the nickname belongs to the turnPlayer
+     */
     public Boolean isTurnPlayer(String nickname) {
         return turnPlayer.getNickname().equals(nickname);
     }
 
+    /**
+     * Returns the nickname of the nth player
+     * @param index An Integer representing the position of a player (order criterion: login time)
+     * @return The nickname of the nth player
+     */
     public String getNthPlayer(Integer index) {
         return players.get(index).getNickname();
     }
 
-
+    /**
+     * Populates the game with all the existing Santorini gods and sends a List of their names as strings to the players
+     */
     public void initGods() {
         Parser fileParser = new Parser();
         godPowers = fileParser.getGodsList();
-        //godPowers = buildDefaultGods();
+        //godPowers = buildDefaultGods(); - LEFT FOR TESTING PURPOSES
         notify(new AvailableGodsUpdate(getGodPowers()));
     }
+
+    /**
+     * Checks whether the current game can accept more players
+     * @return true if more players can join the game
+     */
+    public Boolean hasFreeSlots() {
+        return numberOfPlayers == INITIAL_VALUE && players.size() <= MIN_NUM_OF_NONCHALLENGERS || players.size() < numberOfPlayers;
+    }
+
+    /**
+     * Checks whether the current game has reached the expected number of players, as decided by the challenger
+     * @return true if the expected number of players is reached
+     */
+    public Boolean haveAllPlayersConnected() {
+        if (players.size() == numberOfPlayers) {
+            notifyObservers(new SelectedGodsUpdate(getGodPowers()));
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Sets the starting player, the number of players and the gods that will be available in the game being created
+     * @param selectedStartingPlayerIndex The starting player index (challenger: 1, second player: 2, etc...)
+     * @param selectedNumberOfPlayers The number of players to reach before the game can start
+     * @param selectedGods The gods that will be available for the players to pick
+     * @throws InvalidSelectionException when the passed parameter are in conflict with each other
+     */
+    public void registerChallengerSelection(Integer selectedStartingPlayerIndex, Integer selectedNumberOfPlayers, List<String> selectedGods) throws InvalidSelectionException {
+        if (selectedNumberOfPlayers != selectedGods.size())
+            throw new InvalidSelectionException("Number of players and god powers must match!");
+
+        if (selectedStartingPlayerIndex > selectedNumberOfPlayers)
+            throw new  InvalidSelectionException("You can't choose the third player as starting player in a 2-players game!");
+
+        numberOfPlayers = selectedNumberOfPlayers;
+        currentPlayerIndex = selectedStartingPlayerIndex - OFFSET;
+        setGodPowers(selectedGods);
+    }
+
+    /**
+     * Sets the turnPlayer's color and creates the two gameworkers of theirs according to the specified coordinates
+     * @param selectedColor A String representing the chosen color
+     * @param xCoordinates A List containing the x coordinate of the two workers expressed as Integers
+     * @param yCoordinates A List containing the y coordinate of the two workers expressed as Integers
+     * @throws InvalidSelectionException when the passed parameter are in conflict with each other
+     */
+    public void handleColorAndWorkerSelection(String selectedColor, List<Integer> xCoordinates, List<Integer> yCoordinates) throws InvalidSelectionException {
+        for (Integer i = 0; i < FIELD_SIZE; i++)
+            for (Integer j = 0; j < FIELD_SIZE; j++)
+                if (field[i][j].getWorker() != null && field[i][j].getWorker().getOwner().getColour().toUpperCase().equals(selectedColor))
+                    throw new InvalidSelectionException("One of your opponents already chose this color, pick another one!");
+
+
+        if (xCoordinates.size() != NUM_OF_WORKERS || yCoordinates.size() != NUM_OF_WORKERS)
+            throw new InvalidSelectionException("The selected positions are not " + NUM_OF_WORKERS);
+
+        if(!field[xCoordinates.get(FIRST_ELEMENT_INDEX) - OFFSET][yCoordinates.get(FIRST_ELEMENT_INDEX) - OFFSET].isFree() || !field[xCoordinates.get(SECOND_ELEMENT_INDEX) - OFFSET][yCoordinates.get(SECOND_ELEMENT_INDEX) - OFFSET].isFree())
+            throw new InvalidSelectionException("You can't place a worker in a cell that is already occupied");
+
+
+        turnPlayer.setColour(selectedColor);
+
+        List<GameWorker> turnPlayerWorkers = new ArrayList<>();
+        for (Integer i = 0; i < NUM_OF_WORKERS; i++) {
+            turnPlayerWorkers.add(new GameWorker(this, turnPlayer));
+            try {
+                turnPlayerWorkers.get(i).setPosition(field[xCoordinates.get(i) - OFFSET][yCoordinates.get(i) - OFFSET]);
+            } catch (IndexOutOfBoundsException e) {
+                throw new InvalidSelectionException("The selected cell does not exist on the board");
+            }
+        }
+        turnPlayer.setWorkers(turnPlayerWorkers);
+    }
+
+    /**
+     * Checks whether the passed nickname belongs to the challenger
+     * @param nickname A String representing the challenger's nickname
+     * @return true if the nickname belongs to the challenger
+     */
+    public Boolean isChallenger(String nickname) {
+        try {
+            return getPlayerByName(nickname).isChallenger();
+        } catch (InvalidSelectionException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks whether the current game is ready to start
+     * @return true if all the players have chosen their color and gameWorkers
+     */
+    public Boolean isReadyToStart() {
+        return players
+            .stream()
+            .filter(player -> player.getWorkers() != null)
+            .count() == numberOfPlayers;
+    }
+
+
+    private Player getPlayerByName(String nickname) throws InvalidSelectionException {
+        return players
+                .stream()
+                .filter(player -> player.getNickname().equals(nickname))
+                .findFirst()
+                .orElseThrow(() -> new InvalidSelectionException("The nickname provided does not belong to any player"));
+    }
+
     /**
      * For testing purposes - builds a set of default gods
      * @return a List of gods with default powers
@@ -295,81 +416,9 @@ public class Game extends Observable<Event> {
         return godsToReturn;
     }
 
-    public Boolean hasFreeSlots() {
-        return numberOfPlayers == INITIAL_VALUE && players.size() <= MIN_NUM_OF_NONCHALLENGERS || players.size() < numberOfPlayers;
-    }
-
-    public Boolean haveAllPlayersConnected() {
-        if (players.size() == numberOfPlayers) {
-            notifyObservers(new SelectedGodsUpdate(getGodPowers()));
-            return true;
-        }
-
-        return false;
-    }
-
-    public void registerChallengerSelection(Integer selectedStartingPlayerIndex, Integer selectedNumberOfPlayers, List<String> selectedGods) throws InvalidSelectionException {
-        if (selectedNumberOfPlayers != selectedGods.size())
-            throw new InvalidSelectionException("Number of players and god powers must match!");
-
-        if (selectedStartingPlayerIndex > selectedNumberOfPlayers)
-            throw new  InvalidSelectionException("You can't choose the third player as starting player in a 2-players game!");
-
-        numberOfPlayers = selectedNumberOfPlayers;
-        currentPlayerIndex = selectedStartingPlayerIndex - OFFSET;
-        setGodPowers(selectedGods);
-    }
-
-    public Boolean isChallenger(String nickname) {
-        try {
-            return getPlayerByName(nickname).isChallenger();
-        } catch (InvalidSelectionException e) {
-            return false;
-        }
-    }
-
-
-    private Player getPlayerByName(String nickname) throws InvalidSelectionException {
-        return players
-                .stream()
-                .filter(player -> player.getNickname().equals(nickname))
-                .findFirst()
-                .orElseThrow(() -> new InvalidSelectionException("The nickname provided does not belong to any player"));
-    }
-
-    public void handleColorAndWorkerSelection(String selectedColor, List<Integer> xCoordinates, List<Integer> yCoordinates) throws InvalidSelectionException {
-        for (Integer i = 0; i < FIELD_SIZE; i++)
-            for (Integer j = 0; j < FIELD_SIZE; j++)
-                if (field[i][j].getWorker() != null && field[i][j].getWorker().getOwner().getColour().toUpperCase().equals(selectedColor))
-                    throw new InvalidSelectionException("One of your opponents already chose this color, pick another one!");
-
-
-        if (xCoordinates.size() != NUM_OF_WORKERS || yCoordinates.size() != NUM_OF_WORKERS)
-            throw new InvalidSelectionException("The selected positions are not " + NUM_OF_WORKERS);
-
-        if(!field[xCoordinates.get(0) - 1][yCoordinates.get(0) - 1].isFree() || !field[xCoordinates.get(1) - 1][yCoordinates.get(1) - 1].isFree())
-            throw new InvalidSelectionException("You can't place a worker in a cell that is already occupied");
-
-
-        turnPlayer.setColour(selectedColor);
-
-        List<GameWorker> turnPlayerWorkers = new ArrayList<>();
-        for (Integer i = 0; i < NUM_OF_WORKERS; i++) {
-            turnPlayerWorkers.add(new GameWorker(this, turnPlayer));
-            try {
-                turnPlayerWorkers.get(i).setPosition(field[xCoordinates.get(i) - 1][yCoordinates.get(i) - 1]);
-            } catch (IndexOutOfBoundsException e) {
-                throw new InvalidSelectionException("The selected cell does not exist on the board");
-            }
-        }
-        turnPlayer.setWorkers(turnPlayerWorkers);
-    }
-
-    public Boolean isReadyToStart() {
-        return players
-            .stream()
-            .filter(player -> player.getWorkers() != null)
-            .count() == numberOfPlayers;
+    private Integer getNextPlayerIndex() {
+        currentPlayerIndex++;
+        return currentPlayerIndex % players.size();
     }
 }
 

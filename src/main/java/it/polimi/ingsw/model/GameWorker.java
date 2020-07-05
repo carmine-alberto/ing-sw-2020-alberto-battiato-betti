@@ -27,17 +27,20 @@ public class GameWorker implements Serializable  {
         this.position = cell;
         if (!this.equals(cell.getWorker())) {
             cell.setOccupyingWorker(this);
-            this.oldMovePositions.add(cell);    //TODO empty in endphase
+            this.oldMovePositions.add(cell);
         }
     }
 
+    /**
+     * Moves the gameWorker to the FieldCell passed as argument
+     * @param destination A FieldCell that will be set as the one the gameWorker dwells
+     */
     public void move(FieldCell destination) {moveStrategy.run(destination, this);}
 
     /**
-     * This function is used to get the selected gameWorker to build in the destination insert as first parameter.
-     *
-     * @param destination the fieldCell you want to build into
-     * @param constructible the constructible type you want to build
+     * This function is used to get the selected gameWorker to build in the destination passed as first parameter
+     * @param destination The fieldCell you want to build on
+     * @param constructible The constructible type you want to build
      */
     public void build(FieldCell destination, Constructible constructible) {
         buildStrategy.run(destination, constructible);
@@ -45,7 +48,7 @@ public class GameWorker implements Serializable  {
 
     /**
      * This function is used to get the position of the worker
-     * @return the fieldCell the worker is occupying
+     * @return The fieldCell the worker is occupying
      */
     public FieldCell getCell() {
         return this.position;

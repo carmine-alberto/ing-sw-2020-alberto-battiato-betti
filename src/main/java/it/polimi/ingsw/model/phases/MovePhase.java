@@ -20,7 +20,7 @@ public class MovePhase extends TurnPhase {
    }
 
     /**
-     * Here available cells are calculated and if no cell is available the player is removed from the game
+     * Calculates the available cells and removes the turnPlayer from the game if no legal cells exist
      */
     @Override
     public void stateInit() {
@@ -35,7 +35,7 @@ public class MovePhase extends TurnPhase {
                         .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker()))
                 .collect(Collectors.toList());
 
-        if (availableCells.isEmpty()) //TODO Currently, the player loses even if the second worker can move. Should we add a check and let him select the remaining one?
+        if (availableCells.isEmpty())
            removeTurnPlayerFromGame();
         else {
             currentGame.notifyTurnPlayer(new PhaseUpdate("Select the destination cell"));
@@ -45,11 +45,11 @@ public class MovePhase extends TurnPhase {
     }
 
     /**
-     * Here is setted the player's selected cell and the player moves
+     * Sets the player's selected cell
      *
-     * @param arg coordinates
-     * @throws IllegalFormatException If the format of the string does not fit the required one
-     * @throws InvalidSelectionException If the selection of the action is invalid
+     * @param arg Selected cell coordinates
+     * @throws IllegalFormatException If the string format does not fit the required one
+     * @throws InvalidSelectionException If the selected cell is not among the available cells
      */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {

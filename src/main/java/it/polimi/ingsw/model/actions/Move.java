@@ -4,14 +4,13 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
 
+/**
+ * This class offers basic move behaviour and is used to implement a pseudo-Decorator pattern:
+ * its subclasses call the parent's run() method and add action-specific behaviour afterwards
+ */
 public class Move implements Action {
     protected Player turnPlayer;    //TODO remove
 
-    /**
-     * runs the standard move strategy
-     * @param cell where the worker moves
-     * @param gw worker which moves in the given cell
-     */
     @Override
     public void run(FieldCell cell, GameWorker gw) {
             gw.getCell().setOccupyingWorker(null);

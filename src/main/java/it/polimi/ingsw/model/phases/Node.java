@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
+/**
+ * Class used to implement a tree containing the turnPhases for a given player.
+ */
 public class Node {
     //Data structure attributes
     private List<Node> children;
@@ -24,7 +27,7 @@ public class Node {
     }
 
     /**
-     * this method adds a child to the list of children
+     * Adds a child to the list of children
      * @param node to add
      */
     public void addChild(Node node) {

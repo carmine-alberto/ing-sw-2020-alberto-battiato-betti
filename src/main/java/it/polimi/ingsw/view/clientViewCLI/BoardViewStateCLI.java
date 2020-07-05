@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.clientViewCLI;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.UserInputEvent;
 import it.polimi.ingsw.model.*;
 import javafx.stage.Stage;
@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class BoardViewStateCLI extends CLIViewState {
-    private String selectedColour;
 
     public BoardViewStateCLI(Stage stage, Socket clientSocket, View view, ObjectOutputStream out) {
         super(stage, clientSocket, view, out);

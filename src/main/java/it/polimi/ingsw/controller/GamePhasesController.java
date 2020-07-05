@@ -12,11 +12,18 @@ public class GamePhasesController extends ControllerState {
         super(mainController, currentGame);
     }
 
+
     @Override
     public void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
+    /**
+     * This is the specific handle function used to handle the userInputEvent
+     *
+     * @param event The userInputEvent
+     * @param senderView The turnPlayer's view
+     */
     public void handle(UserInputEvent event, VirtualView senderView) {
         try {
             if (isTurnPlayer(senderView))

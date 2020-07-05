@@ -1,8 +1,8 @@
 package it.polimi.ingsw.view.clientView;
 
-import it.polimi.ingsw.View;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.controller.events.LoginEvent;
-import it.polimi.ingsw.view.utility.MessageWindow;
+import it.polimi.ingsw.view.viewUtility.MessageWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

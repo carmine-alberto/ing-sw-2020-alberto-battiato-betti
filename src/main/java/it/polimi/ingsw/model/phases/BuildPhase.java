@@ -20,7 +20,7 @@ public class BuildPhase extends TurnPhase {
     }
 
     /**
-     * Here available cells are calculated and if no cell is available the player is removed from the game
+     * Calculates the available cells and removes the turnPlayer from the game if no legal cells exist
      */
     @Override
     public void stateInit() {
@@ -51,11 +51,11 @@ public class BuildPhase extends TurnPhase {
     }
 
     /**
-     * Here is setted the player's selected cell
+     * Sets the player's selected cell
      *
-     * @param arg coordinates
-     * @throws IllegalFormatException If the format of the string does not fit the required one
-     * @throws InvalidSelectionException If the selection is invalid
+     * @param arg Selected cell coordinates
+     * @throws IllegalFormatException If the string format does not fit the required one
+     * @throws InvalidSelectionException If the selected cell is not among the available cells
      */
     @Override
     public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
