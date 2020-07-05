@@ -16,8 +16,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -60,7 +58,7 @@ public class Parser {
         for (Integer i = 0; i < nList.getLength(); i++) {
             if (nList.item(i).getNodeValue() == null) {         //CHILD NODE HAS NO TEXT (e.g. <and></and>)
                 System.out.println(numOfTabs(level) + "<" + nList.item(i).getNodeName() + ">");
-                printNode(nList.item(i), level + CORRECTION);
+                printNode(nList.item(i), level + OFFSET);
                 System.out.println(numOfTabs(level) + "FINE<" + nList.item(i).getNodeName() + ">");
             } else                                                 //CHILD NODE HAS TEXT (e.g. <movePredicate>text</movePredicate>)
                 System.out.println(numOfTabs(level) + "NOT NULL: " + nList.item(i).getTextContent());
@@ -151,10 +149,10 @@ public class Parser {
             if (child.getNextSibling() != null)
                 if (isNumeric(child.getNextSibling().getFirstChild().getTextContent()))
                     return (BiPredicate<Player, Constructible>) Class.forName("it.polimi.ingsw.model.predicates.constructiblePredicates." + child.getTextContent())
-                            .getConstructors()[FIRST_ELEMENT]
+                            .getConstructors()[FIRST_ELEMENT_INDEX]
                             .newInstance(Integer.parseInt(child.getNextSibling().getFirstChild().getTextContent()));
             return (BiPredicate<Player, Constructible>) Class.forName("it.polimi.ingsw.model.predicates.constructiblePredicates." + child.getTextContent())
-                    .getConstructors()[FIRST_ELEMENT]
+                    .getConstructors()[FIRST_ELEMENT_INDEX]
                     .newInstance();
         } catch (Exception e) {
             e.printStackTrace(); //TODO Handle exception properly
@@ -170,8 +168,8 @@ public class Parser {
             if (nList.item(i).getNodeValue() == null) {
                 switch (nList.item(i).getNodeName()) {
                     case "name":
-                        if (isNumeric(nList.item(i + CORRECTION).getChildNodes().item(FIRST_ELEMENT).getTextContent()))/*controllo che effettivamente args ci sia */ {
-                            int val = Integer.parseInt(nList.item(i + CORRECTION).getChildNodes().item(FIRST_ELEMENT).getTextContent());
+                        if (isNumeric(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent()))/*controllo che effettivamente args ci sia */ {
+                            int val = Integer.parseInt(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent());
                             winConditionPredicate = readWinCondition(nList.item(i), god, val);
                         } else
                             winConditionPredicate = readWinCondition(nList.item(i), god, null);
@@ -196,12 +194,12 @@ public class Parser {
                 try {
                     if (arg == null)
                         winConditionPredicate = (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + nList.item(i).getTextContent())
-                                .getConstructors()[FIRST_ELEMENT]
+                                .getConstructors()[FIRST_ELEMENT_INDEX]
                                 .newInstance();
                     else
                     { String tmp = nList.item(i).getTextContent();
                         winConditionPredicate = (BiPredicate<Game, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.winConditionsPredicates." + nList.item(i).getTextContent())
-                                .getConstructors()[FIRST_ELEMENT]
+                                .getConstructors()[FIRST_ELEMENT_INDEX]
                                 .newInstance(arg);}
                 } catch (Exception e) {
                     e.printStackTrace(); //TODO Handle exception properly
@@ -219,8 +217,8 @@ public class Parser {
             if (nList.item(i).getNodeValue() == null) {
                 switch (nList.item(i).getNodeName()) {
                     case "name":
-                        if (isNumeric(nList.item(i + CORRECTION).getChildNodes().item(FIRST_ELEMENT).getTextContent()))/*controllo che effettivamente args ci sia */ {
-                            int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(FIRST_ELEMENT).getTextContent());
+                        if (isNumeric(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent()))/*controllo che effettivamente args ci sia */ {
+                            int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent());
                             buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), val);
                         } else
                             buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), null);
@@ -250,11 +248,11 @@ public class Parser {
                 try {
                     if (arg == null)
                         buildAndMovePredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildAndMovePredicates." + nList.item(i).getTextContent())
-                                .getConstructors()[FIRST_ELEMENT]
+                                .getConstructors()[FIRST_ELEMENT_INDEX]
                                 .newInstance();
                     else
                         buildAndMovePredicate = (BiPredicate<FieldCell, GameWorker>) Class.forName("it.polimi.ingsw.model.predicates.buildAndMovePredicates." + nList.item(i).getTextContent())
-                                .getConstructors()[FIRST_ELEMENT]
+                                .getConstructors()[FIRST_ELEMENT_INDEX]
                                 .newInstance(arg);
                 } catch (Exception e) {
                     e.printStackTrace(); //TODO Handle exception properly
@@ -276,19 +274,19 @@ public class Parser {
                         break;
                     case "winCondition":
                         //partly redundant
-                        if (i == FIRST_ELEMENT)
+                        if (i == FIRST_ELEMENT_INDEX)
                             firstPredicate = readWinCondition(nList.item(i), god, null);
                         else
                             secondPredicate = readWinCondition(nList.item(i), god, null);
                         break;
                     case "and":
-                        if (i == FIRST_ELEMENT)
+                        if (i == FIRST_ELEMENT_INDEX)
                             firstPredicate =  readWinConj(nList.item(i), "and", god);
                         else
                             secondPredicate = readWinConj(nList.item(i), "and", god);
                         break;
                     case "or":
-                        if (i == FIRST_ELEMENT)
+                        if (i == FIRST_ELEMENT_INDEX)
                             firstPredicate =  readWinConj(nList.item(i), "or", god);
                         else
                             secondPredicate = readWinConj(nList.item(i), "or", god);
@@ -334,14 +332,14 @@ public class Parser {
             if (nList.item(i).getNodeValue() == null) {
                 switch (nList.item(i).getNodeName()) {
                     case "name": // i think it is useless but still needed for reliability
-                        if (isNumeric(nList.item(i + CORRECTION).getChildNodes().item(FIRST_ELEMENT).getTextContent())) {
-                            int val = Integer.parseInt(nList.item(i + CORRECTION).getChildNodes().item(FIRST_ELEMENT).getTextContent());
-                            if (i == FIRST_ELEMENT)
+                        if (isNumeric(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent())) {
+                            int val = Integer.parseInt(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent());
+                            if (i == FIRST_ELEMENT_INDEX)
                                 firstPredicate = readBuildAndMovePredicates(nList.item(i), val);
                             else
                                 secondPredicate = readBuildAndMovePredicates(nList.item(i), val);
                         } else {
-                            if (i == FIRST_ELEMENT)
+                            if (i == FIRST_ELEMENT_INDEX)
                                 firstPredicate = readBuildAndMovePredicates(nList.item(i), null);
                             else
                                 secondPredicate = readBuildAndMovePredicates(nList.item(i), null);
@@ -352,25 +350,25 @@ public class Parser {
                      */
                     case "movePredicate":
                     case "buildPredicate":
-                        if (i == FIRST_ELEMENT)
+                        if (i == FIRST_ELEMENT_INDEX)
                             firstPredicate = readBuildAndMovePredicates(nList.item(i), null);
                         else
                             secondPredicate = readBuildAndMovePredicates(nList.item(i), null);
                         break;
                     case "and":
-                        if (i == FIRST_ELEMENT)
+                        if (i == FIRST_ELEMENT_INDEX)
                             firstPredicate = readConj(nList.item(i), "and");
                         else
                             secondPredicate = readConj(nList.item(i), "and");
                         break;
                     case "or":
-                        if (i == FIRST_ELEMENT)
+                        if (i == FIRST_ELEMENT_INDEX)
                                 firstPredicate = readConj(nList.item(i), "or");
                         else
                             secondPredicate = readConj(nList.item(i), "or");
                         break;
                     case "negate":
-                        if (i == FIRST_ELEMENT)
+                        if (i == FIRST_ELEMENT_INDEX)
                         firstPredicate = readBuildAndMovePredicates(nList.item(i), null).negate();
                     else
                         secondPredicate = readBuildAndMovePredicates(nList.item(i), null).negate();

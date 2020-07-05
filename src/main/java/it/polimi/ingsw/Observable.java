@@ -18,7 +18,7 @@ public class Observable<T> {
         }
     }
 
-    //todo remove? never used
+
     public void removeObserver(Observer<T> observer){
         synchronized (observers) {
             observers.remove(observer);
@@ -36,6 +36,15 @@ public class Observable<T> {
                 observer.update(message);
             }
         }
+    }
+
+    protected <V> void notify(T message, V source) {
+        synchronized (observers) {
+            for(Observer<T> observer : observers){
+                observer.update(message, source);
+            }
+        }
+
     }
 
     /**

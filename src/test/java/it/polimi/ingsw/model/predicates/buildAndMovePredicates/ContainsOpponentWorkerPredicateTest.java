@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT_INDEX;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ContainsOpponentWorkerPredicateTest {
@@ -21,7 +22,7 @@ class ContainsOpponentWorkerPredicateTest {
     @BeforeEach
     void setUp() throws InvalidSelectionException {
         setupGame();
-        game.setTurnPlayer(players.get(0));
+        game.setTurnPlayer(players.get(FIRST_ELEMENT_INDEX));
         game.initGame();
     }
 
@@ -69,8 +70,8 @@ class ContainsOpponentWorkerPredicateTest {
 
         for (int i = 0;  i < names.size(); i++) {
             players.add(new Player(names.get(i) , null));
-            game.addPlayer(players.get(i));
-            game.assignSelectedGodPowerToPlayer(powers.get(i) , players.get(i));
+            game.addPlayer(players.get(i).getNickname() , null);
+            game.assignSelectedGodPowerToPlayer(powers.get(i) , players.get(i).getNickname());
         }
     }
 

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.events;
 
 import it.polimi.ingsw.controller.*;
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.view.serverView.VirtualView;
 
 public class GodSelectionEvent implements Event {
     public String selectedGod;
@@ -13,7 +13,7 @@ public class GodSelectionEvent implements Event {
 
     @Override
     public void visit(GodPowerController eventHandler, VirtualView view) {
-        eventHandler.handle(this);
+        eventHandler.handle(this, view);
     }
 
   }

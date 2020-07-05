@@ -2,7 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.Observable;
 import it.polimi.ingsw.controller.events.*;
-import it.polimi.ingsw.cview.serverView.VirtualBoardViewState;
+import it.polimi.ingsw.view.serverView.VirtualBoardViewState;
+import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.model.actions.Build;
 import it.polimi.ingsw.model.actions.Move;
 import it.polimi.ingsw.model.exceptions.IllegalFormatException;
@@ -20,11 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.CORRECTION;
-import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
+import static it.polimi.ingsw.GameSettings.*;
 
 public class Game extends Observable<Event> {
-    public Integer NUM_OF_PLAYERS;
+    private final static Integer INITIAL_VALUE = -1;
+    private final static Integer MIN_NUM_OF_NONCHALLENGERS = 1;
+
+    private Integer numberOfPlayers;
 
     private Player turnPlayer;  //TODO ind turnPlayer to currentPlayerIndex to enforce synchronization
     private Integer currentPlayerIndex;
@@ -42,45 +45,13 @@ public class Game extends Observable<Event> {
     public Game() {
         players = new ArrayList<>();
 
-        Parser fileParser = new Parser();
-        godPowers = fileParser.getGodsList();
-        //godPowers = buildDefaultGods();
-
-
-        NUM_OF_PLAYERS = -CORRECTION; //TODO Refactor into proper private variable + accessor
+        numberOfPlayers = INITIAL_VALUE;
 
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
                 this.field[i][j] = new FieldCell(this, i, j);
     }
 
-    private List<God> buildDefaultGods() {
-        God.GodBuilder godBuilder = new God.GodBuilder();
-        List<God> godsToReturn = new ArrayList<>();
-
-        for (Integer i = 0; i < 3; i++)
-            godsToReturn.add(
-                godBuilder
-                .name("Default" + i)
-                .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
-                .addPhase("ChooseActionPhase", new CanMovePredicate().or(new CanBuildPredicate()))
-                .saveRefNode()
-                .addPhase("MovePhase", new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2)))
-                .addPhase("BuildPhase", new IsCellFreePredicate())
-                .addPhase("ChooseBlockPhase", new BlockPredicate(3))
-                .addPhase("EndPhase", (arg1, arg2) -> true)
-                .restoreRefNode()
-                .addPhase("BuildPhase", new IsCellFreePredicate())
-                .addPhase("ChooseBlockPhase", new BlockPredicate(3))
-                .addPhase("EndPhase", (arg1, arg2) -> true)
-                .moveStrategy(new Move())
-                .buildStrategy(new Build())
-                .winConditionPredicate(new WinningMovePredicate().and(new IsTurnPlayerPredicate()))
-                .getCompleteGod()
-            );
-
-        return godsToReturn;
-    }
 
     public List<Player> getPlayers() {
         return players;
@@ -96,16 +67,21 @@ public class Game extends Observable<Event> {
 
     /**
      *
-     * @param player
+     * @param newNickname
      * @throws InvalidSelectionException
      */
-    public void addPlayer(Player player) throws InvalidSelectionException {
-       for (Player tmp : players)
-           if (tmp.getNickname().equals(player.getNickname()))
+    public void addPlayer(String newNickname, VirtualView playerView) throws InvalidSelectionException {
+       for (Player tempPlayer : players)
+           if (tempPlayer.getNickname().equals(newNickname))
                throw new InvalidSelectionException("Nickname already in use");
 
-       player.setCurrentGame(this);
-       players.add(player);
+       Player newPlayer = new Player(newNickname, playerView);
+       newPlayer.setCurrentGame(this);
+       if (players.isEmpty())
+           newPlayer.setChallenger(true);
+
+       players.add(newPlayer);
+       playerView.setOwner(newPlayer.getNickname());
     }
 
     /**
@@ -138,7 +114,7 @@ public class Game extends Observable<Event> {
         players.remove(playerToRemove);
 
         if (players.size() == 1) {
-            players.get(0).setIsWinner(true);
+            players.get(FIRST_ELEMENT_INDEX).setIsWinner(true);
             endGame();
 
             return;
@@ -151,13 +127,13 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     * called after a player's victory, it stops the game
+     * Called after a player's victory, it stops the game and kills the server
      */
     public void endGame() {
         Player winner = players.stream()
                 .filter(player -> player.getIsWinner())
                 .collect(Collectors.toList())
-                .get(0);
+                .get(FIRST_ELEMENT_INDEX);
 
         notifyObservers(new GameEndUpdate(winner.getNickname()));
         System.exit(0);
@@ -181,6 +157,12 @@ public class Game extends Observable<Event> {
         return turnPlayer;
     }
 
+    public String getTurnPlayerNickname() {
+        if (turnPlayer == null)
+            turnPlayer = players.get(currentPlayerIndex);
+        return turnPlayer.getNickname();
+    }
+
     /**
      * @return a list of all god's names
      */
@@ -197,6 +179,8 @@ public class Game extends Observable<Event> {
         .stream()
         .filter(godPower -> godPowers.contains(godPower.getName()))
         .collect(Collectors.toList());
+
+        notifyObservers(new SelectedGodsUpdate(getGodPowers()));
     }
 
     /**
@@ -208,6 +192,8 @@ public class Game extends Observable<Event> {
             .stream()
             .filter(godPower -> !godPower.getName().equals(selectedGod))
             .collect(Collectors.toList());
+
+        notifyObservers(new SelectedGodsUpdate(getGodPowers()));
     }
 
     public void notifyObservers(Event e) {
@@ -218,7 +204,7 @@ public class Game extends Observable<Event> {
         if (!observers.isEmpty())
             this.notify(observers
                     .stream()
-                    .filter(observer -> ((VirtualBoardViewState)observer).getVirtualView().equals(turnPlayer.getPlayerView()))
+                    .filter(observer -> observer.equals(turnPlayer.getPlayerView()))
                     .collect(Collectors.toList())
                     .get(0),
                     event);
@@ -248,18 +234,142 @@ public class Game extends Observable<Event> {
      * @param selectedGod
      * @param choosingPlayer
      */
-    public void assignSelectedGodPowerToPlayer(String selectedGod, Player choosingPlayer) {
+    public void assignSelectedGodPowerToPlayer(String selectedGod, String choosingPlayer) throws InvalidSelectionException {
         God godToBeAssigned = godPowers
             .stream()
             .filter(god -> selectedGod.equals(god.getName()))
             .findFirst()
-            .get();
+            .orElseThrow(() -> new InvalidSelectionException("The selected God is not available!"));
 
-        choosingPlayer.setSelectedGod(godToBeAssigned);
+        getPlayerByName(choosingPlayer).setSelectedGod(godToBeAssigned);
     }
 
     public void detachObservers() {
         observers.clear();
+    }
+
+    public Boolean isTurnPlayer(String nickname) {
+        return turnPlayer.getNickname().equals(nickname);
+    }
+
+    public String getNthPlayer(Integer index) {
+        return players.get(index).getNickname();
+    }
+
+
+    public void initGods() {
+        Parser fileParser = new Parser();
+        godPowers = fileParser.getGodsList();
+        //godPowers = buildDefaultGods();
+        notify(new AvailableGodsUpdate(getGodPowers()));
+    }
+    /**
+     * For testing purposes - builds a set of default gods
+     * @return a List of gods with default powers
+     */
+    private List<God> buildDefaultGods() {
+        God.GodBuilder godBuilder = new God.GodBuilder();
+        List<God> godsToReturn = new ArrayList<>();
+
+        for (Integer i = 0; i < 3; i++)
+            godsToReturn.add(
+                    godBuilder
+                            .name("Default" + i)
+                            .addPhase("ChooseWorkerPhase", (arg1, arg2) -> true)
+                            .addPhase("ChooseActionPhase", new CanMovePredicate().or(new CanBuildPredicate()))
+                            .saveRefNode()
+                            .addPhase("MovePhase", new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2)))
+                            .addPhase("BuildPhase", new IsCellFreePredicate())
+                            .addPhase("ChooseBlockPhase", new BlockPredicate(3))
+                            .addPhase("EndPhase", (arg1, arg2) -> true)
+                            .restoreRefNode()
+                            .addPhase("BuildPhase", new IsCellFreePredicate())
+                            .addPhase("ChooseBlockPhase", new BlockPredicate(3))
+                            .addPhase("EndPhase", (arg1, arg2) -> true)
+                            .moveStrategy(new Move())
+                            .buildStrategy(new Build())
+                            .winConditionPredicate(new WinningMovePredicate().and(new IsTurnPlayerPredicate()))
+                            .getCompleteGod()
+            );
+
+        return godsToReturn;
+    }
+
+    public Boolean hasFreeSlots() {
+        return numberOfPlayers == INITIAL_VALUE && players.size() <= MIN_NUM_OF_NONCHALLENGERS || players.size() < numberOfPlayers;
+    }
+
+    public Boolean haveAllPlayersConnected() {
+        if (players.size() == numberOfPlayers) {
+            notifyObservers(new SelectedGodsUpdate(getGodPowers()));
+            return true;
+        }
+
+        return false;
+    }
+
+    public void registerChallengerSelection(Integer selectedStartingPlayerIndex, Integer selectedNumberOfPlayers, List<String> selectedGods) throws InvalidSelectionException {
+        if (selectedNumberOfPlayers != selectedGods.size())
+            throw new InvalidSelectionException("Number of players and god powers must match!");
+
+        if (selectedStartingPlayerIndex > selectedNumberOfPlayers)
+            throw new  InvalidSelectionException("You can't choose the third player as starting player in a 2-players game!");
+
+        numberOfPlayers = selectedNumberOfPlayers;
+        currentPlayerIndex = selectedStartingPlayerIndex - OFFSET;
+        setGodPowers(selectedGods);
+    }
+
+    public Boolean isChallenger(String nickname) {
+        try {
+            return getPlayerByName(nickname).isChallenger();
+        } catch (InvalidSelectionException e) {
+            return false;
+        }
+    }
+
+
+    private Player getPlayerByName(String nickname) throws InvalidSelectionException {
+        return players
+                .stream()
+                .filter(player -> player.getNickname().equals(nickname))
+                .findFirst()
+                .orElseThrow(() -> new InvalidSelectionException("The nickname provided does not belong to any player"));
+    }
+
+    public void handleColorAndWorkerSelection(String selectedColor, List<Integer> xCoordinates, List<Integer> yCoordinates) throws InvalidSelectionException {
+        for (Integer i = 0; i < FIELD_SIZE; i++)
+            for (Integer j = 0; j < FIELD_SIZE; j++)
+                if (field[i][j].getWorker() != null && field[i][j].getWorker().getOwner().getColour().toUpperCase().equals(selectedColor))
+                    throw new InvalidSelectionException("One of your opponents already chose this color, pick another one!");
+
+
+        if (xCoordinates.size() != NUM_OF_WORKERS || yCoordinates.size() != NUM_OF_WORKERS)
+            throw new InvalidSelectionException("The selected positions are not " + NUM_OF_WORKERS);
+
+        if(!field[xCoordinates.get(0) - 1][yCoordinates.get(0) - 1].isFree() || !field[xCoordinates.get(1) - 1][yCoordinates.get(1) - 1].isFree())
+            throw new InvalidSelectionException("You can't place a worker in a cell that is already occupied");
+
+
+        turnPlayer.setColour(selectedColor);
+
+        List<GameWorker> turnPlayerWorkers = new ArrayList<>();
+        for (Integer i = 0; i < NUM_OF_WORKERS; i++) {
+            turnPlayerWorkers.add(new GameWorker(this, turnPlayer));
+            try {
+                turnPlayerWorkers.get(i).setPosition(field[xCoordinates.get(i) - 1][yCoordinates.get(i) - 1]);
+            } catch (IndexOutOfBoundsException e) {
+                throw new InvalidSelectionException("The selected cell does not exist on the board");
+            }
+        }
+        turnPlayer.setWorkers(turnPlayerWorkers);
+    }
+
+    public Boolean isReadyToStart() {
+        return players
+            .stream()
+            .filter(player -> player.getWorkers() != null)
+            .count() == numberOfPlayers;
     }
 }
 

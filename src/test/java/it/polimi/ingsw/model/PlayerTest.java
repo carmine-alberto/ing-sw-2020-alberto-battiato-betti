@@ -21,13 +21,13 @@ class PlayerTest {
     @BeforeEach
     void setUp() {
         try {
-            game.addPlayer(first);
+            game.addPlayer(first.getNickname(), null);
             first.setCurrentGame(game);
 
-            game.addPlayer(second);
+            game.addPlayer(second.getNickname(), null);
             second.setCurrentGame(game);
 
-            game.addPlayer(third);
+            game.addPlayer(third.getNickname(), null);
             third.setCurrentGame(game);
             firstOpponents.add(second);
             firstOpponents.add(third);

@@ -2,10 +2,9 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.GodSelectionEvent;
-import it.polimi.ingsw.controller.events.SelectedGodsEvent;
-import it.polimi.ingsw.cview.serverView.*;
+import it.polimi.ingsw.view.serverView.*;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.List;
 
@@ -14,67 +13,60 @@ import static it.polimi.ingsw.GameSettings.SECOND_PLAYER_INDEX;
 
 public class GodPowerController extends ControllerState {
     private Integer choosingPlayerIndex;
+    private static final Integer GODPOWER_LEFT_INDEX = 0;
 
     @Override
     public void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
-
-    public GodPowerController(Controller mainController) {
-        super(mainController);
-        choosingPlayerIndex = SECOND_PLAYER_INDEX; //The player selecting the first godPower is always the second to join the game
-        notifySelectedGods(mainController.getCurrentGame().getPlayers().get(choosingPlayerIndex));
+    public GodPowerController(Controller mainController, Game currentGame) {
+        super(mainController, currentGame);
+        choosingPlayerIndex = SECOND_PLAYER_INDEX;
+        //The player selecting the first godPower is always the second to join the game
     }
 
-    private void notifySelectedGods(Player playerToBeNotified) {
-        playerToBeNotified
-                .getPlayerView()
-                .sendToClient(new SelectedGodsEvent(mainController
-                        .getCurrentGame()
-                        .getGodPowers()
-                )); //This may be moved into the model: the game changes (god powers are added) and a notification is sent - Downsides: what if the gods are set before other clients are connected?
-    }
+    public void handle(GodSelectionEvent event, VirtualView senderView) {
+        String choosingPlayerName = currentGame.getNthPlayer(choosingPlayerIndex);
 
+        if (senderView.getOwnerName().equals(choosingPlayerName))
+            try {
+                List<String> godPowersList = currentGame.getGodPowers();
 
-    public void handle(GodSelectionEvent event) {
-        Game currentGame = mainController.getCurrentGame();
-        List<String> godPowersList = currentGame.getGodPowers();
-        Player choosingPlayer = currentGame.getPlayers().get(choosingPlayerIndex);
+                currentGame.assignSelectedGodPowerToPlayer(event.selectedGod, choosingPlayerName);
+                currentGame.removeGodPowerFromAvailableGods(event.selectedGod);
+                godPowersList.remove(event.selectedGod);    //Looks redundant? Necessary for the below code to work (if condition evaluates to true)
 
-        if (godPowersList.contains(event.selectedGod)) {
-            currentGame.assignSelectedGodPowerToPlayer(event.selectedGod, choosingPlayer);
-            currentGame.removeGodPowerFromAvailableGods(event.selectedGod);
-            godPowersList.remove(event.selectedGod);    //Looks redundant? Necessary for the below code to work (if condition evaluates to true)
-            choosingPlayer.getPlayerView().changeView(new VirtualWaitingViewState());
-            choosingPlayerIndex++;
-            if (choosingPlayerIndex % currentGame.NUM_OF_PLAYERS == 0) {
-                currentGame.assignSelectedGodPowerToPlayer(godPowersList.get(FIRST_PLAYER_INDEX), currentGame.getPlayers().get(FIRST_PLAYER_INDEX));
-                currentGame.removeGodPowerFromAvailableGods(godPowersList.get(FIRST_PLAYER_INDEX));
-                moveToNextState();
-            } else {
-                choosingPlayer = currentGame.getPlayers().get(choosingPlayerIndex);
-                choosingPlayer.getPlayerView().changeView(new VirtualGodPowerViewState());
-                notifySelectedGods(currentGame.getPlayers().get(choosingPlayerIndex));
+                senderView.changeViewState(new VirtualWaitingViewState(senderView));
+                choosingPlayerIndex++;
+
+                if (onlyOneGodPowerLeft(godPowersList)) {
+                    currentGame.assignSelectedGodPowerToPlayer(godPowersList.get(GODPOWER_LEFT_INDEX), currentGame.getNthPlayer(FIRST_PLAYER_INDEX));
+                    currentGame.removeGodPowerFromAvailableGods(godPowersList.get(GODPOWER_LEFT_INDEX));
+                    moveToNextState();
+                } else {
+                    choosingPlayerName = currentGame.getNthPlayer(choosingPlayerIndex);
+                    controller.getViewByOwner(choosingPlayerName).changeViewState(new VirtualGodPowerViewState(controller.getViewByOwner(choosingPlayerName)));
+                }
+            } catch (InvalidSelectionException e) {
+                senderView.showMessage("Invalid selection, try again");
             }
-        } else
-            choosingPlayer.getPlayerView().showMessage("Invalid selection, try again");
+    }
 
+    private Boolean onlyOneGodPowerLeft(List<String> godPowersList) {
+        return godPowersList.size() == 1;
     }
 
     private void moveToNextState() {
-        Player turnPlayer = mainController.getCurrentGame().getTurnPlayer();
-
-        mainController
-                .getCurrentGame()
-                .getPlayers()
+        controller
+                .getViews()
                 .stream()
-                .filter(player -> !player.equals(turnPlayer))
-                .forEach(player -> player.getPlayerView().changeView(new VirtualWaitingViewState()));
+                .filter(view -> !view.getOwnerName().equals(currentGame.getTurnPlayerNickname()))
+                .forEach(view -> view.changeViewState(new VirtualWaitingViewState(view)));
 
-        turnPlayer
-                .getPlayerView()
-                .changeView(new VirtualWorkerSetupViewState(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
-        mainController.controllerState = new WorkerSetupController(mainController);
+        VirtualView turnPlayerView = controller.getViewByOwner(currentGame.getTurnPlayerNickname());
+        turnPlayerView.changeViewState(new VirtualWorkerSetupViewState(turnPlayerView));
+
+        controller.next(new WorkerSetupController(controller, currentGame));
     }
 }

@@ -1,9 +1,9 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.cview.ReceivedEvent;
-import it.polimi.ingsw.cview.ViewState;
-import it.polimi.ingsw.cview.clientView.LoginViewState;
-import it.polimi.ingsw.cview.clientViewCLI.TerminalEventHandler;
+import it.polimi.ingsw.view.ReceivedViewState;
+import it.polimi.ingsw.view.ViewState;
+import it.polimi.ingsw.view.clientView.LoginViewState;
+import it.polimi.ingsw.view.clientViewCLI.TerminalEventHandler;
 import it.polimi.ingsw.model.FieldCell;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -30,6 +30,7 @@ public class View extends Application {
     private LocalDateTime pingTimestamp;
     private Map<String, List<String>> playerInfos;
     private String myName;
+    private Boolean isGameOver;
     private static String rendererChoice;
 
 
@@ -46,14 +47,14 @@ public class View extends Application {
     @Override
     public void start(Stage stage) {
         Platform.setImplicitExit(false); //When the stage is closed, the thread keeps running in background - necessary to make the CLI work on the JavaFX thread
-        //TODO Handle manual termination of the GUI thread - it's not done at mainStage.close() when the above statement is applied.
         //stage.setFullScreen(true); TODO Should users be able to select it?
+        stage.setOnCloseRequest(event -> handleCloseRequest(stage));
         this.viewState = new LoginViewState(stage, clientSocket, this, null); //TODO Remove and move next to View
 
         Thread CLIListener = new Thread(new TerminalEventHandler(this));
         CLIListener.start();
 
-        this.viewState.next(ReceivedEvent.LOGIN_VIEW_STATE);
+        this.viewState.next(ReceivedViewState.LOGIN_VIEW_STATE);
 
     }
 
@@ -142,5 +143,21 @@ public class View extends Application {
 
     public void setAvailableGods(List<String> availableGods) {
         this.availableGods = availableGods;
+    }
+
+
+
+    private void handleCloseRequest(Stage stage) {
+        stage.close();
+        Platform.exit();
+        System.exit(0);
+    }
+
+    public Boolean isGameOver() {
+        return isGameOver;
+    }
+
+    public void setGameOver(Boolean gameOver) {
+        isGameOver = gameOver;
     }
 }

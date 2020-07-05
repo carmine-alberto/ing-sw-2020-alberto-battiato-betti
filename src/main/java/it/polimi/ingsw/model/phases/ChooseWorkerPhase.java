@@ -42,10 +42,10 @@ public class ChooseWorkerPhase extends TurnPhase {
 
 
     private GameWorker extractWorkerFromCoordinates(String coordinates) throws InvalidSelectionException {
-        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT, ONE));
+        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT_INDEX, ONE));
         Integer y = Integer.parseInt(coordinates.substring(TWO, THREE));
 
-        GameWorker extractedWorker = currentGame.getCell(x - CORRECTION, y - CORRECTION).getWorker();
+        GameWorker extractedWorker = currentGame.getCell(x - OFFSET, y - OFFSET).getWorker();
 
         if (extractedWorker == null)
             throw new InvalidSelectionException("The selected cell contains no worker. Try again!");

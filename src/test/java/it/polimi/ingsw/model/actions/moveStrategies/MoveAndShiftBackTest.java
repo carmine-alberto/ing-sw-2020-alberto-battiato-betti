@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,8 +25,12 @@ class MoveAndShiftBackTest {
         firstPlayer.setCurrentGame(game);
         secondPlayer = new Player("Palle" , null);
         secondPlayer.setCurrentGame(game);
-        game.assignSelectedGodPowerToPlayer("Minotaur", firstPlayer);
-        game.assignSelectedGodPowerToPlayer("Apollo" , secondPlayer);
+        try {
+            game.assignSelectedGodPowerToPlayer("Minotaur", firstPlayer.getNickname());
+            game.assignSelectedGodPowerToPlayer("Apollo" , secondPlayer.getNickname());
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
         firstWorker = new GameWorker(game, firstPlayer);
         secondWorker = new GameWorker(game , secondPlayer);
 

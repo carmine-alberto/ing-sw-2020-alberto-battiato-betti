@@ -3,20 +3,17 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.controller.events.BoardUpdate;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
-import it.polimi.ingsw.cview.serverView.VirtualBoardViewState;
-import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.cview.serverView.VirtualWorkerSetupViewState;
-import it.polimi.ingsw.model.GameWorker;
-import it.polimi.ingsw.model.Player;
-
-import java.util.ArrayList;
-import java.util.List;
+import it.polimi.ingsw.view.serverView.VirtualBoardViewState;
+import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.view.serverView.VirtualWorkerSetupViewState;
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 public class WorkerSetupController extends ControllerState {
 
-    public WorkerSetupController(Controller mainController) {
-        super(mainController);
-        mainController.getCurrentGame().getTurnPlayer().getPlayerView().sendToClient(new BoardUpdate(mainController.getCurrentGame().getField())); //TODO I know, I know, I'm cheating here
+    public WorkerSetupController(Controller mainController, Game currentGame) {
+        super(mainController, currentGame);
+        controller.getViewByOwner(currentGame.getTurnPlayerNickname()).sendToClient(new BoardUpdate(currentGame.getField()));
         promptTurnPlayer();
     }
 
@@ -26,48 +23,43 @@ public class WorkerSetupController extends ControllerState {
         event.visit(this, view);
     }
 
-    public void handle(WorkerSelectionEvent workerSelectionEvent, VirtualView view) {
-        Player turnPlayer = mainController.getCurrentGame().getTurnPlayer();
-        List<GameWorker> playerWorkers = new ArrayList<>(); //TODO Call Player builder
+    public void handle(WorkerSelectionEvent workerSelectionEvent, VirtualView senderView) {
+        String turnPlayerNickname = currentGame.getTurnPlayerNickname();
 
-        if (isTurnPlayer(view)) {
+        if (isTurnPlayer(senderView)) {
+            try {
+                currentGame.handleColorAndWorkerSelection(workerSelectionEvent.selectedColor,
+                        workerSelectionEvent.xCoordinates,
+                        workerSelectionEvent.yCoordinates);
 
-            turnPlayer.setColour(workerSelectionEvent.selectedColor); //TODO Check colour is not already selected
+                currentGame.setNextTurnPlayer();
+                turnPlayerNickname = currentGame.getTurnPlayerNickname();
 
-            for (Integer i = 0; i < 2; i++) {
-                playerWorkers.add(new GameWorker(mainController.getCurrentGame(), turnPlayer));
-                playerWorkers.get(i).setPosition(mainController.getCurrentGame().getCell(workerSelectionEvent.xCoordinates.get(i) - 1, //TODO Check bounds: exceptions or checks?
-                        workerSelectionEvent.yCoordinates.get(i) - 1));
-            }
-            turnPlayer.setWorkers(playerWorkers);
+                if (currentGame.isReadyToStart()) {
+                    moveToNextState();
+                } else {
+                    VirtualView turnPlayerView = controller.getViewByOwner(turnPlayerNickname);
 
-            mainController.getCurrentGame().setNextTurnPlayer();
-
-            turnPlayer = mainController.getCurrentGame().getTurnPlayer();
-
-            if (turnPlayer.getWorkers() != null) { //TODO Low-quality way to check whether the game is ready to be started, can/should we do better?
-                moveToNextState();
-            } else {
-                turnPlayer.getPlayerView().changeView(new VirtualWorkerSetupViewState(turnPlayer.getPlayerView(), mainController.getCurrentGame()));
-                turnPlayer.getPlayerView().sendToClient(new BoardUpdate(mainController.getCurrentGame().getField())); //TODO I know, I know, I'm cheating here
-                promptTurnPlayer();
+                    turnPlayerView.changeViewState(new VirtualWorkerSetupViewState(turnPlayerView));
+                    turnPlayerView.sendToClient(new BoardUpdate(currentGame.getField()));
+                    promptTurnPlayer();
+                }
+            } catch (InvalidSelectionException e) {
+                senderView.showMessage(e.getMessage());
             }
         } else
-            view.showMessage("It's not your turn!");
+            senderView.showMessage("It's not your turn!");
     }
 
     private void promptTurnPlayer() {
-        mainController
-                .getCurrentGame()
-                .getTurnPlayer()
-                .getPlayerView()
+        controller
+                .getViewByOwner(currentGame.getTurnPlayerNickname())
                 .showMessage("Select your colour and the workers' starting position");
     }
 
     private void moveToNextState() {
-        mainController.getCurrentGame().detachObservers();
-        mainController.getCurrentGame().getPlayers().forEach(player -> player.getPlayerView().changeView(new VirtualBoardViewState(player.getPlayerView(), mainController.getCurrentGame())));
-        mainController.controllerState = new GamePhasesController(mainController);
-        mainController.getCurrentGame().initGame();
+        controller.getViews().forEach(view -> view.changeViewState(new VirtualBoardViewState(view)));
+        controller.next(new GamePhasesController(controller, currentGame));
+        currentGame.initGame();
     }
 }

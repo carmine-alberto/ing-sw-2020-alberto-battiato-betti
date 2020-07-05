@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.phases;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,15 +21,19 @@ class EndPhaseTest {
         player = new Player("Giovanni", null);
         player.setCurrentGame(game);
         game.getPlayers().add(player);
-        game.assignSelectedGodPowerToPlayer("Apollo" , player);
         second = new Player("Paolo" , null);
         second.setCurrentGame(game);
         game.getPlayers().add(second);
-        game.assignSelectedGodPowerToPlayer("Artemis" , second);
         third = new Player("secondo" , null);
         third.setCurrentGame(game);
         game.getPlayers().add(third);
-        game.assignSelectedGodPowerToPlayer("Athena" , third);
+        try {
+            game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
+            game.assignSelectedGodPowerToPlayer("Artemis" , second.getNickname());
+            game.assignSelectedGodPowerToPlayer("Athena" , third.getNickname());
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
 
         worker = new GameWorker(game , player);
 

@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +28,11 @@ class DisplacePredicateTest {
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Zio" , null);
         player.setCurrentGame(game);
-        game.assignSelectedGodPowerToPlayer("Charon" , player);
+        try {
+            game.assignSelectedGodPowerToPlayer("Charon" , player.getNickname());
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
         worker = new GameWorker(game , player);
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)
@@ -37,7 +42,11 @@ class DisplacePredicateTest {
         board[0][0].setOccupyingWorker(worker);
         secondPlayer = new Player("lol" , null);
         secondPlayer.setCurrentGame(game);
-        game.assignSelectedGodPowerToPlayer("Artemis", secondPlayer);
+        try {
+            game.assignSelectedGodPowerToPlayer("Artemis", secondPlayer.getNickname());
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
         secondWorker = new GameWorker(game , secondPlayer);
         cellToTest = board[1][1];
         secondWorker.setPosition(cellToTest);

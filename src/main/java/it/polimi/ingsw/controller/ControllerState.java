@@ -1,15 +1,19 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.events.ClientDisconnectedEvent;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.PingEvent;
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.model.Game;
 
 
 public abstract class ControllerState {
-    protected Controller mainController;
+    protected Controller controller;
+    protected Game currentGame;
 
-    public ControllerState(Controller mainController) {
-        this.mainController = mainController;
+    public ControllerState(Controller mainController, Game currentGame) {
+        this.controller = mainController;
+        this.currentGame = currentGame;
     }
 
     /**
@@ -20,11 +24,15 @@ public abstract class ControllerState {
      */
     public abstract void handle(Event event, VirtualView view);
 
-    protected Boolean isTurnPlayer(VirtualView view) {
-        return mainController.getCurrentGame().getTurnPlayer().getPlayerView().equals(view);
+    public void handle(ClientDisconnectedEvent event, VirtualView view) {
+        controller.handleViewDisconnection(view);
     }
 
     public void handle(PingEvent event, VirtualView view) {
         view.resetTimerFlag();
+    }
+
+    protected Boolean isTurnPlayer(VirtualView view) {
+        return currentGame.isTurnPlayer(view.getOwnerName());
     }
 }

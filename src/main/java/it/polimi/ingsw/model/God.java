@@ -56,9 +56,9 @@ public class God implements Serializable {
         try {
             String nextPhase = currentPhaseNode.getPhase();
             BiPredicate phasePredicate = currentPhaseNode.getPhasePredicate(); // TODO fix
-            // l'idea è, di usare, per le fasi standard, i predicati presenti nel god, facendo un controllo sul phasePredicate. se è diverso da null va usato quest'ultimo
-            TurnPhase newPhase = (TurnPhase) Class.forName("it.polimi.ingsw.model.phases." + nextPhase)
-                    .getConstructors()[FIRST_ELEMENT]
+
+            TurnPhase newPhase = (TurnPhase) Class.forName(TurnPhase.class.getPackageName() + PACKAGE_SEPARATOR + nextPhase)
+                    .getConstructors()[FIRST_ELEMENT_INDEX]
                     .newInstance(currentGame, phasePredicate);
 
             return newPhase;
@@ -87,7 +87,7 @@ public class God implements Serializable {
                     .get();
         }
         else if (currentPhaseNode.getChildren().size() == ONE)
-            currentPhaseNode =  currentPhaseNode.getChildren().get(FIRST_ELEMENT);
+            currentPhaseNode =  currentPhaseNode.getChildren().get(FIRST_ELEMENT_INDEX);
         else { //Leaf Node - we are in the EndPhase
 
             reset(); //The next phase will be the root of the tree - ugly way to manage a de-facto graph
@@ -336,7 +336,7 @@ public class God implements Serializable {
             if(tempGod.phasesTree.getChildren().size() == EMPTY)
                 setBasePhases();
             //We're assuming it's the only one, since every turn starts with WorkerSelection
-            tempGod.phasesTree = tempGod.phasesTree.getChildren().get(FIRST_ELEMENT);   //Root is null, set the first child as new root.
+            tempGod.phasesTree = tempGod.phasesTree.getChildren().get(FIRST_ELEMENT_INDEX);   //Root is null, set the first child as new root.
             tempGod.currentPhaseNode = tempGod.phasesTree;
 
 

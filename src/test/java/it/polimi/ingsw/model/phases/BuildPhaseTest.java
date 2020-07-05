@@ -28,11 +28,19 @@ class BuildPhaseTest {
         player = new Player("Gianpiero", null);
         player.setCurrentGame(game);
         game.getPlayers().add(player);
-        game.assignSelectedGodPowerToPlayer("Apollo" , player);
+        try {
+            game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
+        } catch (InvalidSelectionException invalidSelectionException) {
+            invalidSelectionException.printStackTrace();
+        }
         second = new Player("Angela" , null);
         second.setCurrentGame(game);
         game.getPlayers().add(second);
-        game.assignSelectedGodPowerToPlayer("Artemis" , second);
+        try {
+            game.assignSelectedGodPowerToPlayer("Artemis" , second.getNickname());
+        } catch (InvalidSelectionException invalidSelectionException) {
+            invalidSelectionException.printStackTrace();
+        }
         worker = new GameWorker(game, player);
         workers = new ArrayList<>();
         workers.add(worker);
@@ -40,7 +48,11 @@ class BuildPhaseTest {
         third = new Player("Gioele" , null);
         third.setCurrentGame(game);
         game.getPlayers().add(third);
-        game.assignSelectedGodPowerToPlayer("Athena" , third);
+        try {
+            game.assignSelectedGodPowerToPlayer("Athena" , third.getNickname());
+        } catch (InvalidSelectionException invalidSelectionException) {
+            invalidSelectionException.printStackTrace();
+        }
 
         game.setTurnPlayer(player);
         worker.setPosition(game.getCell(1 , 1));

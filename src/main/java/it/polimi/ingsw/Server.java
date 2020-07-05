@@ -1,34 +1,43 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.model.Game;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static it.polimi.ingsw.GameSettings.*;
 
 public class Server {
-    static List<Game> games;
-    static Game lastGame;
-    static Controller controller;
-    static ServerSocket serverSocket;
-    static ExecutorService executor;
-    public static Boolean acceptNextPlayer;
-
+    private Game currentGame;
+    private Controller controller;
+    private ServerSocket serverSocket;
+    private ExecutorService executorThreadPool;
 
     public static void main(String[] args){
-        games = new ArrayList<>();
-        games.add(new Game());
-        controller = new Controller(games.get(FIRST_ELEMENT));
-        startServer(PORT_NUMBER);
-        listenToNewGameConnections();
+        Server gameServer = new Server();
+        gameServer.currentGame  = new Game();
+        gameServer.controller = new Controller(gameServer.currentGame);
+
+        try {
+            gameServer.start(PORT_NUMBER);
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        try {
+            gameServer.listenToNewGameConnections();
+        } catch (IOException e) {
+            gameServer.executorThreadPool.shutdown();
+            System.out.println(e.getMessage());
+        }
+
     }
 
     /**
@@ -36,33 +45,23 @@ public class Server {
      *
      * @param port the port you want the server to work on
      */
-    public static void startServer(int port) {
-        executor = Executors.newCachedThreadPool();
+    private void start(int port) throws IOException {
+        executorThreadPool = Executors.newCachedThreadPool();
 
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            System.err.println(e.getMessage()); // Port not available
-            return;
-        }
+        serverSocket = new ServerSocket(port);
     }
 
     /**
      * This function is used to set the server waiting for connections
      */
-    private static void listenToNewGameConnections() {
-        lastGame = games.get(games.size() - CORRECTION);
+    private void listenToNewGameConnections() throws IOException {
         while (true) {
-            try {
-                System.out.println("Server ready, players: " + lastGame.getPlayers().size() + " of " + lastGame.NUM_OF_PLAYERS);
+                System.out.println("Server listening...");
                 Socket socket = serverSocket.accept();
-                executor.submit(new VirtualView(socket, controller));
+                VirtualView connectedView = new VirtualView(socket, controller);
 
-            } catch (IOException e) {
-                break; // Entrerei qui se serverSocket venisse chiuso
-            }
+                executorThreadPool.submit(connectedView);
         }
-        executor.shutdown();
     }
 }
 

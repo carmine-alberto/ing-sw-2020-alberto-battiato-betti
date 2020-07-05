@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,11 @@ class NotOnPerimeterPredicateTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Zio" , null);
-        game.assignSelectedGodPowerToPlayer("Hestia" , player);
+        try {
+            game.assignSelectedGodPowerToPlayer("Hestia" , player.getNickname());
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
         worker = new GameWorker(game , player);
         for (Integer i = 0; i < FIELD_SIZE; i++)
             for (Integer j = 0; j < FIELD_SIZE; j++)

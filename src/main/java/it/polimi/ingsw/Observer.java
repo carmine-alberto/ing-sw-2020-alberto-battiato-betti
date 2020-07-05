@@ -7,6 +7,8 @@ public interface Observer<T> {
      *
      * @param message the observer is notified with
      */
-    void update(T message);
+    default void update(T message) { throw new UnsupportedOperationException("Operation not available"); };
+
+    default <V> void  update(T message, V source) { throw new UnsupportedOperationException("Operation not available");};
 
 }

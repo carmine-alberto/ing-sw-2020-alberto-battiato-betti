@@ -70,8 +70,8 @@ class CanBuildUnderItselfPredicateTest {
 
         for (int i = 0;  i < names.size(); i++) {
             players.add(new Player(names.get(i) , null));
-            game.addPlayer(players.get(i));
-            game.assignSelectedGodPowerToPlayer(powers.get(i) , players.get(i));
+            game.addPlayer(players.get(i).getNickname() , null);
+            game.assignSelectedGodPowerToPlayer(powers.get(i) , players.get(i).getNickname());
         }
     }
 

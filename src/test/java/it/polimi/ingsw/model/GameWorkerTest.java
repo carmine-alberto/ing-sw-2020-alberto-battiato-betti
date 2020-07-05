@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,11 @@ class GameWorkerTest {
     void setUp() {
         myGame = new Game();
         myPlayer = new Player("Franco" , null);
-        myGame.assignSelectedGodPowerToPlayer("Apollo" , myPlayer);
+        try {
+            myGame.assignSelectedGodPowerToPlayer("Apollo" , myPlayer.getNickname());
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
         notOnPerimeterGameWorker = new GameWorker(myGame, myPlayer);
         notOnPerimeterGameWorker.setPosition(myGame.getCell(2, 3));
         onPerimeterGameWorker = new GameWorker(myGame, myPlayer);

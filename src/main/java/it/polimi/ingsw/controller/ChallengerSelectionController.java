@@ -1,77 +1,70 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.*;
-import it.polimi.ingsw.cview.serverView.VirtualGodPowerViewState;
+import it.polimi.ingsw.view.serverView.VirtualGodPowerViewState;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.cview.serverView.VirtualView;
-import it.polimi.ingsw.cview.serverView.VirtualWaitingViewState;
+import it.polimi.ingsw.view.serverView.VirtualView;
+import it.polimi.ingsw.view.serverView.VirtualWaitingViewState;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
-
-import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.GameSettings.*;
 
 public class ChallengerSelectionController extends ControllerState {
-    public ChallengerSelectionController(Controller mainController) {
-        super(mainController);
-        notifyAvailableGods(mainController.getCurrentGame().getPlayers().get(0));
+
+    public ChallengerSelectionController(Controller mainController, Game currentGame) {
+        super(mainController, currentGame);
     }
 
     @Override
-    public synchronized void handle(Event event, VirtualView view) {
+    public void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
     public void handle(LoginEvent loginEvent, VirtualView senderView) {
-        Game currentGame = mainController.getCurrentGame();
-        Player newPlayer;
-
         try {
-            if (currentGame.NUM_OF_PLAYERS == -1 && currentGame.getPlayers().size() < TWO  || currentGame.getPlayers().size() < currentGame.NUM_OF_PLAYERS) { //If the challenger has not chosen yet
-                newPlayer = new Player(loginEvent.playerUsername, senderView);
-                currentGame.addPlayer(newPlayer);
-                newPlayer.getPlayerView().changeView(new VirtualWaitingViewState());
-            } else {
-                senderView.showMessage("Challenger not ready! Try again later");
-                senderView.terminate();
+            if (!currentGame.isChallenger(senderView.getOwnerName())) {
+                if (currentGame.hasFreeSlots()) {
+                    currentGame.addPlayer(loginEvent.playerUsername, senderView);
+                    currentGame.addObserver(senderView);
+                    controller.handleConnectedView(senderView);
+
+                    senderView.changeViewState(new VirtualWaitingViewState(senderView));
+                } else {
+                    senderView.showMessage("Challenger not ready! Try again later");
+                    senderView.terminate();
+                }
+
+                if (currentGame.haveAllPlayersConnected()) {
+                    moveToNextState(currentGame);
+                }
             }
-            if (currentGame.getPlayers().size() == currentGame.NUM_OF_PLAYERS)
-                moveToNextState(currentGame);
         } catch (InvalidSelectionException e) {
             senderView.showMessage(e.getMessage());
         }
-
-        System.out.println(mainController.getCurrentGame().getPlayers().stream().map(player -> player.getNickname()).collect(Collectors.toList()));
-
     }
 
-    public void handle(ChallengerSelectionEvent event, VirtualView senderView) { //TODO Check legality of choices
-        mainController.getCurrentGame().setCurrentPlayerIndex(event.selectedStartingPlayerIndex - CORRECTION);
-        mainController.getCurrentGame().NUM_OF_PLAYERS = event.selectedNumberOfPlayers;
-        mainController.getCurrentGame().setGodPowers(event.selectedGods);
+    public void handle(ChallengerSelectionEvent event, VirtualView senderView) {
+        try {
+            if (currentGame.isChallenger(senderView.getOwnerName())) {
+                currentGame.registerChallengerSelection(event.selectedStartingPlayerIndex,
+                        event.selectedNumberOfPlayers,
+                        event.selectedGods);
 
-        mainController.getCurrentGame().getPlayers().get(FIRST_PLAYER_INDEX).getPlayerView().changeView(new VirtualWaitingViewState());
+                senderView.changeViewState(new VirtualWaitingViewState(senderView));
 
-        if (mainController.getCurrentGame().getPlayers().size() == mainController.getCurrentGame().NUM_OF_PLAYERS) {
-            moveToNextState(mainController.getCurrentGame());
+                if (currentGame.haveAllPlayersConnected())
+                    moveToNextState(currentGame);
+            }
+        } catch (InvalidSelectionException e) {
+            senderView.showMessage(e.getMessage());
         }
-
     }
+
 
     private void moveToNextState(Game currentGame) {
-        currentGame.getPlayers().get(FIRST_PLAYER_INDEX).getPlayerView().changeView(new VirtualWaitingViewState());
-        currentGame.getPlayers().get(SECOND_PLAYER_INDEX).getPlayerView().changeView(new VirtualGodPowerViewState());
-        mainController.controllerState = new GodPowerController(mainController);
+        VirtualView nthPlayerView = controller.getViewByOwner(currentGame.getNthPlayer(SECOND_PLAYER_INDEX));
+        nthPlayerView.changeViewState(new VirtualGodPowerViewState(nthPlayerView));
+        controller.next(new GodPowerController(controller, currentGame));
     }
 
-    private void notifyAvailableGods(Player playerToBeNotified) {
-        playerToBeNotified
-                .getPlayerView()
-                .sendToClient(new AvailableGodsEvent(mainController
-                        .getCurrentGame()
-                        .getGodPowers()
-                        .stream()
-                        .collect(Collectors.toList()))); //This may be moved into the model: the game changes (god powers are added) and a notification is sent - Downsides: what if the gods are set before other clients are connected?
-    }
 }

@@ -2,37 +2,29 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.UserInputEvent;
-import it.polimi.ingsw.controller.events.WorkerSelectionEvent;
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.exceptions.IllegalFormatException;
 
 public class GamePhasesController extends ControllerState {
-    Player turnPlayer;
-    Game currentGame;
 
-    public GamePhasesController(Controller mainController) {
-        super(mainController);
-        currentGame = mainController.getCurrentGame();
+    public GamePhasesController(Controller mainController, Game currentGame) {
+        super(mainController, currentGame);
     }
 
     @Override
-    public synchronized void handle(Event event, VirtualView view) {
+    public void handle(Event event, VirtualView view) {
         event.visit(this, view);
     }
 
-    public void handle(UserInputEvent event, VirtualView view) {
+    public void handle(UserInputEvent event, VirtualView senderView) {
         try {
-            turnPlayer = currentGame.getTurnPlayer();
-
-            if (isTurnPlayer(view))
+            if (isTurnPlayer(senderView))
                 currentGame.runPhase(event.inputString);
             else
-                view.showMessage("It's not your turn!");
+                senderView.showMessage("It's not your turn!");
         } catch (Exception e) {
-            turnPlayer.getPlayerView().showMessage(e.getMessage());
+            senderView.showMessage(e.getMessage());
         }
 
     }

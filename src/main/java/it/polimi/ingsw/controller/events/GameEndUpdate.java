@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.events;
 
-import it.polimi.ingsw.cview.ViewEventHandler;
+import it.polimi.ingsw.view.ViewEventHandler;
 
 public class GameEndUpdate implements Event {
     public String winnerNickname;

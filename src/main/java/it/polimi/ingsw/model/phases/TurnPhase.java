@@ -15,6 +15,7 @@ import static it.polimi.ingsw.GameSettings.*;
 
 
 public abstract class TurnPhase {
+    private static final Integer OFFSET = 1;
     protected Game currentGame;
     protected Player turnPlayer;
     protected BiPredicate phasePredicate;
@@ -114,10 +115,10 @@ public abstract class TurnPhase {
      * @throws InvalidSelectionException if the selection is out of bound
      */
     protected FieldCell extractCellFromCoordinates(String coordinates) throws InvalidSelectionException {
-        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT, ONE));
+        Integer x = Integer.parseInt(coordinates.substring(FIRST_ELEMENT_INDEX, ONE));
         Integer y = Integer.parseInt(coordinates.substring(TWO, THREE));
 
-        return currentGame.getCell(x - CORRECTION, y - CORRECTION);
+        return currentGame.getCell(x - OFFSET, y - OFFSET);
 
     }
 

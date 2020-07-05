@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT;
+import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT_INDEX;
 import static it.polimi.ingsw.GameSettings.ONE;
 
 public class ChooseActionPhase extends TurnPhase {
@@ -39,7 +39,7 @@ public class ChooseActionPhase extends TurnPhase {
         }
         else
             try {
-                currentGame.runPhase(availableActions.get(FIRST_ELEMENT).toString());
+                currentGame.runPhase(availableActions.get(FIRST_ELEMENT_INDEX).toString());
             } catch (Exception e) {
                 //Never thrown since the passed string is well-formatted
             }

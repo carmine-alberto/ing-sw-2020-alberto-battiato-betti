@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.events;
 
-import it.polimi.ingsw.cview.ViewEventHandler;
+import it.polimi.ingsw.view.ViewEventHandler;
 
 public class PlayerLostUpdate implements Event {
     public String losingPlayerNickname;

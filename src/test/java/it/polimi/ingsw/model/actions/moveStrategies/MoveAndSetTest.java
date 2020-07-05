@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.FieldCell;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameWorker;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,11 @@ class MoveAndSetTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         firstPlayer = new Player("Grande", null);
-        game.assignSelectedGodPowerToPlayer("Athena", firstPlayer);
+        try {
+            game.assignSelectedGodPowerToPlayer("Athena", firstPlayer.getNickname());
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
         firstWorker = new GameWorker(game, firstPlayer);
 
         for (Integer i = 0; i < FIELD_SIZE; i++)

@@ -2,16 +2,14 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.controller.events.LoginEvent;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.cview.serverView.VirtualChallengerSelectionViewState;
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.view.serverView.VirtualChallengerSelectionViewState;
+import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
-import java.util.stream.Collectors;
-
 public class LoginController extends ControllerState {
-    public LoginController(Controller mainController) {
-        super(mainController);
+    public LoginController(Controller mainController, Game currentGame) {
+        super(mainController, currentGame);
     }
 
     @Override
@@ -20,14 +18,15 @@ public class LoginController extends ControllerState {
     }
 
     public void handle(LoginEvent loginEvent, VirtualView senderView) {
-        Player newPlayer = new Player(loginEvent.playerUsername, senderView);
-
         try {
-            mainController.getCurrentGame().addPlayer(newPlayer);
-            newPlayer.getPlayerView().changeView(new VirtualChallengerSelectionViewState());
-            mainController.controllerState = new ChallengerSelectionController(mainController);
+            currentGame.addPlayer(loginEvent.playerUsername, senderView);
+            currentGame.addObserver(senderView);
+            controller.handleConnectedView(senderView);
 
-            System.out.println(mainController.getCurrentGame().getPlayers().stream().map(player -> player.getNickname()).collect(Collectors.toList())); //TODO Remove random print
+            currentGame.initGods();
+            senderView.changeViewState(new VirtualChallengerSelectionViewState(senderView));
+
+            controller.next(new ChallengerSelectionController(controller, currentGame));
         } catch (InvalidSelectionException e) {
             //This catch will never be run: the first player launching the client can't choose an already-existing name
         }

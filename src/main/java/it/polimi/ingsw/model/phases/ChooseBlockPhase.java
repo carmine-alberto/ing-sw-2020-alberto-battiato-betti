@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT_INDEX;
+
 public class ChooseBlockPhase extends TurnPhase {
     private List<Constructible> availableBlocks;
 
@@ -33,13 +35,13 @@ public class ChooseBlockPhase extends TurnPhase {
                 .collect(Collectors.toList());
 
         if (availableBlocks.size() > 1) {
-            currentGame.notifyTurnPlayer(new PhaseUpdate("Select the constructible to build"));  //TODO Fix overlapping windows
+            //currentGame.notifyTurnPlayer(new PhaseUpdate("Select the constructible to build"));  //TODO Fix overlapping windows
 
             currentGame.notifyTurnPlayer(new AvailableChoicesUpdate(stringify(availableBlocks)));
         }
         else
             try {
-                currentGame.runPhase(availableBlocks.get(0).toString());
+                currentGame.runPhase(availableBlocks.get(FIRST_ELEMENT_INDEX).toString());
             } catch (Exception e) {
                 //Never thrown since the passed string is well-formatted
             }

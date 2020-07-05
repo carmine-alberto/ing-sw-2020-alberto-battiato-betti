@@ -28,15 +28,19 @@ class DisplacePhaseTest {
         player = new Player("Giovanni", null);
         player.setCurrentGame(game);
         game.getPlayers().add(player);
-        game.assignSelectedGodPowerToPlayer("Apollo" , player);
         second = new Player("Paolo" , null);
         second.setCurrentGame(game);
         game.getPlayers().add(second);
-        game.assignSelectedGodPowerToPlayer("Artemis" , second);
         third = new Player("secondo" , null);
         third.setCurrentGame(game);
         game.getPlayers().add(third);
-        game.assignSelectedGodPowerToPlayer("Athena" , third);
+        try {
+            game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
+            game.assignSelectedGodPowerToPlayer("Artemis" , second.getNickname());
+            game.assignSelectedGodPowerToPlayer("Athena" , third.getNickname());
+        } catch (InvalidSelectionException invalidSelectionException) {
+            invalidSelectionException.printStackTrace();
+        }
 
         firstWorker = new GameWorker(game, player);
         workers = new ArrayList<>();

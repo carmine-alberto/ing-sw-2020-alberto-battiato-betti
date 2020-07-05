@@ -1,8 +1,8 @@
 package it.polimi.ingsw.controller.events;
 
 import it.polimi.ingsw.controller.*;
-import it.polimi.ingsw.cview.ViewEventHandler;
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.view.ViewEventHandler;
+import it.polimi.ingsw.view.serverView.VirtualView;
 
 import java.io.Serializable;
 

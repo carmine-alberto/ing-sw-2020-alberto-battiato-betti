@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.cview.serverView.VirtualView;
+import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
 import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
 
@@ -13,22 +13,24 @@ public class Player implements Serializable {
     private String nickname;
     private String colour;
     private Boolean isWinner;
+
+    private Boolean isChallenger;
+
     private transient Game currentGame;
     private transient VirtualView playerView;
     private List<GameWorker> workers;
-    private String selectedGodPower; //TODO Refactor into proper type
     private God selectedGod;
-
     private transient PlayerState playerState;
 
     //Predicates
-    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
 
+    private transient BiPredicate<Game, GameWorker> winConditions = new WinningMovePredicate().and(new IsTurnPlayerPredicate());
     public Player(String nickname, VirtualView playerView) {
         this.nickname = nickname;
         this.playerView = playerView;
         this.playerState = new PlayerState(this);
         this.isWinner = false;
+        this.isChallenger = false;
     }
 
     public BiPredicate<Game, GameWorker> getWinConditions() {
@@ -71,6 +73,14 @@ public class Player implements Serializable {
         return currentGame;
     }
 
+    public Boolean isChallenger() {
+        return isChallenger;
+    }
+
+    public void setChallenger(Boolean isChallenger) {
+        this.isChallenger = isChallenger;
+    }
+
     public void setCurrentGame(Game currentGame) {
         this.currentGame = currentGame;
     }
@@ -83,10 +93,6 @@ public class Player implements Serializable {
         return currentGame.getPlayers().stream()
                 .filter(player -> !player.equals(this))
                 .collect(Collectors.toList());
-    }
-
-    public String getSelectedGodPower() {
-        return selectedGodPower;
     }
 
     public PlayerState getPlayerState() {

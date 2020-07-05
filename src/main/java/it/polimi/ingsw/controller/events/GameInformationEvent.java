@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.events;
 
-import it.polimi.ingsw.cview.ViewEventHandler;
+import it.polimi.ingsw.view.ViewEventHandler;
 import it.polimi.ingsw.model.Player;
 
 import java.util.ArrayList;
