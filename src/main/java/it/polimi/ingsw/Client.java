@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.view.View;
 
-import static it.polimi.ingsw.GameSettings.*;
+import static it.polimi.ingsw.utility.GameSettings.*;
 
 /**
  * App entrypoint: this is the first class to be run in order to launch the client.

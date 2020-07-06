@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.function.BiPredicate;
 
-import static it.polimi.ingsw.GameSettings.*;
+import static it.polimi.ingsw.utility.GameSettings.*;
 
 
 public class ChooseWorkerPhase extends TurnPhase {

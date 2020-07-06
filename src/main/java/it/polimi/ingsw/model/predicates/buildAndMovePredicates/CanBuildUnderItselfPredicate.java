@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
-import static it.polimi.ingsw.GameSettings.Y_STARTING_POSITION;
+import static it.polimi.ingsw.utility.GameSettings.Y_STARTING_POSITION;
 
 public class CanBuildUnderItselfPredicate implements BiPredicate<FieldCell, GameWorker> {
 

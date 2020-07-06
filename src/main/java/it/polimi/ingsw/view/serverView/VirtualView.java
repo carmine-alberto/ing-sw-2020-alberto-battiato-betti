@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.serverView;
 
-import it.polimi.ingsw.Observable;
-import it.polimi.ingsw.Observer;
+import it.polimi.ingsw.utility.Observable;
+import it.polimi.ingsw.utility.Observer;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.controller.events.*;
 
@@ -10,8 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import static it.polimi.ingsw.GameSettings.GRANULARITY;
-import static it.polimi.ingsw.GameSettings.TIMEOUT;
+import static it.polimi.ingsw.utility.GameSettings.GRANULARITY;
+import static it.polimi.ingsw.utility.GameSettings.TIMEOUT;
 
 public class VirtualView extends Observable<Event> implements Runnable, Observer<Event> {
         private Socket socket;

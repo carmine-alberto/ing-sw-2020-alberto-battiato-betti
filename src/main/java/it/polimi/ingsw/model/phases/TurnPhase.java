@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.*;
+import static it.polimi.ingsw.utility.GameSettings.*;
 
 
 public abstract class TurnPhase {

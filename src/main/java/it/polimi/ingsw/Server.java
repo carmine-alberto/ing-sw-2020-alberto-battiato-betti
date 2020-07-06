@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static it.polimi.ingsw.GameSettings.*;
+import static it.polimi.ingsw.utility.GameSettings.*;
 
 /**
  * Server entrypoint: this is the first class to be run when the server is launched.

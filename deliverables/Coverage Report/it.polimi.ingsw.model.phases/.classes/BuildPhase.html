@@ -1,0 +1,152 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BuildPhase</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.phases</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BuildPhase (it.polimi.ingsw.model.phases)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BuildPhase</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (26/ 26)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.phases;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.events.AvailableCellsUpdate;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.events.PhaseUpdate;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.FieldCell;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.Game;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.exceptions.IllegalFormatException;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.util.ArrayList;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;import java.util.function.BiPredicate;
+<i>13</i>&nbsp;import java.util.stream.Collectors;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;public class BuildPhase extends TurnPhase {
+<b class="fc"><i>16</i>&nbsp;    private List&lt;FieldCell&gt; availableCells = new ArrayList&lt;&gt;();</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    public BuildPhase(Game currentGame, BiPredicate phasePredicate) {
+<b class="fc"><i>19</i>&nbsp;        super(currentGame, phasePredicate, &quot;buildPredicate&quot;);</b>
+<b class="fc"><i>20</i>&nbsp;    }</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     * Calculates the available cells and removes the turnPlayer from the game if no legal cells exist
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    @Override
+<i>26</i>&nbsp;    public void stateInit() {
+<i>27</i>&nbsp;
+<b class="fc"><i>28</i>&nbsp;        List&lt;FieldCell&gt; adjacentCellsPlusSelf = turnPlayer</b>
+<b class="fc"><i>29</i>&nbsp;                .getPlayerState()</b>
+<b class="fc"><i>30</i>&nbsp;                .getSelectedWorker()</b>
+<b class="fc"><i>31</i>&nbsp;                .getCell()</b>
+<b class="fc"><i>32</i>&nbsp;                .getAdjacentCells();</b>
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;        adjacentCellsPlusSelf.add(turnPlayer.getPlayerState().getSelectedWorker().getCell());  //Passing adjacent cells + the cell I&#39;m on, for Zeus</b>
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;        availableCells = adjacentCellsPlusSelf</b>
+<b class="fc"><i>37</i>&nbsp;                .stream()</b>
+<b class="fc"><i>38</i>&nbsp;                .filter(adjacentCell -&gt;</b>
+<b class="fc"><i>39</i>&nbsp;                        phasePredicate</b>
+<b class="fc"><i>40</i>&nbsp;                        .test(adjacentCell, turnPlayer.getPlayerState().getSelectedWorker())</b>
+<i>41</i>&nbsp;                )
+<b class="fc"><i>42</i>&nbsp;                .collect(Collectors.toList());</b>
+<i>43</i>&nbsp;
+<b class="fc"><i>44</i>&nbsp;        if (availableCells.isEmpty())</b>
+<b class="fc"><i>45</i>&nbsp;            removeTurnPlayerFromGame();</b>
+<i>46</i>&nbsp;        else {
+<b class="fc"><i>47</i>&nbsp;            currentGame.notifyTurnPlayer(new PhaseUpdate(&quot;Select the cell where you want to build&quot;));</b>
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;            currentGame.notifyTurnPlayer(new AvailableCellsUpdate(availableCells));</b>
+<i>50</i>&nbsp;        }
+<b class="fc"><i>51</i>&nbsp;    }</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    /**
+<i>54</i>&nbsp;     * Sets the player&#39;s selected cell
+<i>55</i>&nbsp;     *
+<i>56</i>&nbsp;     * @param arg Selected cell coordinates
+<i>57</i>&nbsp;     * @throws IllegalFormatException If the string format does not fit the required one
+<i>58</i>&nbsp;     * @throws InvalidSelectionException If the selected cell is not among the available cells
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    @Override
+<i>61</i>&nbsp;    public void run(String arg) throws IllegalFormatException, InvalidSelectionException {
+<b class="fc"><i>62</i>&nbsp;        parseCoordinatesArg(arg);</b>
+<i>63</i>&nbsp;
+<b class="fc"><i>64</i>&nbsp;        FieldCell selectedCell = extractCellFromCoordinates(arg);</b>
+<b class="fc"><i>65</i>&nbsp;        if (!availableCells.contains(selectedCell))</b>
+<b class="fc"><i>66</i>&nbsp;            throw new InvalidSelectionException(&quot;You can&#39;t build on the selected cell. Try with a different one&quot;);</b>
+<b class="fc"><i>67</i>&nbsp;        turnPlayer.getPlayerState().setSelectedCell(selectedCell);</b>
+<b class="fc"><i>68</i>&nbsp;    }</b>
+<i>69</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-06 11:54</div>
+</div>
+</body>
+</html>

@@ -69,7 +69,9 @@ class CanMoveBackPredicateTest {
 
         for (int i = 0;  i < names.size(); i++) {
             players.add(new Player(names.get(i) , null));
-            game.addPlayer(players.get(i).getNickname() , null);
+            game.getPlayers().add(players.get(i));
+            players.get(i).setCurrentGame(game);
+            game.initGods();
             game.assignSelectedGodPowerToPlayer(powers.get(i) , players.get(i).getNickname());
         }
     }

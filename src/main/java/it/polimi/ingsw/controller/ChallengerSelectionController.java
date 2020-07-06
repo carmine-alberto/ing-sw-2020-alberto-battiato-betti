@@ -7,7 +7,7 @@ import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.view.serverView.VirtualWaitingViewState;
 import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
-import static it.polimi.ingsw.GameSettings.*;
+import static it.polimi.ingsw.utility.GameSettings.*;
 
 public class ChallengerSelectionController extends ControllerState {
 
@@ -30,6 +30,7 @@ public class ChallengerSelectionController extends ControllerState {
             if (!currentGame.isChallenger(senderView.getOwnerName())) {
                 if (currentGame.hasFreeSlots()) {
                     currentGame.addPlayer(loginEvent.playerUsername, senderView);
+                    senderView.setOwner(loginEvent.playerUsername);
                     currentGame.addObserver(senderView);
                     controller.handleConnectedView(senderView);
 

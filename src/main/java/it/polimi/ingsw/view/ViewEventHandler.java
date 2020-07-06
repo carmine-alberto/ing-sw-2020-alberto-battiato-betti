@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
-import static it.polimi.ingsw.GameSettings.GRANULARITY;
+import static it.polimi.ingsw.utility.GameSettings.GRANULARITY;
+import static it.polimi.ingsw.utility.GameSettings.TIMEOUT;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 /**
@@ -21,7 +22,6 @@ public class ViewEventHandler implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private View view;
-    static Float TIMEOUT = 1F;
 
     public ViewEventHandler(View view, ObjectInputStream in) throws IOException {
         this.view = view;
@@ -112,17 +112,17 @@ public class ViewEventHandler implements Runnable {
                 update.winnerNickname + " is the winner!");
     }
 
+    public void handle(GameInformationEvent gameInformationsEvent) {
+        view.setPlayerInfos(gameInformationsEvent.playersName, gameInformationsEvent.chosenGods, gameInformationsEvent.chosenColor);
+    }
+
     public void handle(PingEvent pingEvent) {
         if (view.getPingTimestamp() == null) {
             view.setPingTimestamp(LocalDateTime.now());
             startDeltaTimestampCheckingThread();
         }
         view.setPingTimestamp(LocalDateTime.now());
-        view.getViewState().notify(new PingEvent());  //TODO We should decouple pinging and JavaFX thread
-    }
-
-    public void handle(GameInformationEvent gameInformationsEvent) {
-        view.setPlayerInfos(gameInformationsEvent.playersName, gameInformationsEvent.chosenGods, gameInformationsEvent.chosenColor);
+        view.getViewState().notify(new PingEvent());
     }
 
     private void startDeltaTimestampCheckingThread() {
@@ -131,7 +131,7 @@ public class ViewEventHandler implements Runnable {
             view.setGameOver(false);
             while (!view.isGameOver()) {
                 LocalDateTime now = LocalDateTime.now();
-                if (SECONDS.between(view.getPingTimestamp(), now) > scalingFactor * TIMEOUT) { //TODO Should we make all of this synchronized?
+                if (SECONDS.between(view.getPingTimestamp(), now) > scalingFactor * TIMEOUT) {
                     view.getViewState().terminate("The server is no longer available - The connection will be closed");
                 }
                 try {

@@ -8,8 +8,8 @@ import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
 
 import java.util.List;
 
-import static it.polimi.ingsw.GameSettings.FIRST_PLAYER_INDEX;
-import static it.polimi.ingsw.GameSettings.SECOND_ELEMENT_INDEX;
+import static it.polimi.ingsw.utility.GameSettings.FIRST_PLAYER_INDEX;
+import static it.polimi.ingsw.utility.GameSettings.SECOND_ELEMENT_INDEX;
 
 public class GodPowerController extends ControllerState {
     private Integer choosingPlayerIndex;

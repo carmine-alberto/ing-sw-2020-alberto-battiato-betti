@@ -23,12 +23,14 @@ import java.net.Socket;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
-import static it.polimi.ingsw.GameSettings.NUM_OF_WORKERS;
+import static it.polimi.ingsw.utility.GameSettings.*;
 import static it.polimi.ingsw.view.clientView.WorkerSetupViewState.CellCoordinate.X;
 import static it.polimi.ingsw.view.clientView.WorkerSetupViewState.CellCoordinate.Y;
 
 public class WorkerSetupViewState extends GUIViewState {
+    private static final double COLOR_SHAPE_WIDTH = 60;
+    private static final double COLOR_SHAPE_HEIGHT = 10;
+
     enum CellCoordinate {
         X, Y;
     }
@@ -54,11 +56,11 @@ public class WorkerSetupViewState extends GUIViewState {
 
         if (boardRep != null) {
             colors = new ComboBox<>();
-            Rectangle cyan = new Rectangle(60 , 10);
+            Rectangle cyan = new Rectangle(COLOR_SHAPE_WIDTH , COLOR_SHAPE_HEIGHT);
             cyan.setFill(Color.CYAN);
-            Rectangle magenta = new Rectangle(60 , 10);
+            Rectangle magenta = new Rectangle(COLOR_SHAPE_WIDTH , COLOR_SHAPE_HEIGHT);
             magenta.setFill(Color.MAGENTA);
-            Rectangle yellow = new Rectangle(60 , 10);
+            Rectangle yellow = new Rectangle(COLOR_SHAPE_WIDTH , COLOR_SHAPE_HEIGHT);
             yellow.setFill(Color.YELLOW);
             colors.getItems().addAll(cyan, yellow, magenta);
             colors.getSelectionModel().select(cyan);
@@ -76,13 +78,13 @@ public class WorkerSetupViewState extends GUIViewState {
             bGImage = new BackgroundImage(boardBackground, null, null, null,  backGroundSize);
             board.setBackground(new Background(bGImage));
 
-            FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / 5 - EDGE_TOLERANCE, (float) mainStage.getScene().getHeight() / 5 - EDGE_TOLERANCE));
-            mainStage.getScene().heightProperty().addListener(e -> updateProperty(tileSideLength));
-            mainStage.getScene().widthProperty().addListener(e -> updateProperty(tileSideLength));
+            FloatProperty tileSideLength = new SimpleFloatProperty(Math.min((float) mainStage.getScene().getWidth() / FIELD_SIZE - EDGE_TOLERANCE, (float) mainStage.getScene().getHeight() / FIELD_SIZE - EDGE_TOLERANCE));
+            mainStage.getScene().heightProperty().addListener(e -> {updateProperty(tileSideLength); });
+            mainStage.getScene().widthProperty().addListener(e -> {updateProperty(tileSideLength); });
 
             board.setOrientation(Orientation.HORIZONTAL);
-            board.setPrefRows(5);
-            board.setPrefColumns(5);
+            board.setPrefRows(FIELD_SIZE);
+            board.setPrefColumns(FIELD_SIZE);
             board.prefTileWidthProperty().bind(tileSideLength);
             board.prefTileHeightProperty().bind(tileSideLength);
 
@@ -96,15 +98,14 @@ public class WorkerSetupViewState extends GUIViewState {
                     cell.prefHeightProperty().bind(tileSideLength);
                     cell.prefWidthProperty().bind(tileSideLength);
 
-                    fillCell(cell, boardRep[i - 1][j - 1]);
+                    fillCell(cell, boardRep[i - OFFSET][j - OFFSET]);
 
                     board.getChildren().add(cell);
                 }
 
             VBox interfaceBox;
-            interfaceBox = new VBox(20, board);
-            interfaceBox.setPadding(new Insets(20));
-            interfaceBox.getChildren().add(0, colorPickerBox);
+            interfaceBox = new VBox(EDGE_TOLERANCE, colorPickerBox, board);
+            interfaceBox.setPadding(new Insets(EDGE_TOLERANCE));
             interfaceBox.setAlignment(Pos.CENTER);
             interfaceBox.setFillWidth(false);
 
@@ -175,7 +176,7 @@ public class WorkerSetupViewState extends GUIViewState {
     }
 
     private void updateProperty(FloatProperty tileSideLength) {
-        tileSideLength.set(Math.min((float)mainStage.getScene().getWidth()/5 - EDGE_TOLERANCE,(float)mainStage.getScene().getHeight()/5 - EDGE_TOLERANCE));
+        tileSideLength.set(Math.min((float)mainStage.getScene().getWidth()/FIELD_SIZE - EDGE_TOLERANCE,(float)mainStage.getScene().getHeight()/FIELD_SIZE - EDGE_TOLERANCE));
     }
 
     private void handleCellClick(StackPane clickedCell) {

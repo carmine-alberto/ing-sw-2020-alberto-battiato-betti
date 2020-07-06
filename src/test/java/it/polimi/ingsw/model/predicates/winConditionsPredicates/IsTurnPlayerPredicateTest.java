@@ -26,6 +26,8 @@ class IsTurnPlayerPredicateTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         firstPlayer = new Player("Zio" , null);
+        game.getPlayers().add(firstPlayer);
+        game.initGods();
         try {
             game.assignSelectedGodPowerToPlayer("Apollo", firstPlayer.getNickname());
         } catch (InvalidSelectionException e) {
@@ -37,6 +39,7 @@ class IsTurnPlayerPredicateTest {
                 board[i][j] = new FieldCell(game , i , j);
 
         secondPlayer = new Player("lol" , null);
+        game.getPlayers().add(secondPlayer);
         try {
             game.assignSelectedGodPowerToPlayer("Artemis", secondPlayer.getNickname());
         } catch (InvalidSelectionException e) {

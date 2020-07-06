@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.Observer;
+import it.polimi.ingsw.utility.Observer;
 import it.polimi.ingsw.controller.events.Event;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.view.serverView.VirtualView;
@@ -63,7 +63,7 @@ public class Controller implements Observer<Event> {
     }
 
     private void notifyConnectedView(VirtualView virtualView) {
-        virtualView.showMessage(virtualView.getOwnerName() + "has disconnected and the game has been terminated.");
+        virtualView.showMessage(virtualView.getOwnerName() + " has disconnected and the game has been terminated.");
         virtualView.terminate();
         virtualView.removeObserver(this);
     }

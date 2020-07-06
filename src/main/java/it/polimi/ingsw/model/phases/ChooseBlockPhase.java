@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.phases;
 
 import it.polimi.ingsw.controller.events.AvailableChoicesUpdate;
-import it.polimi.ingsw.controller.events.PhaseUpdate;
 import it.polimi.ingsw.model.Constructible;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.PlayerState;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT_INDEX;
+import static it.polimi.ingsw.utility.GameSettings.FIRST_ELEMENT_INDEX;
 
 public class ChooseBlockPhase extends TurnPhase {
     private List<Constructible> availableBlocks;

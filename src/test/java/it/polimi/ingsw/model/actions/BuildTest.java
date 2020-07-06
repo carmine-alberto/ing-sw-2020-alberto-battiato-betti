@@ -25,7 +25,9 @@ class BuildTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Niub", null);
+        game.initGods();
         try {
+            game.getPlayers().add(player);
             game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
         } catch (InvalidSelectionException e) {
             e.printStackTrace();

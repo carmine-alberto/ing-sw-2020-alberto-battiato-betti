@@ -25,6 +25,10 @@ class MoveAndSwapTest {
         firstPlayer.setCurrentGame(game);
         secondPlayer = new Player("Palle" , null);
         secondPlayer.setCurrentGame(game);
+        game.initGods();
+        game.getPlayers().add(firstPlayer);
+        game.getPlayers().add(secondPlayer);
+
         try {
             game.assignSelectedGodPowerToPlayer("Artemis" , secondPlayer.getNickname());
             game.assignSelectedGodPowerToPlayer("Apollo", firstPlayer.getNickname());

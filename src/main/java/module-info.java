@@ -5,5 +5,5 @@ module org.example {
 
     opens it.polimi.ingsw to javafx.fxml;
     opens it.polimi.ingsw.model.predicates.winConditionsPredicates;
-    exports it.polimi.ingsw;
+    exports it.polimi.ingsw.view;
 }

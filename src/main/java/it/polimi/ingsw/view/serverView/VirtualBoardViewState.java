@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.serverView;
 
-import it.polimi.ingsw.Observer;
+import it.polimi.ingsw.utility.Observer;
 import it.polimi.ingsw.controller.events.Event;
 
 public class VirtualBoardViewState extends VirtualViewState implements Observer<Event> {

@@ -21,7 +21,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.GameSettings.*;
+import static it.polimi.ingsw.utility.GameSettings.*;
 
 
 public class BoardViewState extends GUIViewState {
@@ -75,7 +75,7 @@ public class BoardViewState extends GUIViewState {
                     cell.prefHeightProperty().bind(tileSideLength);
                     cell.prefWidthProperty().bind(tileSideLength);
 
-                    fillCell(cell, boardRep[i - 1][j - 1]);
+                    fillCell(cell, boardRep[i - OFFSET][j - OFFSET]);
 
                     board.getChildren().add(cell);
                 }

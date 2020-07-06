@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT_INDEX;
+import static it.polimi.ingsw.utility.GameSettings.FIRST_ELEMENT_INDEX;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ContainsOpponentWorkerPredicateTest {
@@ -70,7 +70,9 @@ class ContainsOpponentWorkerPredicateTest {
 
         for (int i = 0;  i < names.size(); i++) {
             players.add(new Player(names.get(i) , null));
-            game.addPlayer(players.get(i).getNickname() , null);
+            game.getPlayers().add(players.get(i));
+            players.get(i).setCurrentGame(game);
+            game.initGods();
             game.assignSelectedGodPowerToPlayer(powers.get(i) , players.get(i).getNickname());
         }
     }

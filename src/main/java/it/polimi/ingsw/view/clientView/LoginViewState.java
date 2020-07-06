@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import static it.polimi.ingsw.GameSettings.CLI;
-import static it.polimi.ingsw.GameSettings.GUI;
+import static it.polimi.ingsw.utility.GameSettings.CLI;
+import static it.polimi.ingsw.utility.GameSettings.GUI;
 
 public class LoginViewState extends GUIViewState {
     private ChoiceBox<String> cliGUIChoice;

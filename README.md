@@ -1,9 +1,13 @@
 ![SANTORINI](https://pbs.twimg.com/media/DcMrncHWsAIr5dB?format=jpg&name=small)
 # Prova Finale di Ingegneria del Software a.a. 2019-2020
-During this year final exam the partecipants were required to implement the game [Santorini](http://www.craniocreations.it/prodotto/santorini/) using Java programming language and in particular Model View Controller pattern. The project covers all the game's rules for two and three players with the exceptions of severals advanced gods. Using object-oriented programming two different game modes were developed: CLI and GUI. CLI mode (Command Line Interface) offers a simple game mode to be used in the command line. For those who would like a more complete and good-looking game experience, there is the GUI (Graphical User Interface).
+For this year's final exam, the partecipants were required to implement the game [Santorini](http://www.craniocreations.it/prodotto/santorini/) using the Java programming language and the Model-View-Controller pattern.  
+The project covers all the game's rules for two and three players, except for several advanced gods whose power has not been implemented.  
+Using Object-Oriented Programming principles and patterns (better detailed in the JavaDoc), two different game interfaces were developed: CLI and GUI. 
+- The CLI (Command Line Interface) offers a simple game mode to be used in the command line;
+- The GUI (Graphical User Interface) caters to those players who like a more complete and good-looking game experience.
 
 ## UML
-The UML documentation is avialable in two different versions, the initial one, created as soon as the problem was brought us, and the final one: created once completed the program. There are several and interesting differences.
+The UML documentation is available in two different versions: the initial one, created as soon as the game specs were made public, and the final one, created once the game was completed. There are several and interesting differences.
 
 * [Initial UML](https://raw.githubusercontent.com/carmine-alberto/ing-sw-2020-alberto-battiato-betti/master/deliverables/UML/OldModelController.png?token=ANPYJVHN5TTZ4PWANRURLA27A5N6S)
 
@@ -11,7 +15,7 @@ The UML documentation is avialable in two different versions, the initial one, c
 * [Final Model UML](https://raw.githubusercontent.com/carmine-alberto/ing-sw-2020-alberto-battiato-betti/master/deliverables/UML/UML_model.png?token=ANPYJVDRYSSKQN3U7WW2ONK7A5N42)
 
 ## JavaDoc
-The project is also provided with a Java documentation (JUnit 5) that covers almost every model's class. The documentation can be found in the deliverables folder of the project.
+The project is also provided with a Java documentation that covers almost every model's class. The documentation can be found in the "deliverables" folder of the project.
 
 ## Implemented functionality
 | Functionality | State |
@@ -31,16 +35,19 @@ For both client and server jars is required [Java 14.0.1 JDK](https://jdk.java.n
 The jars can be found in the deliverables folder of the project.
 
 ### Server
-You can launch the server with the command <code> java --enable-preview -jar .\AM49-Server.jar </code>
+You can launch the server moving to the "Jar" folder in your terminal and using the command <code> java --enable-preview -jar .\AM49-Server.jar </code>
+The default port number is 1200. To change it, launch the server appending <code> -port MY_PORT_NUMBER </code> to the command above.
   
 ### Client
-Once found the client jar, the it will be enough to type  <code> java --enable-preview -jar .\AM49-Client.jar </code>
+You can launch the client moving to the "Jar" folder in your terminal and using the command  <code> java --enable-preview -jar .\AM49-Client.jar </code>
 - CLI 
-In order to use this game mode it will be necessary to insert the parameter <code>-CLI</code> when launching the jar file
+In order to use this game interface, it will be necessary to append the parameter <code>-CLI</code> to the command above.
 - GUI
-To play in GUI game mode, there are no other parameters to add
+By default, the interface launched is the GUI.
 
-It will anyways be possible to switch from one mode to another in some moments during the program's excution. For example during a CLI game by typing switch, or in a GUI game by selecting CLI during the login.
+It's possible to switch from one mode to another in some moments during the program's execution: 
+- during a CLI game by typing "switch";
+- in a GUI game by selecting CLI during the login.
 ## Gruppo AM49
 
 - ###   10603433    Filippo Betti ([@FilippoBetti98](https://github.com/FilippoBetti98))<br>filippo.betti@mail.polimi.it

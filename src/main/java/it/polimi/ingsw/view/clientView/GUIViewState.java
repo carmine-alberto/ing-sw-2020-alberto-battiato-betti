@@ -44,35 +44,42 @@ public abstract class GUIViewState extends ViewState {
      * @param fieldCell The rep component to draw data from
      */
     protected void fillCell(StackPane cell, FieldCell fieldCell) {
+        final Color BLOCK_COLOR = Color.web("#F0DC7E");
         final Double BASE_SCALING_FACTOR = 0.80;
         final Double RECURSIVE_SCALING_FACTOR = 0.86;
+        final Integer DIAMETER_OVER_RADIUS = 2;
 
-        Double baseWidth = BASE_SCALING_FACTOR * cell.getPrefWidth();
+        Double scalingFactor = BASE_SCALING_FACTOR;
 
         Rectangle block;
-
         for (Integer i = 0; i < fieldCell.getHeight(); i++) {
-            block = new Rectangle(baseWidth, baseWidth);
-            block.setFill(Color.web("#F0DC7E"));
+            block = new Rectangle(scalingFactor * cell.getPrefWidth(), scalingFactor * cell.getPrefWidth());
+            block.heightProperty().bind(cell.heightProperty().multiply(scalingFactor));
+            block.widthProperty().bind(block.heightProperty());
+            block.setFill(BLOCK_COLOR);
             block.setStroke(Color.BLACK);
 
             cell.getChildren().add(block);
 
-            baseWidth *= RECURSIVE_SCALING_FACTOR;
+            scalingFactor *= RECURSIVE_SCALING_FACTOR;
         }
 
         if (fieldCell.getHasDome()) {
-            Circle dome = new Circle(baseWidth / 2, Color.BLUE);
+            Double radius = scalingFactor * cell.getPrefWidth() / DIAMETER_OVER_RADIUS;
+            Circle dome = new Circle(radius, Color.BLUE);
+            dome.radiusProperty().bind(cell.heightProperty().multiply(scalingFactor / DIAMETER_OVER_RADIUS));
             cell.getChildren().add(dome);
             cell.setAlignment(dome, Pos.CENTER);
         }
 
         if (fieldCell.getWorker() != null) { //TODO Worker should look better than a plain circle
-            Circle worker = new Circle(baseWidth / 2, Color.valueOf(fieldCell
+            Double radius = scalingFactor * cell.getPrefWidth() / 2;
+            Circle worker = new Circle(radius, Color.valueOf(fieldCell
                     .getWorker()
                     .getOwner()
                     .getColour()
                     .toUpperCase()));
+            worker.radiusProperty().bind(cell.heightProperty().multiply(scalingFactor / DIAMETER_OVER_RADIUS));
             cell.getChildren().add(worker);
             cell.setAlignment(worker, Pos.CENTER);
         }

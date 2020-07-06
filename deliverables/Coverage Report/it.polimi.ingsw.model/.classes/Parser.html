@@ -1,0 +1,580 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Parser</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Parser (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Parser</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,5%
+  </span>
+  <span class="absValue">
+    (19/ 21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76,4%
+  </span>
+  <span class="absValue">
+    (211/ 276)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.Server;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.actions.Action;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSet;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.actions.moveStrategies.MoveAndShiftBack;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.actions.moveStrategies.MoveAndSwap;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
+<i>9</i>&nbsp;import it.polimi.ingsw.model.predicates.actionPredicate.CanDisplacePredicate;
+<i>10</i>&nbsp;import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
+<i>11</i>&nbsp;import it.polimi.ingsw.model.predicates.actionPredicate.CanStopPredicate;
+<i>12</i>&nbsp;import org.w3c.dom.Document;
+<i>13</i>&nbsp;import org.w3c.dom.Node;
+<i>14</i>&nbsp;import org.w3c.dom.NodeList;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;import javax.xml.parsers.DocumentBuilder;
+<i>17</i>&nbsp;import javax.xml.parsers.DocumentBuilderFactory;
+<i>18</i>&nbsp;import java.io.*;
+<i>19</i>&nbsp;import java.util.ArrayList;
+<i>20</i>&nbsp;import java.util.List;
+<i>21</i>&nbsp;import java.util.function.BiPredicate;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;import static it.polimi.ingsw.utility.GameSettings.*;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;public class Parser {</b>
+<i>27</i>&nbsp;
+<b class="fc"><i>28</i>&nbsp;    private List&lt;God&gt; godsList = new ArrayList&lt;&gt;();</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * This function is used to get the parser going, it makes it read the file with the written gods
+<i>32</i>&nbsp;     *
+<i>33</i>&nbsp;     * @return the godsList just read
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    public List&lt;God&gt; getGodsList() {
+<b class="fc"><i>36</i>&nbsp;        read();</b>
+<b class="fc"><i>37</i>&nbsp;        return this.godsList;</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    private void read() {
+<b class="fc"><i>41</i>&nbsp;        God.GodBuilder builder = new God.GodBuilder();</b>
+<i>42</i>&nbsp;        // Add setters for the remaining God attributes in GodBuilder (SHOULD BE DONE)
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;        try {
+<b class="fc"><i>45</i>&nbsp;            InputStream godPowersStream = Server.class.getClassLoader().getResourceAsStream(&quot;godPowers.xml&quot;);</b>
+<b class="fc"><i>46</i>&nbsp;            File xmlFile = File.createTempFile(&quot;godPowersFile&quot;, &quot;.xml&quot;);</b>
+<b class="fc"><i>47</i>&nbsp;            xmlFile.deleteOnExit();</b>
+<b class="fc"><i>48</i>&nbsp;            copyInputStreamToFile(godPowersStream, xmlFile);</b>
+<i>49</i>&nbsp;
+<b class="fc"><i>50</i>&nbsp;            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();</b>
+<b class="fc"><i>51</i>&nbsp;            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();</b>
+<b class="fc"><i>52</i>&nbsp;            Document doc = dBuilder.parse(xmlFile);</b>
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;            doc.getDocumentElement().normalize();</b>
+<b class="fc"><i>55</i>&nbsp;            stripSpace(doc);</b>
+<i>56</i>&nbsp;
+<b class="fc"><i>57</i>&nbsp;            visitNode(doc, builder);</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;
+<b class="nc"><i>60</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>61</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>62</i>&nbsp;        }</b>
+<b class="fc"><i>63</i>&nbsp;    }</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    /**
+<i>66</i>&nbsp;     * For debugging purposes only
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    private void printNode(Node node, Integer level) {
+<b class="nc"><i>69</i>&nbsp;        NodeList nList = node.getChildNodes();</b>
+<b class="nc"><i>70</i>&nbsp;        for (Integer i = 0; i &lt; nList.getLength(); i++) {</b>
+<b class="nc"><i>71</i>&nbsp;            if (nList.item(i).getNodeValue() == null) {         //CHILD NODE HAS NO TEXT (e.g. &lt;and&gt;&lt;/and&gt;)</b>
+<b class="nc"><i>72</i>&nbsp;                System.out.println(numOfTabs(level) + &quot;&lt;&quot; + nList.item(i).getNodeName() + &quot;&gt;&quot;);</b>
+<b class="nc"><i>73</i>&nbsp;                printNode(nList.item(i), level + OFFSET);</b>
+<b class="nc"><i>74</i>&nbsp;                System.out.println(numOfTabs(level) + &quot;FINE&lt;&quot; + nList.item(i).getNodeName() + &quot;&gt;&quot;);</b>
+<i>75</i>&nbsp;            } else                                                 //CHILD NODE HAS TEXT (e.g. &lt;movePredicate&gt;text&lt;/movePredicate&gt;)
+<b class="nc"><i>76</i>&nbsp;                System.out.println(numOfTabs(level) + &quot;NOT NULL: &quot; + nList.item(i).getTextContent());</b>
+<i>77</i>&nbsp;        }
+<b class="nc"><i>78</i>&nbsp;    }</b>
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    private boolean isNumeric(String strNum) {
+<b class="fc"><i>81</i>&nbsp;        if (strNum == null) {</b>
+<b class="nc"><i>82</i>&nbsp;            return false;</b>
+<i>83</i>&nbsp;        }
+<i>84</i>&nbsp;        try {
+<b class="fc"><i>85</i>&nbsp;            double d = Double.parseDouble(strNum);</b>
+<b class="nc"><i>86</i>&nbsp;        } catch (NumberFormatException nfe) {</b>
+<b class="nc"><i>87</i>&nbsp;            return false;</b>
+<b class="fc"><i>88</i>&nbsp;        }</b>
+<b class="fc"><i>89</i>&nbsp;        return true;</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    private void visitNode(Node node, God.GodBuilder god) {
+<b class="fc"><i>93</i>&nbsp;        Node child = node.getFirstChild();</b>
+<i>94</i>&nbsp;
+<b class="fc"><i>95</i>&nbsp;        if (child.getNodeName().equals(&quot;gods&quot;)) { //some &quot;useless&quot; controls just to check if the xml was formatted correctly</b>
+<b class="fc"><i>96</i>&nbsp;            NodeList nList = child.getChildNodes();</b>
+<b class="fc"><i>97</i>&nbsp;            for (int i = 0; i &lt; nList.getLength(); i++)</b>
+<b class="fc"><i>98</i>&nbsp;                if (nList.item(i).getNodeValue() == null)</b>
+<b class="fc"><i>99</i>&nbsp;                    if (nList.item(i).getNodeName().equals(&quot;god&quot;)){ //sto leggendo un god</b>
+<b class="fc"><i>100</i>&nbsp;                        readNode(nList.item(i), god);</b>
+<b class="fc"><i>101</i>&nbsp;                        godsList.add(god.getCompleteGod());</b>
+<i>102</i>&nbsp;                    }
+<i>103</i>&nbsp;            // non dovrei fare God.GodBuilder builder = new God.GodBuilder(); per creare un nuovo god ?
+<i>104</i>&nbsp;        }
+<b class="fc"><i>105</i>&nbsp;    }</b>
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    private void readNode(Node node, God.GodBuilder god) {
+<b class="fc"><i>108</i>&nbsp;        NodeList nList = node.getChildNodes();</b>
+<i>109</i>&nbsp;
+<b class="fc"><i>110</i>&nbsp;        for (int i = 0; i &lt; nList.getLength(); i++) {</b>
+<i>111</i>&nbsp;            //if (nList.item(i).getNodeValue() == null)
+<b class="fc"><i>112</i>&nbsp;            node = nList.item(i);</b>
+<b class="fc"><i>113</i>&nbsp;            switch (node.getNodeName()) {</b>
+<i>114</i>&nbsp;                case &quot;name&quot;:
+<b class="fc"><i>115</i>&nbsp;                    String string = readName(node);</b>
+<b class="fc"><i>116</i>&nbsp;                    god.name(string);</b>
+<b class="fc"><i>117</i>&nbsp;                    break;</b>
+<i>118</i>&nbsp;                case &quot;movePredicates&quot;:
+<b class="fc"><i>119</i>&nbsp;                    BiPredicate&lt;FieldCell, GameWorker&gt; movePredicate = readBuildAndMovePredicates(node, null);</b>
+<b class="fc"><i>120</i>&nbsp;                    god.movePredicate(movePredicate);</b>
+<i>121</i>&nbsp;                    //attenzione and or e concatenazioni, magari lo faccio mettere in una stringa
+<b class="fc"><i>122</i>&nbsp;                    break;</b>
+<i>123</i>&nbsp;                case &quot;moveStrategy&quot;:
+<b class="fc"><i>124</i>&nbsp;                    Action moveStrategy = readStrategy(node);</b>
+<b class="fc"><i>125</i>&nbsp;                    god.moveStrategy(moveStrategy);</b>
+<b class="fc"><i>126</i>&nbsp;                    break;</b>
+<i>127</i>&nbsp;                case &quot;buildPredicates&quot;:
+<b class="fc"><i>128</i>&nbsp;                    BiPredicate&lt;FieldCell, GameWorker&gt; buildPredicate = readBuildAndMovePredicates(node, null);</b>
+<b class="fc"><i>129</i>&nbsp;                    god.buildPredicate(buildPredicate);</b>
+<b class="fc"><i>130</i>&nbsp;                    break;</b>
+<i>131</i>&nbsp;                case &quot;buildStrategy&quot;:
+<b class="nc"><i>132</i>&nbsp;                    Action buildStrategy = readStrategy(node);</b>
+<b class="nc"><i>133</i>&nbsp;                    god.buildStrategy(buildStrategy);</b>
+<b class="nc"><i>134</i>&nbsp;                    break;</b>
+<i>135</i>&nbsp;                case &quot;phases&quot;:
+<b class="fc"><i>136</i>&nbsp;                    buildPhases(node, god);</b>
+<b class="fc"><i>137</i>&nbsp;                    break;</b>
+<i>138</i>&nbsp;                case &quot;winConditions&quot;:
+<b class="fc"><i>139</i>&nbsp;                    if(node.getFirstChild().getNodeName().equals(&quot;outerPredicates&quot;))</b>
+<b class="fc"><i>140</i>&nbsp;                        god.addOuterHashMap(&quot;winCondition&quot;, readWinCondition(node.getFirstChild(), god, null));</b>
+<i>141</i>&nbsp;                    else
+<b class="fc"><i>142</i>&nbsp;                    god.winConditionPredicate(readWinCondition(node, god, null));</b>
+<b class="fc"><i>143</i>&nbsp;                    break;</b>
+<i>144</i>&nbsp;                case &quot;constructiblePredicates&quot;:
+<b class="fc"><i>145</i>&nbsp;                    BiPredicate&lt;Player, Constructible&gt; constructiblePredicate = readConstructiblePredicate(node);</b>
+<b class="fc"><i>146</i>&nbsp;                    god.constructiblePredicate(constructiblePredicate);</b>
+<b class="fc"><i>147</i>&nbsp;                    break;</b>
+<i>148</i>&nbsp;                case &quot;outerPredicates&quot;:
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;            }
+<i>151</i>&nbsp;        }
+<b class="fc"><i>152</i>&nbsp;    }</b>
+<i>153</i>&nbsp;
+<i>154</i>&nbsp;    //we assume constructiblePredicates can be fitted with an arg and it is always an int
+<i>155</i>&nbsp;    private BiPredicate&lt;Player, Constructible&gt; readConstructiblePredicate(Node node) {
+<b class="fc"><i>156</i>&nbsp;        Node child = node.getFirstChild();</b>
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;        try {
+<b class="fc"><i>159</i>&nbsp;            if (child.getNextSibling() != null)</b>
+<b class="fc"><i>160</i>&nbsp;                if (isNumeric(child.getNextSibling().getFirstChild().getTextContent()))</b>
+<b class="fc"><i>161</i>&nbsp;                    return (BiPredicate&lt;Player, Constructible&gt;) Class.forName(&quot;it.polimi.ingsw.model.predicates.constructiblePredicates.&quot; + child.getTextContent())</b>
+<b class="fc"><i>162</i>&nbsp;                            .getConstructors()[FIRST_ELEMENT_INDEX]</b>
+<b class="fc"><i>163</i>&nbsp;                            .newInstance(Integer.parseInt(child.getNextSibling().getFirstChild().getTextContent()));</b>
+<b class="nc"><i>164</i>&nbsp;            return (BiPredicate&lt;Player, Constructible&gt;) Class.forName(&quot;it.polimi.ingsw.model.predicates.constructiblePredicates.&quot; + child.getTextContent())</b>
+<b class="nc"><i>165</i>&nbsp;                    .getConstructors()[FIRST_ELEMENT_INDEX]</b>
+<b class="nc"><i>166</i>&nbsp;                    .newInstance();</b>
+<b class="nc"><i>167</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>168</i>&nbsp;            e.printStackTrace(); //TODO Handle exception properly</b>
+<b class="nc"><i>169</i>&nbsp;            return null;</b>
+<i>170</i>&nbsp;        }
+<i>171</i>&nbsp;    }
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;    private BiPredicate&lt;Game, GameWorker&gt; readWinCondition(Node node, God.GodBuilder god, Integer arg) {
+<b class="fc"><i>174</i>&nbsp;        NodeList nList = node.getChildNodes();</b>
+<b class="fc"><i>175</i>&nbsp;        BiPredicate&lt;Game, GameWorker&gt; winConditionPredicate = null;</b>
+<i>176</i>&nbsp;
+<b class="fc"><i>177</i>&nbsp;        for (int i = 0; i &lt; nList.getLength(); i++) {</b>
+<b class="fc"><i>178</i>&nbsp;            if (nList.item(i).getNodeValue() == null) {</b>
+<b class="fc"><i>179</i>&nbsp;                switch (nList.item(i).getNodeName()) {</b>
+<i>180</i>&nbsp;                    case &quot;name&quot;:
+<b class="fc"><i>181</i>&nbsp;                        if (isNumeric(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent()))/*controllo che effettivamente args ci sia */ {</b>
+<b class="fc"><i>182</i>&nbsp;                            int val = Integer.parseInt(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent());</b>
+<b class="fc"><i>183</i>&nbsp;                            winConditionPredicate = readWinCondition(nList.item(i), god, val);</b>
+<b class="fc"><i>184</i>&nbsp;                        } else</b>
+<b class="nc"><i>185</i>&nbsp;                            winConditionPredicate = readWinCondition(nList.item(i), god, null);</b>
+<b class="nc"><i>186</i>&nbsp;                        break;</b>
+<i>187</i>&nbsp;                    case &quot;winCondition&quot;:
+<b class="fc"><i>188</i>&nbsp;                        winConditionPredicate = readWinCondition(nList.item(i), god, null);</b>
+<b class="fc"><i>189</i>&nbsp;                        break;</b>
+<i>190</i>&nbsp;                    case &quot;and&quot;:
+<b class="nc"><i>191</i>&nbsp;                        winConditionPredicate = readWinConj(nList.item(i), &quot;and&quot;, god);</b>
+<b class="nc"><i>192</i>&nbsp;                        break;</b>
+<i>193</i>&nbsp;                    case &quot;or&quot;:
+<b class="fc"><i>194</i>&nbsp;                        winConditionPredicate = readWinConj(nList.item(i), &quot;or&quot;, god);</b>
+<b class="fc"><i>195</i>&nbsp;                        break;</b>
+<i>196</i>&nbsp;                    case &quot;negate&quot;:
+<b class="nc"><i>197</i>&nbsp;                        winConditionPredicate = readWinCondition(nList.item(i), god, null).negate();</b>
+<b class="fc"><i>198</i>&nbsp;                        break;</b>
+<i>199</i>&nbsp;                }
+<i>200</i>&nbsp;            } else { //gestisco caso base leggo il predicate con la reflection
+<i>201</i>&nbsp;                try {
+<b class="fc"><i>202</i>&nbsp;                    if (arg == null)</b>
+<b class="fc"><i>203</i>&nbsp;                        winConditionPredicate = (BiPredicate&lt;Game, GameWorker&gt;) Class.forName(&quot;it.polimi.ingsw.model.predicates.winConditionsPredicates.&quot; + nList.item(i).getTextContent())</b>
+<b class="fc"><i>204</i>&nbsp;                                .getConstructors()[FIRST_ELEMENT_INDEX]</b>
+<b class="fc"><i>205</i>&nbsp;                                .newInstance();</b>
+<i>206</i>&nbsp;                    else
+<b class="fc"><i>207</i>&nbsp;                    { String tmp = nList.item(i).getTextContent();</b>
+<b class="fc"><i>208</i>&nbsp;                        winConditionPredicate = (BiPredicate&lt;Game, GameWorker&gt;) Class.forName(&quot;it.polimi.ingsw.model.predicates.winConditionsPredicates.&quot; + nList.item(i).getTextContent())</b>
+<b class="fc"><i>209</i>&nbsp;                                .getConstructors()[FIRST_ELEMENT_INDEX]</b>
+<b class="fc"><i>210</i>&nbsp;                                .newInstance(arg);}</b>
+<b class="nc"><i>211</i>&nbsp;                } catch (Exception e) {</b>
+<b class="nc"><i>212</i>&nbsp;                    e.printStackTrace(); //TODO Handle exception properly</b>
+<b class="fc"><i>213</i>&nbsp;                }</b>
+<i>214</i>&nbsp;            }
+<i>215</i>&nbsp;        }
+<b class="fc"><i>216</i>&nbsp;        return winConditionPredicate;</b>
+<i>217</i>&nbsp;    }
+<i>218</i>&nbsp;
+<i>219</i>&nbsp;    private BiPredicate&lt;FieldCell, GameWorker&gt; readBuildAndMovePredicates(Node node, Integer arg) {
+<b class="fc"><i>220</i>&nbsp;        NodeList nList = node.getChildNodes();</b>
+<b class="fc"><i>221</i>&nbsp;        BiPredicate&lt;FieldCell, GameWorker&gt; buildAndMovePredicate = null;</b>
+<i>222</i>&nbsp;
+<b class="fc"><i>223</i>&nbsp;        for (int i = 0; i &lt; nList.getLength(); i++) {</b>
+<b class="fc"><i>224</i>&nbsp;            if (nList.item(i).getNodeValue() == null) {</b>
+<b class="fc"><i>225</i>&nbsp;                switch (nList.item(i).getNodeName()) {</b>
+<i>226</i>&nbsp;                    case &quot;name&quot;:
+<b class="fc"><i>227</i>&nbsp;                        if (isNumeric(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent()))/*controllo che effettivamente args ci sia */ {</b>
+<b class="fc"><i>228</i>&nbsp;                            int val = Integer.parseInt(nList.item(i + 1).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent());</b>
+<b class="fc"><i>229</i>&nbsp;                            buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), val);</b>
+<b class="fc"><i>230</i>&nbsp;                        } else</b>
+<b class="nc"><i>231</i>&nbsp;                            buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), null);</b>
+<b class="nc"><i>232</i>&nbsp;                        break;</b>
+<i>233</i>&nbsp;                    case &quot;movePredicate&quot;:
+<i>234</i>&nbsp;                    case &quot;buildPredicate&quot;:
+<b class="fc"><i>235</i>&nbsp;                        buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), null);</b>
+<b class="fc"><i>236</i>&nbsp;                        break;</b>
+<i>237</i>&nbsp;                    case &quot;and&quot;:
+<b class="fc"><i>238</i>&nbsp;                        buildAndMovePredicate = readConj(nList.item(i), &quot;and&quot;);</b>
+<b class="fc"><i>239</i>&nbsp;                        break;</b>
+<i>240</i>&nbsp;                    case &quot;or&quot;:
+<b class="fc"><i>241</i>&nbsp;                        buildAndMovePredicate = readConj(nList.item(i), &quot;or&quot;);</b>
+<b class="fc"><i>242</i>&nbsp;                        break;</b>
+<i>243</i>&nbsp;                    case &quot;negate&quot;:
+<b class="nc"><i>244</i>&nbsp;                        buildAndMovePredicate = readBuildAndMovePredicates(nList.item(i), null).negate();</b>
+<b class="fc"><i>245</i>&nbsp;                        break;</b>
+<i>246</i>&nbsp;                }
+<i>247</i>&nbsp;            } else { //gestisco caso base leggo il predicate con la reflection
+<i>248</i>&nbsp;                try {
+<b class="fc"><i>249</i>&nbsp;                    if (arg == null)</b>
+<b class="fc"><i>250</i>&nbsp;                        buildAndMovePredicate = (BiPredicate&lt;FieldCell, GameWorker&gt;) Class.forName(&quot;it.polimi.ingsw.model.predicates.buildAndMovePredicates.&quot; + nList.item(i).getTextContent())</b>
+<b class="fc"><i>251</i>&nbsp;                                .getConstructors()[FIRST_ELEMENT_INDEX]</b>
+<b class="fc"><i>252</i>&nbsp;                                .newInstance();</b>
+<i>253</i>&nbsp;                    else
+<b class="fc"><i>254</i>&nbsp;                        buildAndMovePredicate = (BiPredicate&lt;FieldCell, GameWorker&gt;) Class.forName(&quot;it.polimi.ingsw.model.predicates.buildAndMovePredicates.&quot; + nList.item(i).getTextContent())</b>
+<b class="fc"><i>255</i>&nbsp;                                .getConstructors()[FIRST_ELEMENT_INDEX]</b>
+<b class="fc"><i>256</i>&nbsp;                                .newInstance(arg);</b>
+<b class="nc"><i>257</i>&nbsp;                } catch (Exception e) {</b>
+<b class="nc"><i>258</i>&nbsp;                    e.printStackTrace(); //TODO Handle exception properly</b>
+<b class="fc"><i>259</i>&nbsp;                }</b>
+<i>260</i>&nbsp;            }
+<i>261</i>&nbsp;        }
+<b class="fc"><i>262</i>&nbsp;        return buildAndMovePredicate;</b>
+<i>263</i>&nbsp;    }
+<i>264</i>&nbsp;
+<i>265</i>&nbsp;    private BiPredicate&lt;Game, GameWorker&gt; readWinConj(Node node, String type, God.GodBuilder god) {
+<b class="fc"><i>266</i>&nbsp;        NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case</b>
+<b class="fc"><i>267</i>&nbsp;        BiPredicate&lt;Game, GameWorker&gt; firstPredicate = null;</b>
+<b class="fc"><i>268</i>&nbsp;        BiPredicate&lt;Game, GameWorker&gt; secondPredicate = null;</b>
+<i>269</i>&nbsp;
+<b class="fc"><i>270</i>&nbsp;        for (int i = 0; i &lt; nList.getLength(); i++) {</b>
+<b class="fc"><i>271</i>&nbsp;            if (nList.item(i).getNodeValue() == null) {</b>
+<b class="fc"><i>272</i>&nbsp;                switch (nList.item(i).getNodeName()) {</b>
+<i>273</i>&nbsp;                    case &quot;name&quot;:
+<b class="nc"><i>274</i>&nbsp;                        break;</b>
+<i>275</i>&nbsp;                    case &quot;winCondition&quot;:
+<i>276</i>&nbsp;                        //partly redundant
+<b class="fc"><i>277</i>&nbsp;                        if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="fc"><i>278</i>&nbsp;                            firstPredicate = readWinCondition(nList.item(i), god, null);</b>
+<i>279</i>&nbsp;                        else
+<b class="fc"><i>280</i>&nbsp;                            secondPredicate = readWinCondition(nList.item(i), god, null);</b>
+<b class="fc"><i>281</i>&nbsp;                        break;</b>
+<i>282</i>&nbsp;                    case &quot;and&quot;:
+<b class="nc"><i>283</i>&nbsp;                        if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="nc"><i>284</i>&nbsp;                            firstPredicate =  readWinConj(nList.item(i), &quot;and&quot;, god);</b>
+<i>285</i>&nbsp;                        else
+<b class="nc"><i>286</i>&nbsp;                            secondPredicate = readWinConj(nList.item(i), &quot;and&quot;, god);</b>
+<b class="nc"><i>287</i>&nbsp;                        break;</b>
+<i>288</i>&nbsp;                    case &quot;or&quot;:
+<b class="nc"><i>289</i>&nbsp;                        if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="nc"><i>290</i>&nbsp;                            firstPredicate =  readWinConj(nList.item(i), &quot;or&quot;, god);</b>
+<i>291</i>&nbsp;                        else
+<b class="nc"><i>292</i>&nbsp;                            secondPredicate = readWinConj(nList.item(i), &quot;or&quot;, god);</b>
+<i>293</i>&nbsp;                        break;
+<i>294</i>&nbsp;                }
+<i>295</i>&nbsp;            }
+<i>296</i>&nbsp;        }
+<b class="fc"><i>297</i>&nbsp;        if (firstPredicate != null &amp;&amp; secondPredicate != null) {</b>
+<b class="fc"><i>298</i>&nbsp;            if (type.equals(&quot;and&quot;))</b>
+<b class="nc"><i>299</i>&nbsp;                return firstPredicate.and(secondPredicate);</b>
+<b class="fc"><i>300</i>&nbsp;            return firstPredicate.or(secondPredicate);</b>
+<i>301</i>&nbsp;        }
+<b class="nc"><i>302</i>&nbsp;        return null;</b>
+<i>303</i>&nbsp;
+<i>304</i>&nbsp;    }
+<i>305</i>&nbsp;
+<i>306</i>&nbsp;    private Action readStrategy(Node node) {
+<b class="fc"><i>307</i>&nbsp;        Node child = node.getFirstChild();</b>
+<i>308</i>&nbsp;
+<i>309</i>&nbsp;        //if (child.getNodeValue() != null)
+<b class="fc"><i>310</i>&nbsp;        switch (child.getTextContent()) {  //TODO Can be replaced using reflection</b>
+<i>311</i>&nbsp;            case &quot;MoveAndShiftBack&quot;:
+<b class="fc"><i>312</i>&nbsp;                return new MoveAndShiftBack();</b>
+<i>313</i>&nbsp;            case &quot;MoveWithSwap&quot;:
+<b class="fc"><i>314</i>&nbsp;                return new MoveAndSwap();</b>
+<i>315</i>&nbsp;            case &quot;MoveAndSet&quot;: //note: move and set can only be provided with a move or build predicate
+<b class="fc"><i>316</i>&nbsp;                    if (child.getNextSibling().getNodeName().equals(&quot;arg&quot;)) {</b>
+<i>317</i>&nbsp;                        BiPredicate&lt;FieldCell, GameWorker&gt; predicate;
+<b class="fc"><i>318</i>&nbsp;                        predicate = readBuildAndMovePredicates(child.getNextSibling(), null);</b>
+<b class="fc"><i>319</i>&nbsp;                        return new MoveAndSet(predicate);</b>
+<i>320</i>&nbsp;                    }
+<i>321</i>&nbsp;        }
+<b class="nc"><i>322</i>&nbsp;        return null;</b>
+<i>323</i>&nbsp;    }
+<i>324</i>&nbsp;
+<i>325</i>&nbsp;    private BiPredicate&lt;FieldCell, GameWorker&gt; readConj(Node node, String type) {
+<b class="fc"><i>326</i>&nbsp;        NodeList nList = node.getChildNodes(); //in case we want other predicates to handle conjunctions we must add it to the switch case</b>
+<b class="fc"><i>327</i>&nbsp;        BiPredicate&lt;FieldCell, GameWorker&gt; firstPredicate = null;</b>
+<b class="fc"><i>328</i>&nbsp;        BiPredicate&lt;FieldCell, GameWorker&gt; secondPredicate = null;</b>
+<i>329</i>&nbsp;
+<b class="fc"><i>330</i>&nbsp;        for (int i = 0; i &lt; nList.getLength(); i++) {</b>
+<b class="fc"><i>331</i>&nbsp;            if (nList.item(i).getNodeValue() == null) {</b>
+<b class="fc"><i>332</i>&nbsp;                switch (nList.item(i).getNodeName()) {</b>
+<i>333</i>&nbsp;                    case &quot;name&quot;: // i think it is useless but still needed for reliability
+<b class="nc"><i>334</i>&nbsp;                        if (isNumeric(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent())) {</b>
+<b class="nc"><i>335</i>&nbsp;                            int val = Integer.parseInt(nList.item(i + OFFSET).getChildNodes().item(FIRST_ELEMENT_INDEX).getTextContent());</b>
+<b class="nc"><i>336</i>&nbsp;                            if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="nc"><i>337</i>&nbsp;                                firstPredicate = readBuildAndMovePredicates(nList.item(i), val);</b>
+<i>338</i>&nbsp;                            else
+<b class="nc"><i>339</i>&nbsp;                                secondPredicate = readBuildAndMovePredicates(nList.item(i), val);</b>
+<b class="nc"><i>340</i>&nbsp;                        } else {</b>
+<b class="nc"><i>341</i>&nbsp;                            if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="nc"><i>342</i>&nbsp;                                firstPredicate = readBuildAndMovePredicates(nList.item(i), null);</b>
+<i>343</i>&nbsp;                            else
+<b class="nc"><i>344</i>&nbsp;                                secondPredicate = readBuildAndMovePredicates(nList.item(i), null);</b>
+<i>345</i>&nbsp;                        }
+<b class="nc"><i>346</i>&nbsp;                        break;</b>
+<i>347</i>&nbsp;                    case &quot;movePredicate&quot;:
+<i>348</i>&nbsp;                    case &quot;buildPredicate&quot;:
+<b class="fc"><i>349</i>&nbsp;                        if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="fc"><i>350</i>&nbsp;                            firstPredicate = readBuildAndMovePredicates(nList.item(i), null);</b>
+<i>351</i>&nbsp;                        else
+<b class="fc"><i>352</i>&nbsp;                            secondPredicate = readBuildAndMovePredicates(nList.item(i), null);</b>
+<b class="fc"><i>353</i>&nbsp;                        break;</b>
+<i>354</i>&nbsp;                    case &quot;and&quot;:
+<b class="fc"><i>355</i>&nbsp;                        if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="fc"><i>356</i>&nbsp;                            firstPredicate = readConj(nList.item(i), &quot;and&quot;);</b>
+<i>357</i>&nbsp;                        else
+<b class="fc"><i>358</i>&nbsp;                            secondPredicate = readConj(nList.item(i), &quot;and&quot;);</b>
+<b class="fc"><i>359</i>&nbsp;                        break;</b>
+<i>360</i>&nbsp;                    case &quot;or&quot;:
+<b class="fc"><i>361</i>&nbsp;                        if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="nc"><i>362</i>&nbsp;                                firstPredicate = readConj(nList.item(i), &quot;or&quot;);</b>
+<i>363</i>&nbsp;                        else
+<b class="fc"><i>364</i>&nbsp;                            secondPredicate = readConj(nList.item(i), &quot;or&quot;);</b>
+<b class="fc"><i>365</i>&nbsp;                        break;</b>
+<i>366</i>&nbsp;                    case &quot;negate&quot;:
+<b class="fc"><i>367</i>&nbsp;                        if (i == FIRST_ELEMENT_INDEX)</b>
+<b class="nc"><i>368</i>&nbsp;                        firstPredicate = readBuildAndMovePredicates(nList.item(i), null).negate();</b>
+<i>369</i>&nbsp;                    else
+<b class="fc"><i>370</i>&nbsp;                        secondPredicate = readBuildAndMovePredicates(nList.item(i), null).negate();</b>
+<i>371</i>&nbsp;                        break;
+<i>372</i>&nbsp;                }
+<i>373</i>&nbsp;            }
+<i>374</i>&nbsp;        }
+<b class="fc"><i>375</i>&nbsp;        if (firstPredicate != null &amp;&amp; secondPredicate != null) {</b>
+<b class="fc"><i>376</i>&nbsp;            if (type.equals(&quot;and&quot;))</b>
+<b class="fc"><i>377</i>&nbsp;                return firstPredicate.and(secondPredicate);</b>
+<b class="fc"><i>378</i>&nbsp;            return firstPredicate.or(secondPredicate);</b>
+<i>379</i>&nbsp;        }
+<b class="nc"><i>380</i>&nbsp;        return null;</b>
+<i>381</i>&nbsp;    }
+<i>382</i>&nbsp;
+<i>383</i>&nbsp;    private String readName(Node item) {
+<b class="fc"><i>384</i>&nbsp;        Node node = item.getFirstChild();</b>
+<i>385</i>&nbsp;
+<b class="fc"><i>386</i>&nbsp;        if (node.getNodeValue() != null)</b>
+<b class="fc"><i>387</i>&nbsp;            return node.getTextContent();</b>
+<b class="nc"><i>388</i>&nbsp;        return null;</b>
+<i>389</i>&nbsp;    }
+<i>390</i>&nbsp;
+<i>391</i>&nbsp;    private void buildPhases(Node item, God.GodBuilder god) {
+<b class="fc"><i>392</i>&nbsp;        NodeList nList = item.getChildNodes();</b>
+<i>393</i>&nbsp;
+<b class="fc"><i>394</i>&nbsp;        for (Integer i = 0; i &lt; nList.getLength(); i++) {</b>
+<b class="fc"><i>395</i>&nbsp;            Node node = nList.item(i);</b>
+<b class="fc"><i>396</i>&nbsp;            if (node.getNodeValue() == null) {</b>
+<b class="fc"><i>397</i>&nbsp;                switch (node.getNodeName()) {</b>
+<i>398</i>&nbsp;                    case &quot;phases&quot;:   //new branch
+<b class="fc"><i>399</i>&nbsp;                        god.saveRefNode();</b>
+<b class="fc"><i>400</i>&nbsp;                        buildPhases(node, god);</b>
+<b class="fc"><i>401</i>&nbsp;                        god.restoreRefNode();</b>
+<b class="fc"><i>402</i>&nbsp;                        break;</b>
+<i>403</i>&nbsp;                    case &quot;name&quot;:   //phase introduces a new predicate
+<b class="fc"><i>404</i>&nbsp;                        readPredicate(node, god);</b>
+<b class="fc"><i>405</i>&nbsp;                        i = nList.getLength();  // We arleady read the siblings above</b>
+<b class="fc"><i>406</i>&nbsp;                        break;</b>
+<i>407</i>&nbsp;                    default:    //&lt;phase&gt;
+<b class="fc"><i>408</i>&nbsp;                        buildPhases(node, god);   //normal phase</b>
+<b class="fc"><i>409</i>&nbsp;                        break;</b>
+<i>410</i>&nbsp;                }
+<i>411</i>&nbsp;            } else {//reading the text (di sopra o di sotto?)
+<b class="fc"><i>412</i>&nbsp;                String phaseName = node.getTextContent();</b>
+<b class="fc"><i>413</i>&nbsp;                BiPredicate phasePredicate = null;</b>
+<b class="fc"><i>414</i>&nbsp;                if (phaseName.equals(&quot;ChooseActionPhase&quot;))</b>
+<b class="fc"><i>415</i>&nbsp;                    phasePredicate = getActionPredicate(item.getNextSibling());</b>
+<b class="fc"><i>416</i>&nbsp;                god.addPhase(node.getTextContent(), phasePredicate);</b>
+<i>417</i>&nbsp;            }
+<i>418</i>&nbsp;        }
+<b class="fc"><i>419</i>&nbsp;    }</b>
+<i>420</i>&nbsp;
+<i>421</i>&nbsp;    private BiPredicate getActionPredicate(Node item){
+<b class="fc"><i>422</i>&nbsp;       Node node = item.getFirstChild();</b>
+<i>423</i>&nbsp;       String firstPhase;
+<b class="fc"><i>424</i>&nbsp;       String secondPhase = &quot;End&quot;;</b>
+<i>425</i>&nbsp;
+<b class="fc"><i>426</i>&nbsp;        if (item.getNextSibling() != null)</b>
+<b class="fc"><i>427</i>&nbsp;            secondPhase = readName(item.getNextSibling().getFirstChild());</b>
+<i>428</i>&nbsp;
+<b class="fc"><i>429</i>&nbsp;        if (node.getFirstChild().getNodeValue() == null)    //when the phase introduces a new predicate</b>
+<b class="fc"><i>430</i>&nbsp;            node = node.getFirstChild();</b>
+<i>431</i>&nbsp;
+<b class="fc"><i>432</i>&nbsp;        firstPhase = readName(node);</b>
+<i>433</i>&nbsp;
+<b class="fc"><i>434</i>&nbsp;        return StringToPredicate(firstPhase).or(StringToPredicate(secondPhase));</b>
+<i>435</i>&nbsp;
+<i>436</i>&nbsp;    }
+<i>437</i>&nbsp;
+<i>438</i>&nbsp;    private BiPredicate StringToPredicate(String phaseName){
+<b class="fc"><i>439</i>&nbsp;        return switch (phaseName){</b>
+<b class="fc"><i>440</i>&nbsp;            case (&quot;MovePhase&quot;) -&gt; new CanMovePredicate();</b>
+<b class="fc"><i>441</i>&nbsp;            case (&quot;BuildPhase&quot;) -&gt; new CanBuildPredicate();</b>
+<b class="fc"><i>442</i>&nbsp;            case (&quot;DisplacePhase&quot;) -&gt; new CanDisplacePredicate();</b>
+<b class="fc"><i>443</i>&nbsp;            default -&gt; new CanStopPredicate();</b>
+<i>444</i>&nbsp;        };
+<i>445</i>&nbsp;    }
+<i>446</i>&nbsp;
+<i>447</i>&nbsp;    private void readPredicate(Node item, God.GodBuilder god) {
+<b class="fc"><i>448</i>&nbsp;        String name = readName(item);</b>
+<b class="fc"><i>449</i>&nbsp;        String predicateName = item.getNextSibling().getNodeName();</b>
+<i>450</i>&nbsp;        BiPredicate predicate;
+<b class="fc"><i>451</i>&nbsp;        if (predicateName.startsWith(&quot;constructible&quot;))</b>
+<b class="nc"><i>452</i>&nbsp;            predicate = readConstructiblePredicate(item.getNextSibling());</b>
+<i>453</i>&nbsp;        else   //build or move predicate //do we need adding action and winconditionPredicate?
+<b class="fc"><i>454</i>&nbsp;            predicate = readBuildAndMovePredicates(item.getNextSibling(), null);</b>
+<i>455</i>&nbsp;
+<b class="fc"><i>456</i>&nbsp;        god.addPhase(name, predicate);</b>
+<b class="fc"><i>457</i>&nbsp;    }</b>
+<i>458</i>&nbsp;
+<i>459</i>&nbsp;    private String numOfTabs(Integer level) {
+<b class="nc"><i>460</i>&nbsp;        StringBuilder tabs = new StringBuilder();</b>
+<i>461</i>&nbsp;
+<b class="nc"><i>462</i>&nbsp;        for (Integer i = 0; i &lt; level; i++)</b>
+<b class="nc"><i>463</i>&nbsp;            tabs.append(&#39;\t&#39;);</b>
+<i>464</i>&nbsp;
+<b class="nc"><i>465</i>&nbsp;        return tabs.toString();</b>
+<i>466</i>&nbsp;
+<i>467</i>&nbsp;    }
+<i>468</i>&nbsp;
+<i>469</i>&nbsp;    private void stripSpace(Node node) {
+<b class="fc"><i>470</i>&nbsp;        Node child = node.getFirstChild();</b>
+<i>471</i>&nbsp;
+<b class="fc"><i>472</i>&nbsp;        while (child != null) {</b>
+<i>473</i>&nbsp;            // save the sibling of the node that will
+<i>474</i>&nbsp;            // perhaps be removed and set to null
+<b class="fc"><i>475</i>&nbsp;            Node c = child.getNextSibling();</b>
+<b class="fc"><i>476</i>&nbsp;            if ((child.getNodeType() == Node.TEXT_NODE &amp;&amp; child.getNodeValue().trim().length() == EMPTY)</b>
+<i>477</i>&nbsp;                    ||
+<b class="fc"><i>478</i>&nbsp;                    ((child.getNodeType() != Node.TEXT_NODE) &amp;&amp; (child.getNodeType() != Node.ELEMENT_NODE)))</b>
+<b class="fc"><i>479</i>&nbsp;                node.removeChild(child);</b>
+<i>480</i>&nbsp;            else // process children recursively
+<b class="fc"><i>481</i>&nbsp;                stripSpace(child);</b>
+<b class="fc"><i>482</i>&nbsp;            child = c;</b>
+<b class="fc"><i>483</i>&nbsp;        }</b>
+<b class="fc"><i>484</i>&nbsp;    }</b>
+<i>485</i>&nbsp;
+<i>486</i>&nbsp;
+<i>487</i>&nbsp;
+<i>488</i>&nbsp;    private void copyInputStreamToFile(InputStream input, File destination) {
+<i>489</i>&nbsp;
+<b class="fc"><i>490</i>&nbsp;        try (OutputStream output = new FileOutputStream(destination)) {</b>
+<b class="fc"><i>491</i>&nbsp;            input.transferTo(output);</b>
+<b class="fc"><i>492</i>&nbsp;        } catch (IOException ioException) {</b>
+<b class="nc"><i>493</i>&nbsp;            ioException.printStackTrace();</b>
+<b class="fc"><i>494</i>&nbsp;        }</b>
+<i>495</i>&nbsp;
+<b class="fc"><i>496</i>&nbsp;    }</b>
+<i>497</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-06 11:54</div>
+</div>
+</body>
+</html>

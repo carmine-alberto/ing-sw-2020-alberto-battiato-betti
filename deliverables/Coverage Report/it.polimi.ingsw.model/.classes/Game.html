@@ -1,0 +1,508 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Game</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Game (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Game</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,8%
+  </span>
+  <span class="absValue">
+    (28/ 33)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60,4%
+  </span>
+  <span class="absValue">
+    (102/ 169)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.utility.Observable;
+<i>4</i>&nbsp;import it.polimi.ingsw.controller.events.*;
+<i>5</i>&nbsp;import it.polimi.ingsw.view.serverView.VirtualView;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.actions.Build;
+<i>7</i>&nbsp;import it.polimi.ingsw.model.actions.Move;
+<i>8</i>&nbsp;import it.polimi.ingsw.model.exceptions.IllegalFormatException;
+<i>9</i>&nbsp;import it.polimi.ingsw.model.exceptions.InvalidSelectionException;
+<i>10</i>&nbsp;import it.polimi.ingsw.model.phases.TurnPhase;
+<i>11</i>&nbsp;import it.polimi.ingsw.model.predicates.actionPredicate.CanBuildPredicate;
+<i>12</i>&nbsp;import it.polimi.ingsw.model.predicates.actionPredicate.CanMovePredicate;
+<i>13</i>&nbsp;import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsCellFreePredicate;
+<i>14</i>&nbsp;import it.polimi.ingsw.model.predicates.buildAndMovePredicates.IsDeltaHeightLessThanPredicate;
+<i>15</i>&nbsp;import it.polimi.ingsw.model.predicates.constructiblePredicates.BlockPredicate;
+<i>16</i>&nbsp;import it.polimi.ingsw.model.predicates.winConditionsPredicates.IsTurnPlayerPredicate;
+<i>17</i>&nbsp;import it.polimi.ingsw.model.predicates.winConditionsPredicates.WinningMovePredicate;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;import java.util.ArrayList;
+<i>20</i>&nbsp;import java.util.List;
+<i>21</i>&nbsp;import java.util.stream.Collectors;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;import static it.polimi.ingsw.utility.GameSettings.*;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;public class Game extends Observable&lt;Event&gt; {
+<b class="fc"><i>26</i>&nbsp;    private final static Integer INITIAL_VALUE = -1;</b>
+<b class="fc"><i>27</i>&nbsp;    private final static Integer MIN_NUM_OF_NONCHALLENGERS = 1;</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    private Integer numberOfPlayers;
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    private Player turnPlayer;
+<i>32</i>&nbsp;    private Integer currentPlayerIndex;
+<i>33</i>&nbsp;    private List&lt;Player&gt; players;
+<i>34</i>&nbsp;    private List&lt;God&gt; godPowers;
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    private TurnPhase turnPhase;
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;    private FieldCell[][] field = new FieldCell[FIELD_SIZE][FIELD_SIZE];</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Constructor for class Game, it creates the board and the list of available gods
+<i>43</i>&nbsp;     */
+<b class="fc"><i>44</i>&nbsp;    public Game() {</b>
+<b class="fc"><i>45</i>&nbsp;        players = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>46</i>&nbsp;        numberOfPlayers = INITIAL_VALUE;</b>
+<i>47</i>&nbsp;
+<b class="fc"><i>48</i>&nbsp;        for (Integer i = 0; i &lt; FIELD_SIZE; i++)</b>
+<b class="fc"><i>49</i>&nbsp;            for (Integer j = 0; j &lt; FIELD_SIZE; j++)</b>
+<b class="fc"><i>50</i>&nbsp;                this.field[i][j] = new FieldCell(this, i, j);</b>
+<b class="fc"><i>51</i>&nbsp;    }</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    public List&lt;Player&gt; getPlayers() {
+<b class="fc"><i>55</i>&nbsp;        return players;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    public void setTurnPlayer(Player currentTurnPlayer) {
+<b class="fc"><i>59</i>&nbsp;        this.turnPlayer = currentTurnPlayer;</b>
+<b class="fc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    public FieldCell getCell(Integer x, Integer y) {
+<b class="fc"><i>63</i>&nbsp;        return field[x][y];</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     * Adds a new player to the game
+<i>68</i>&nbsp;     * @param newNickname The nickname of the player to be added
+<i>69</i>&nbsp;     * @throws InvalidSelectionException if the player&#39;s name is already in use
+<i>70</i>&nbsp;     */
+<i>71</i>&nbsp;    public void addPlayer(String newNickname, VirtualView playerView) throws InvalidSelectionException {
+<b class="fc"><i>72</i>&nbsp;       for (Player tempPlayer : players)</b>
+<b class="fc"><i>73</i>&nbsp;           if (tempPlayer.getNickname().equals(newNickname))</b>
+<b class="fc"><i>74</i>&nbsp;               throw new InvalidSelectionException(&quot;Nickname already in use&quot;);</b>
+<i>75</i>&nbsp;
+<b class="nc"><i>76</i>&nbsp;       Player newPlayer = new Player(newNickname, playerView);</b>
+<b class="nc"><i>77</i>&nbsp;       newPlayer.setCurrentGame(this);</b>
+<b class="nc"><i>78</i>&nbsp;       if (players.isEmpty())</b>
+<b class="nc"><i>79</i>&nbsp;           newPlayer.setChallenger(true);</b>
+<i>80</i>&nbsp;
+<b class="nc"><i>81</i>&nbsp;       players.add(newPlayer);</b>
+<b class="nc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    public void setCurrentPlayerIndex(Integer currentPlayerIndex) {
+<b class="fc"><i>85</i>&nbsp;        this.currentPlayerIndex = currentPlayerIndex;</b>
+<b class="fc"><i>86</i>&nbsp;    }</b>
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;    /**
+<i>89</i>&nbsp;     * Sends game information to players and starts the first turn.
+<i>90</i>&nbsp;     * Called only at the starting of the game
+<i>91</i>&nbsp;     */
+<i>92</i>&nbsp;    public void initGame() {
+<b class="fc"><i>93</i>&nbsp;        notifyObservers(new GameInformationEvent(players));</b>
+<b class="fc"><i>94</i>&nbsp;        notifyObservers(new GameStartedEvent());</b>
+<b class="fc"><i>95</i>&nbsp;        turnPhase = turnPlayer.getSelectedGod().getNextPhase(this);</b>
+<b class="fc"><i>96</i>&nbsp;        turnPhase.stateInit();</b>
+<b class="fc"><i>97</i>&nbsp;    }</b>
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    //TODO Make sure the transition is smooth - an error seemed to be present during one of our tests
+<i>100</i>&nbsp;
+<i>101</i>&nbsp;    /**
+<i>102</i>&nbsp;     * Removes the turnPlayer from the game and ends the game if there&#39;s only one player left
+<i>103</i>&nbsp;     */
+<i>104</i>&nbsp;    public void removeTurnPlayer() {
+<b class="fc"><i>105</i>&nbsp;        Player playerToRemove = turnPlayer;</b>
+<i>106</i>&nbsp;
+<b class="fc"><i>107</i>&nbsp;        setNextTurnPlayer();</b>
+<b class="fc"><i>108</i>&nbsp;        players.remove(playerToRemove);</b>
+<i>109</i>&nbsp;
+<b class="fc"><i>110</i>&nbsp;        if (players.size() == 1) {</b>
+<b class="nc"><i>111</i>&nbsp;            players.get(FIRST_ELEMENT_INDEX).setIsWinner(true);</b>
+<b class="nc"><i>112</i>&nbsp;            endGame();</b>
+<i>113</i>&nbsp;
+<b class="nc"><i>114</i>&nbsp;            return;</b>
+<i>115</i>&nbsp;        }
+<b class="fc"><i>116</i>&nbsp;        playerToRemove.removeWorkersFromBoard();</b>
+<b class="fc"><i>117</i>&nbsp;        notifyObservers(new PlayerLostUpdate(playerToRemove.getNickname()));</b>
+<i>118</i>&nbsp;
+<b class="fc"><i>119</i>&nbsp;        turnPhase = turnPlayer.getSelectedGod().getNextPhase(this);</b>
+<b class="fc"><i>120</i>&nbsp;        turnPhase.stateInit();</b>
+<b class="fc"><i>121</i>&nbsp;    }</b>
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    /**
+<i>124</i>&nbsp;     * Stops the game and kills the server.
+<i>125</i>&nbsp;     * Called after a player&#39;s victory
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    public void endGame() {
+<b class="nc"><i>128</i>&nbsp;        Player winner = players.stream()</b>
+<b class="nc"><i>129</i>&nbsp;                .filter(player -&gt; player.getIsWinner())</b>
+<b class="nc"><i>130</i>&nbsp;                .collect(Collectors.toList())</b>
+<b class="nc"><i>131</i>&nbsp;                .get(FIRST_ELEMENT_INDEX);</b>
+<i>132</i>&nbsp;
+<b class="nc"><i>133</i>&nbsp;        notifyObservers(new GameEndUpdate(winner.getNickname()));</b>
+<b class="nc"><i>134</i>&nbsp;        System.exit(0);</b>
+<b class="nc"><i>135</i>&nbsp;    }</b>
+<i>136</i>&nbsp;
+<i>137</i>&nbsp;    /**
+<i>138</i>&nbsp;     * Changes the current turnPlayer to the next one.
+<i>139</i>&nbsp;     * Called after the end of the turn
+<i>140</i>&nbsp;     */
+<i>141</i>&nbsp;    public void setNextTurnPlayer() {
+<b class="fc"><i>142</i>&nbsp;        this.turnPlayer = players.get(getNextPlayerIndex());</b>
+<b class="fc"><i>143</i>&nbsp;    }</b>
+<i>144</i>&nbsp;
+<i>145</i>&nbsp;    public Player getTurnPlayer() {
+<b class="fc"><i>146</i>&nbsp;        if (turnPlayer == null)</b>
+<b class="nc"><i>147</i>&nbsp;            turnPlayer = players.get(currentPlayerIndex);</b>
+<b class="fc"><i>148</i>&nbsp;        return turnPlayer;</b>
+<i>149</i>&nbsp;    }
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;    public String getTurnPlayerNickname() {
+<b class="nc"><i>152</i>&nbsp;        if (turnPlayer == null)</b>
+<b class="nc"><i>153</i>&nbsp;            turnPlayer = players.get(currentPlayerIndex);</b>
+<b class="nc"><i>154</i>&nbsp;        return turnPlayer.getNickname();</b>
+<i>155</i>&nbsp;    }
+<i>156</i>&nbsp;
+<i>157</i>&nbsp;    /**
+<i>158</i>&nbsp;     * @return a list of each god&#39;s name. If no godPowers are set, returns null instead
+<i>159</i>&nbsp;     */
+<i>160</i>&nbsp;    public List&lt;String&gt; getGodPowers() {
+<b class="fc"><i>161</i>&nbsp;        if (godPowers != null)</b>
+<b class="fc"><i>162</i>&nbsp;            return godPowers</b>
+<b class="fc"><i>163</i>&nbsp;                    .stream()</b>
+<b class="fc"><i>164</i>&nbsp;                    .map(godPower -&gt; godPower.getName())</b>
+<b class="fc"><i>165</i>&nbsp;                    .collect(Collectors.toList());</b>
+<b class="fc"><i>166</i>&nbsp;        return null;</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    }
+<i>169</i>&nbsp;
+<i>170</i>&nbsp;    /**
+<i>171</i>&nbsp;     * Sets the godPowers that will be available to players
+<i>172</i>&nbsp;     * @param godPowers A list of strings representing god names
+<i>173</i>&nbsp;     */
+<i>174</i>&nbsp;    public void setGodPowers(List&lt;String&gt; godPowers) {
+<b class="fc"><i>175</i>&nbsp;        this.godPowers = this.godPowers</b>
+<b class="fc"><i>176</i>&nbsp;        .stream()</b>
+<b class="fc"><i>177</i>&nbsp;        .filter(godPower -&gt; godPowers.contains(godPower.getName()))</b>
+<b class="fc"><i>178</i>&nbsp;        .collect(Collectors.toList());</b>
+<i>179</i>&nbsp;
+<b class="fc"><i>180</i>&nbsp;        notifyObservers(new SelectedGodsUpdate(getGodPowers()));</b>
+<b class="fc"><i>181</i>&nbsp;    }</b>
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;    /**
+<i>184</i>&nbsp;     * This method removes the given god from the gods available to players
+<i>185</i>&nbsp;     * @param selectedGod The name of the god to remove
+<i>186</i>&nbsp;     */
+<i>187</i>&nbsp;    public void removeGodPowerFromAvailableGods(String selectedGod) {
+<b class="fc"><i>188</i>&nbsp;        this.godPowers = this.godPowers</b>
+<b class="fc"><i>189</i>&nbsp;            .stream()</b>
+<b class="fc"><i>190</i>&nbsp;            .filter(godPower -&gt; !godPower.getName().equals(selectedGod))</b>
+<b class="fc"><i>191</i>&nbsp;            .collect(Collectors.toList());</b>
+<i>192</i>&nbsp;
+<b class="fc"><i>193</i>&nbsp;        notifyObservers(new SelectedGodsUpdate(getGodPowers()));</b>
+<b class="fc"><i>194</i>&nbsp;    }</b>
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;    /**
+<i>197</i>&nbsp;     * Sends a notification to all of the observers about a specific event
+<i>198</i>&nbsp;     * @param e The event the observers will receive
+<i>199</i>&nbsp;     */
+<i>200</i>&nbsp;    public void notifyObservers(Event e) {
+<b class="fc"><i>201</i>&nbsp;        this.notify(e);</b>
+<b class="fc"><i>202</i>&nbsp;    }</b>
+<i>203</i>&nbsp;
+<i>204</i>&nbsp;    /**
+<i>205</i>&nbsp;     * Sends a notification to the turnPlayer about a specific event
+<i>206</i>&nbsp;     * @param event The even the turnPlayer will receive
+<i>207</i>&nbsp;     */
+<i>208</i>&nbsp;    public void notifyTurnPlayer(Event event) {
+<b class="fc"><i>209</i>&nbsp;        if (!observers.isEmpty())</b>
+<b class="nc"><i>210</i>&nbsp;            this.notify(observers</b>
+<b class="nc"><i>211</i>&nbsp;                    .stream()</b>
+<b class="nc"><i>212</i>&nbsp;                    .filter(observer -&gt; observer.equals(turnPlayer.getPlayerView()))</b>
+<b class="nc"><i>213</i>&nbsp;                    .collect(Collectors.toList())</b>
+<b class="nc"><i>214</i>&nbsp;                    .get(0),</b>
+<i>215</i>&nbsp;                    event);
+<b class="fc"><i>216</i>&nbsp;    }</b>
+<i>217</i>&nbsp;
+<i>218</i>&nbsp;    public FieldCell[][] getField() {
+<b class="fc"><i>219</i>&nbsp;        return this.field;</b>
+<i>220</i>&nbsp;    }
+<i>221</i>&nbsp;
+<i>222</i>&nbsp;    /**
+<i>223</i>&nbsp;     * Runs the currentPhase of the game
+<i>224</i>&nbsp;     * @param inputString usually indicates a cell&#39;s position, it may indicate actions or constructible items
+<i>225</i>&nbsp;     * @throws IllegalFormatException when the inpuString can&#39;t be parsed
+<i>226</i>&nbsp;     * @throws InvalidSelectionException when the inputString is parsed to a non-permitted action
+<i>227</i>&nbsp;     */
+<i>228</i>&nbsp;    public void runPhase(String inputString) throws IllegalFormatException, InvalidSelectionException {
+<b class="fc"><i>229</i>&nbsp;        this.turnPhase.run(inputString);</b>
+<b class="fc"><i>230</i>&nbsp;        turnPhase.stateEnd();</b>
+<i>231</i>&nbsp;
+<b class="fc"><i>232</i>&nbsp;        turnPhase = turnPlayer.getSelectedGod().getNextPhase(this);</b>
+<i>233</i>&nbsp;
+<b class="fc"><i>234</i>&nbsp;        turnPhase.stateInit();</b>
+<b class="fc"><i>235</i>&nbsp;    }</b>
+<i>236</i>&nbsp;
+<i>237</i>&nbsp;    /**
+<i>238</i>&nbsp;     * Assigns the god passed as a String representing its name to the player passed as a String representing their nickname
+<i>239</i>&nbsp;     * @param selectedGod A String representing the god&#39;s name
+<i>240</i>&nbsp;     * @param choosingPlayer A String representing the player&#39;s nickname
+<i>241</i>&nbsp;     */
+<i>242</i>&nbsp;    public void assignSelectedGodPowerToPlayer(String selectedGod, String choosingPlayer) throws InvalidSelectionException {
+<b class="fc"><i>243</i>&nbsp;        God godToBeAssigned = godPowers</b>
+<b class="fc"><i>244</i>&nbsp;            .stream()</b>
+<b class="fc"><i>245</i>&nbsp;            .filter(god -&gt; selectedGod.equals(god.getName()))</b>
+<b class="fc"><i>246</i>&nbsp;            .findFirst()</b>
+<b class="fc"><i>247</i>&nbsp;            .orElseThrow(() -&gt; new InvalidSelectionException(&quot;The selected God is not available!&quot;));</b>
+<i>248</i>&nbsp;
+<b class="fc"><i>249</i>&nbsp;        getPlayerByName(choosingPlayer).setSelectedGod(godToBeAssigned);</b>
+<b class="fc"><i>250</i>&nbsp;    }</b>
+<i>251</i>&nbsp;
+<i>252</i>&nbsp;    /**
+<i>253</i>&nbsp;     * Checks whether the passed nickname belongs to the turnPlayer
+<i>254</i>&nbsp;     * @param nickname A String representing a nickname
+<i>255</i>&nbsp;     * @return true if the nickname belongs to the turnPlayer
+<i>256</i>&nbsp;     */
+<i>257</i>&nbsp;    public Boolean isTurnPlayer(String nickname) {
+<b class="nc"><i>258</i>&nbsp;        return turnPlayer.getNickname().equals(nickname);</b>
+<i>259</i>&nbsp;    }
+<i>260</i>&nbsp;
+<i>261</i>&nbsp;    /**
+<i>262</i>&nbsp;     * Returns the nickname of the nth player
+<i>263</i>&nbsp;     * @param index An Integer representing the position of a player (order criterion: login time)
+<i>264</i>&nbsp;     * @return The nickname of the nth player
+<i>265</i>&nbsp;     */
+<i>266</i>&nbsp;    public String getNthPlayer(Integer index) {
+<b class="fc"><i>267</i>&nbsp;        return players.get(index).getNickname();</b>
+<i>268</i>&nbsp;    }
+<i>269</i>&nbsp;
+<i>270</i>&nbsp;    /**
+<i>271</i>&nbsp;     * Populates the game with all the existing Santorini gods and sends a List of their names as strings to the players
+<i>272</i>&nbsp;     */
+<i>273</i>&nbsp;    public void initGods() {
+<b class="fc"><i>274</i>&nbsp;        Parser fileParser = new Parser();</b>
+<b class="fc"><i>275</i>&nbsp;        godPowers = fileParser.getGodsList();</b>
+<i>276</i>&nbsp;        //godPowers = buildDefaultGods(); - LEFT FOR TESTING PURPOSES
+<b class="fc"><i>277</i>&nbsp;        notify(new AvailableGodsUpdate(getGodPowers()));</b>
+<b class="fc"><i>278</i>&nbsp;    }</b>
+<i>279</i>&nbsp;
+<i>280</i>&nbsp;    /**
+<i>281</i>&nbsp;     * Checks whether the current game can accept more players
+<i>282</i>&nbsp;     * @return true if more players can join the game
+<i>283</i>&nbsp;     */
+<i>284</i>&nbsp;    public Boolean hasFreeSlots() {
+<b class="fc"><i>285</i>&nbsp;        return numberOfPlayers == INITIAL_VALUE &amp;&amp; players.size() &lt;= MIN_NUM_OF_NONCHALLENGERS || players.size() &lt; numberOfPlayers;</b>
+<i>286</i>&nbsp;    }
+<i>287</i>&nbsp;
+<i>288</i>&nbsp;    /**
+<i>289</i>&nbsp;     * Checks whether the current game has reached the expected number of players, as decided by the challenger
+<i>290</i>&nbsp;     * @return true if the expected number of players is reached
+<i>291</i>&nbsp;     */
+<i>292</i>&nbsp;    public Boolean haveAllPlayersConnected() {
+<b class="fc"><i>293</i>&nbsp;        if (players.size() == numberOfPlayers) {</b>
+<b class="fc"><i>294</i>&nbsp;            notifyObservers(new SelectedGodsUpdate(getGodPowers()));</b>
+<b class="fc"><i>295</i>&nbsp;            return true;</b>
+<i>296</i>&nbsp;        }
+<i>297</i>&nbsp;
+<b class="fc"><i>298</i>&nbsp;        return false;</b>
+<i>299</i>&nbsp;    }
+<i>300</i>&nbsp;
+<i>301</i>&nbsp;    /**
+<i>302</i>&nbsp;     * Sets the starting player, the number of players and the gods that will be available in the game being created
+<i>303</i>&nbsp;     * @param selectedStartingPlayerIndex The starting player index (challenger: 1, second player: 2, etc...)
+<i>304</i>&nbsp;     * @param selectedNumberOfPlayers The number of players to reach before the game can start
+<i>305</i>&nbsp;     * @param selectedGods The gods that will be available for the players to pick
+<i>306</i>&nbsp;     * @throws InvalidSelectionException when the passed parameter are in conflict with each other
+<i>307</i>&nbsp;     */
+<i>308</i>&nbsp;    public void registerChallengerSelection(Integer selectedStartingPlayerIndex, Integer selectedNumberOfPlayers, List&lt;String&gt; selectedGods) throws InvalidSelectionException {
+<b class="fc"><i>309</i>&nbsp;        if (selectedNumberOfPlayers != selectedGods.size())</b>
+<b class="fc"><i>310</i>&nbsp;            throw new InvalidSelectionException(&quot;Number of players and god powers must match!&quot;);</b>
+<i>311</i>&nbsp;
+<b class="fc"><i>312</i>&nbsp;        if (selectedStartingPlayerIndex &gt; selectedNumberOfPlayers)</b>
+<b class="fc"><i>313</i>&nbsp;            throw new  InvalidSelectionException(&quot;You can&#39;t choose the third player as starting player in a 2-players game!&quot;);</b>
+<i>314</i>&nbsp;
+<b class="fc"><i>315</i>&nbsp;        numberOfPlayers = selectedNumberOfPlayers;</b>
+<b class="fc"><i>316</i>&nbsp;        currentPlayerIndex = selectedStartingPlayerIndex - OFFSET;</b>
+<b class="fc"><i>317</i>&nbsp;        setGodPowers(selectedGods);</b>
+<b class="fc"><i>318</i>&nbsp;    }</b>
+<i>319</i>&nbsp;
+<i>320</i>&nbsp;    /**
+<i>321</i>&nbsp;     * Sets the turnPlayer&#39;s color and creates the two gameworkers of theirs according to the specified coordinates
+<i>322</i>&nbsp;     * @param selectedColor A String representing the chosen color
+<i>323</i>&nbsp;     * @param xCoordinates A List containing the x coordinate of the two workers expressed as Integers
+<i>324</i>&nbsp;     * @param yCoordinates A List containing the y coordinate of the two workers expressed as Integers
+<i>325</i>&nbsp;     * @throws InvalidSelectionException when the passed parameter are in conflict with each other
+<i>326</i>&nbsp;     */
+<i>327</i>&nbsp;    public void handleColorAndWorkerSelection(String selectedColor, List&lt;Integer&gt; xCoordinates, List&lt;Integer&gt; yCoordinates) throws InvalidSelectionException {
+<b class="nc"><i>328</i>&nbsp;        for (Integer i = 0; i &lt; FIELD_SIZE; i++)</b>
+<b class="nc"><i>329</i>&nbsp;            for (Integer j = 0; j &lt; FIELD_SIZE; j++)</b>
+<b class="nc"><i>330</i>&nbsp;                if (field[i][j].getWorker() != null &amp;&amp; field[i][j].getWorker().getOwner().getColour().toUpperCase().equals(selectedColor))</b>
+<b class="nc"><i>331</i>&nbsp;                    throw new InvalidSelectionException(&quot;One of your opponents already chose this color, pick another one!&quot;);</b>
+<i>332</i>&nbsp;
+<i>333</i>&nbsp;
+<b class="nc"><i>334</i>&nbsp;        if (xCoordinates.size() != NUM_OF_WORKERS || yCoordinates.size() != NUM_OF_WORKERS)</b>
+<b class="nc"><i>335</i>&nbsp;            throw new InvalidSelectionException(&quot;The selected positions are not &quot; + NUM_OF_WORKERS);</b>
+<i>336</i>&nbsp;
+<b class="nc"><i>337</i>&nbsp;        if(!field[xCoordinates.get(FIRST_ELEMENT_INDEX) - OFFSET][yCoordinates.get(FIRST_ELEMENT_INDEX) - OFFSET].isFree() || !field[xCoordinates.get(SECOND_ELEMENT_INDEX) - OFFSET][yCoordinates.get(SECOND_ELEMENT_INDEX) - OFFSET].isFree())</b>
+<b class="nc"><i>338</i>&nbsp;            throw new InvalidSelectionException(&quot;You can&#39;t place a worker in a cell that is already occupied&quot;);</b>
+<i>339</i>&nbsp;
+<i>340</i>&nbsp;
+<b class="nc"><i>341</i>&nbsp;        turnPlayer.setColour(selectedColor);</b>
+<i>342</i>&nbsp;
+<b class="nc"><i>343</i>&nbsp;        List&lt;GameWorker&gt; turnPlayerWorkers = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>344</i>&nbsp;        for (Integer i = 0; i &lt; NUM_OF_WORKERS; i++) {</b>
+<b class="nc"><i>345</i>&nbsp;            turnPlayerWorkers.add(new GameWorker(this, turnPlayer));</b>
+<i>346</i>&nbsp;            try {
+<b class="nc"><i>347</i>&nbsp;                turnPlayerWorkers.get(i).setPosition(field[xCoordinates.get(i) - OFFSET][yCoordinates.get(i) - OFFSET]);</b>
+<b class="nc"><i>348</i>&nbsp;            } catch (IndexOutOfBoundsException e) {</b>
+<b class="nc"><i>349</i>&nbsp;                throw new InvalidSelectionException(&quot;The selected cell does not exist on the board&quot;);</b>
+<b class="nc"><i>350</i>&nbsp;            }</b>
+<i>351</i>&nbsp;        }
+<b class="nc"><i>352</i>&nbsp;        turnPlayer.setWorkers(turnPlayerWorkers);</b>
+<b class="nc"><i>353</i>&nbsp;    }</b>
+<i>354</i>&nbsp;
+<i>355</i>&nbsp;    /**
+<i>356</i>&nbsp;     * Checks whether the passed nickname belongs to the challenger
+<i>357</i>&nbsp;     * @param nickname A String representing the challenger&#39;s nickname
+<i>358</i>&nbsp;     * @return true if the nickname belongs to the challenger
+<i>359</i>&nbsp;     */
+<i>360</i>&nbsp;    public Boolean isChallenger(String nickname) {
+<i>361</i>&nbsp;        try {
+<b class="fc"><i>362</i>&nbsp;            return getPlayerByName(nickname).isChallenger();</b>
+<b class="nc"><i>363</i>&nbsp;        } catch (InvalidSelectionException e) {</b>
+<b class="nc"><i>364</i>&nbsp;            return false;</b>
+<i>365</i>&nbsp;        }
+<i>366</i>&nbsp;    }
+<i>367</i>&nbsp;
+<i>368</i>&nbsp;    /**
+<i>369</i>&nbsp;     * Checks whether the current game is ready to start
+<i>370</i>&nbsp;     * @return true if all the players have chosen their color and gameWorkers
+<i>371</i>&nbsp;     */
+<i>372</i>&nbsp;    public Boolean isReadyToStart() {
+<b class="fc"><i>373</i>&nbsp;        return players</b>
+<b class="fc"><i>374</i>&nbsp;            .stream()</b>
+<b class="fc"><i>375</i>&nbsp;            .filter(player -&gt; player.getWorkers() != null)</b>
+<b class="fc"><i>376</i>&nbsp;            .count() == numberOfPlayers;</b>
+<i>377</i>&nbsp;    }
+<i>378</i>&nbsp;
+<i>379</i>&nbsp;
+<i>380</i>&nbsp;    private Player getPlayerByName(String nickname) throws InvalidSelectionException {
+<b class="fc"><i>381</i>&nbsp;        return players</b>
+<b class="fc"><i>382</i>&nbsp;                .stream()</b>
+<b class="fc"><i>383</i>&nbsp;                .filter(player -&gt; player.getNickname().equals(nickname))</b>
+<b class="fc"><i>384</i>&nbsp;                .findFirst()</b>
+<b class="fc"><i>385</i>&nbsp;                .orElseThrow(() -&gt; new InvalidSelectionException(&quot;The nickname provided does not belong to any player&quot;));</b>
+<i>386</i>&nbsp;    }
+<i>387</i>&nbsp;
+<i>388</i>&nbsp;    /**
+<i>389</i>&nbsp;     * For testing purposes - builds a set of default gods
+<i>390</i>&nbsp;     * @return a List of gods with default powers
+<i>391</i>&nbsp;     */
+<i>392</i>&nbsp;    private List&lt;God&gt; buildDefaultGods() {
+<b class="nc"><i>393</i>&nbsp;        God.GodBuilder godBuilder = new God.GodBuilder();</b>
+<b class="nc"><i>394</i>&nbsp;        List&lt;God&gt; godsToReturn = new ArrayList&lt;&gt;();</b>
+<i>395</i>&nbsp;
+<b class="nc"><i>396</i>&nbsp;        for (Integer i = 0; i &lt; 3; i++)</b>
+<b class="nc"><i>397</i>&nbsp;            godsToReturn.add(</b>
+<i>398</i>&nbsp;                    godBuilder
+<b class="nc"><i>399</i>&nbsp;                            .name(&quot;Default&quot; + i)</b>
+<b class="nc"><i>400</i>&nbsp;                            .addPhase(&quot;ChooseWorkerPhase&quot;, (arg1, arg2) -&gt; true)</b>
+<b class="nc"><i>401</i>&nbsp;                            .addPhase(&quot;ChooseActionPhase&quot;, new CanMovePredicate().or(new CanBuildPredicate()))</b>
+<b class="nc"><i>402</i>&nbsp;                            .saveRefNode()</b>
+<b class="nc"><i>403</i>&nbsp;                            .addPhase(&quot;MovePhase&quot;, new IsCellFreePredicate().and(new IsDeltaHeightLessThanPredicate(2)))</b>
+<b class="nc"><i>404</i>&nbsp;                            .addPhase(&quot;BuildPhase&quot;, new IsCellFreePredicate())</b>
+<b class="nc"><i>405</i>&nbsp;                            .addPhase(&quot;ChooseBlockPhase&quot;, new BlockPredicate(3))</b>
+<b class="nc"><i>406</i>&nbsp;                            .addPhase(&quot;EndPhase&quot;, (arg1, arg2) -&gt; true)</b>
+<b class="nc"><i>407</i>&nbsp;                            .restoreRefNode()</b>
+<b class="nc"><i>408</i>&nbsp;                            .addPhase(&quot;BuildPhase&quot;, new IsCellFreePredicate())</b>
+<b class="nc"><i>409</i>&nbsp;                            .addPhase(&quot;ChooseBlockPhase&quot;, new BlockPredicate(3))</b>
+<b class="nc"><i>410</i>&nbsp;                            .addPhase(&quot;EndPhase&quot;, (arg1, arg2) -&gt; true)</b>
+<b class="nc"><i>411</i>&nbsp;                            .moveStrategy(new Move())</b>
+<b class="nc"><i>412</i>&nbsp;                            .buildStrategy(new Build())</b>
+<b class="nc"><i>413</i>&nbsp;                            .winConditionPredicate(new WinningMovePredicate().and(new IsTurnPlayerPredicate()))</b>
+<b class="nc"><i>414</i>&nbsp;                            .getCompleteGod()</b>
+<i>415</i>&nbsp;            );
+<i>416</i>&nbsp;
+<b class="nc"><i>417</i>&nbsp;        return godsToReturn;</b>
+<i>418</i>&nbsp;    }
+<i>419</i>&nbsp;
+<i>420</i>&nbsp;    private Integer getNextPlayerIndex() {
+<b class="fc"><i>421</i>&nbsp;        currentPlayerIndex++;</b>
+<b class="fc"><i>422</i>&nbsp;        return currentPlayerIndex % players.size();</b>
+<i>423</i>&nbsp;    }
+<i>424</i>&nbsp;}
+<i>425</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-06 11:54</div>
+</div>
+</body>
+</html>

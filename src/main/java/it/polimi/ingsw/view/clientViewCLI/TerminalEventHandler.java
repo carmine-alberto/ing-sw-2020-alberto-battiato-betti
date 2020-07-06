@@ -5,7 +5,7 @@ import it.polimi.ingsw.view.ReceivedViewState;
 
 import java.util.Scanner;
 
-import static it.polimi.ingsw.GameSettings.CLI;
+import static it.polimi.ingsw.utility.GameSettings.CLI;
 
 /**
  * Used to handle input from the client received as terminal strings

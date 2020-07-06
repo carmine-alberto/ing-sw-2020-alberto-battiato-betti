@@ -26,6 +26,7 @@ public class LoginController extends ControllerState {
         try {
             currentGame.addPlayer(loginEvent.playerUsername, senderView);
             currentGame.addObserver(senderView);
+            senderView.setOwner(loginEvent.playerUsername);
             controller.handleConnectedView(senderView);
 
             currentGame.initGods();

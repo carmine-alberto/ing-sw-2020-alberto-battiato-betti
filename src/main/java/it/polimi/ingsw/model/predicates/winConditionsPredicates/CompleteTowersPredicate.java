@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
-import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
+import static it.polimi.ingsw.utility.GameSettings.FIELD_SIZE;
 
 
 public class CompleteTowersPredicate implements BiPredicate<Game, GameWorker> {

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.Observable;
+import it.polimi.ingsw.utility.Observable;
 import it.polimi.ingsw.controller.events.*;
 import it.polimi.ingsw.view.serverView.VirtualView;
 import it.polimi.ingsw.model.actions.Build;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.*;
+import static it.polimi.ingsw.utility.GameSettings.*;
 
 public class Game extends Observable<Event> {
     private final static Integer INITIAL_VALUE = -1;
@@ -79,7 +79,6 @@ public class Game extends Observable<Event> {
            newPlayer.setChallenger(true);
 
        players.add(newPlayer);
-       playerView.setOwner(newPlayer.getNickname());
     }
 
     public void setCurrentPlayerIndex(Integer currentPlayerIndex) {
@@ -156,13 +155,15 @@ public class Game extends Observable<Event> {
     }
 
     /**
-     * @return a list of each god's name
+     * @return a list of each god's name. If no godPowers are set, returns null instead
      */
     public List<String> getGodPowers() {
-        return godPowers
-                .stream()
-                .map(godPower -> godPower.getName())
-                .collect(Collectors.toList());
+        if (godPowers != null)
+            return godPowers
+                    .stream()
+                    .map(godPower -> godPower.getName())
+                    .collect(Collectors.toList());
+        return null;
 
     }
 

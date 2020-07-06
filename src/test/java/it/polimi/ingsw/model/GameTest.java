@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.GameSettings.FIRST_PLAYER_INDEX;
-import static it.polimi.ingsw.GameSettings.THIRD_PLAYER_INDEX;
+import static it.polimi.ingsw.utility.GameSettings.FIRST_PLAYER_INDEX;
+import static it.polimi.ingsw.utility.GameSettings.THIRD_PLAYER_INDEX;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
@@ -23,17 +23,20 @@ class GameTest {
     void setUp() {
         game = new Game();
         player1 = new Player("Es1" , null);
+        player1.setCurrentGame(game);
+        player1.setChallenger(true);
 
         player2 = new Player("Es2" , null);
+        player2.setCurrentGame(game);
 
         player3 = new Player("Es3" , null);
+        player3.setCurrentGame(game);
+        game.initGods();
 
         try {
-            game.addPlayer(player1.getNickname(), null);
+            game.getPlayers().addAll(List.of(player1, player2, player3));
             game.assignSelectedGodPowerToPlayer("Apollo" , player1.getNickname());
-            game.addPlayer(player2.getNickname() , null);
             game.assignSelectedGodPowerToPlayer("Artemis" , player2.getNickname());
-            game.addPlayer(player3.getNickname() , null);
             game.assignSelectedGodPowerToPlayer("Athena" , player3.getNickname());
         } catch (InvalidSelectionException e) {
             e.printStackTrace();
@@ -86,9 +89,9 @@ class GameTest {
     @Test
     void initGods(){
         Game g = new Game();
-        assertNull(game.getGodPowers());
-        game.initGods();
-        assertNotNull(game.getGodPowers());
+        assertNull(g.getGodPowers());
+        g.initGods();
+        assertTrue(g.getGodPowers().size() != 0);
     }
     @Test
     void setNextTurnPlayer() {
@@ -132,5 +135,53 @@ class GameTest {
         } catch (InvalidSelectionException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void getNthPlayer() {
+        String firstPlayer = game.getNthPlayer(0);
+        assertEquals(firstPlayer, player1.getNickname());
+    }
+
+
+    @Test
+    void haveAllPlayersConnected() {
+        try {
+            game.registerChallengerSelection(1, 3, List.of("Athena", "Artemis", "Apollo"));
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
+        assertTrue(game.haveAllPlayersConnected());
+
+        game.getPlayers().remove(1);
+        assertFalse(game.haveAllPlayersConnected());
+    }
+
+    @Test
+    void isChallenger() {
+        assertTrue(game.isChallenger(player1.getNickname()));
+        assertFalse(game.isChallenger(player2.getNickname()));
+    }
+
+    @Test
+    void isReadyToStart() {
+        try {
+            game.registerChallengerSelection(1, 3, List.of("Athena", "Artemis", "Apollo"));
+        } catch (InvalidSelectionException e) {
+            e.printStackTrace();
+        }
+
+        List<GameWorker> p1Workers = List.of(new GameWorker(game, player1), new GameWorker(game, player1));
+        player1.setWorkers(p1Workers);
+
+        List<GameWorker> p2Workers = List.of(new GameWorker(game, player2), new GameWorker(game, player2));
+        player2.setWorkers(p2Workers);
+
+        assertFalse(game.isReadyToStart());
+
+        List<GameWorker> p3Workers = List.of(new GameWorker(game, player3), new GameWorker(game, player3));
+        player3.setWorkers(p3Workers);
+
+        assertTrue(game.isReadyToStart());
     }
 }

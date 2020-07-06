@@ -34,6 +34,7 @@ class ChooseWorkerPhaseTest {
         third = new Player("Tacchino" , null);
         third.setCurrentGame(game);
         game.getPlayers().add(third);
+        game.initGods();
         try {
             game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
             game.assignSelectedGodPowerToPlayer("Artemis" , second.getNickname());

@@ -11,7 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-import static it.polimi.ingsw.GameSettings.FIELD_SIZE;
+import static it.polimi.ingsw.utility.GameSettings.FIELD_SIZE;
 import static it.polimi.ingsw.view.viewUtility.CLIFormatter.*;
 
 public abstract class CLIViewState extends ViewState {
@@ -131,7 +131,7 @@ public abstract class CLIViewState extends ViewState {
      */
     public void terminate(String reason) {
         super.terminate(reason);
-        showMessage(reason);
+        showWarning(reason);
     }
 
         public abstract void handleCLIInput(String input);

@@ -1,0 +1,106 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: NotOnPerimeterPredicate</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model.predicates.winConditionsPredicates</a> ]
+</div>
+
+<h1>Coverage Summary for Class: NotOnPerimeterPredicate (it.polimi.ingsw.model.predicates.winConditionsPredicates)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NotOnPerimeterPredicate</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model.predicates.winConditionsPredicates;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Game;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.GameWorker;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.function.BiPredicate;
+<i>7</i>&nbsp;
+<b class="fc"><i>8</i>&nbsp;public class NotOnPerimeterPredicate implements BiPredicate&lt;Game, GameWorker&gt; {</b>
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    /**
+<i>11</i>&nbsp;     * We check if the considered gameWorker has won, the notOnPerimeterPredicate sets the player
+<i>12</i>&nbsp;     * as winner if the worker is not on a perimeter cell
+<i>13</i>&nbsp;     *
+<i>14</i>&nbsp;     * @param game the game we&#39;re playing on
+<i>15</i>&nbsp;     * @param gameWorker the gameWorker that we&#39;re checking the winCondition
+<i>16</i>&nbsp;     *
+<i>17</i>&nbsp;     * @return true if the winCondition is respected (the gameWorker has won), false otherwise
+<i>18</i>&nbsp;     */
+<i>19</i>&nbsp;    @Override
+<i>20</i>&nbsp;    public boolean test(Game game, GameWorker gameWorker) {
+<b class="fc"><i>21</i>&nbsp;        return gameWorker != null &amp;&amp; !gameWorker.getCell().isOnPerimeter();</b>
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-06 11:54</div>
+</div>
+</body>
+</html>

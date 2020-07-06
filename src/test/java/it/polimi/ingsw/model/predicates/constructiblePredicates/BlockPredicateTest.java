@@ -29,6 +29,8 @@ class BlockPredicateTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Zio" , null);
+        game.getPlayers().add(player);
+        game.initGods();
         try {
             game.assignSelectedGodPowerToPlayer("Hestia" , player.getNickname());
         } catch (InvalidSelectionException e) {

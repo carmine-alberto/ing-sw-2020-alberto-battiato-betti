@@ -15,7 +15,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-import static it.polimi.ingsw.GameSettings.CLI;
+import static it.polimi.ingsw.utility.GameSettings.CLI;
 
 public abstract class ViewState {
     protected Stage mainStage;
@@ -166,14 +166,12 @@ public abstract class ViewState {
      * @param e the event you want to send
      */
     public void notify(Event e) {
-        Platform.runLater(() -> {
             try {
                 out.writeObject(e);
                 out.reset();
             } catch (IOException ex) {
                 connectionClosedHandler();
             }
-        });
     }
 
     /**

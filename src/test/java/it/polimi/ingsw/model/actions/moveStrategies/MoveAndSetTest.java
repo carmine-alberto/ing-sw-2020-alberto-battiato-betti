@@ -24,7 +24,9 @@ class MoveAndSetTest {
         game = new Game();
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         firstPlayer = new Player("Grande", null);
+        game.initGods();
         try {
+            game.getPlayers().add(firstPlayer);
             game.assignSelectedGodPowerToPlayer("Athena", firstPlayer.getNickname());
         } catch (InvalidSelectionException e) {
             e.printStackTrace();

@@ -5,8 +5,8 @@ import it.polimi.ingsw.model.GameWorker;
 
 import java.util.function.BiPredicate;
 
-import static it.polimi.ingsw.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
-import static it.polimi.ingsw.GameSettings.SECOND_LEVEL;
+import static it.polimi.ingsw.utility.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
+import static it.polimi.ingsw.utility.GameSettings.SECOND_LEVEL;
 
 public class WinningMovePredicate implements BiPredicate<Game, GameWorker> {
 

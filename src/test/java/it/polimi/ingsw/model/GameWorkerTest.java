@@ -16,6 +16,8 @@ class GameWorkerTest {
     void setUp() {
         myGame = new Game();
         myPlayer = new Player("Franco" , null);
+        myGame.initGods();
+        myGame.getPlayers().add(myPlayer);
         try {
             myGame.assignSelectedGodPowerToPlayer("Apollo" , myPlayer.getNickname());
         } catch (InvalidSelectionException e) {

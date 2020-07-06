@@ -27,6 +27,8 @@ class WinningMovePredicateTest {
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Zio" , null);
         try {
+            game.getPlayers().add(player);
+            game.initGods();
             game.assignSelectedGodPowerToPlayer("Hestia" , player.getNickname());
         } catch (InvalidSelectionException e) {
             e.printStackTrace();

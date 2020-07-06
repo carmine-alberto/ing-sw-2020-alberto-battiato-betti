@@ -27,12 +27,24 @@ class ChooseBlockPhaseTest {
     @BeforeEach
     void setUp() {
         game = new Game();
+        game.initGods();
         player = new Player("Giovanni", null);
         player.setCurrentGame(game);
         game.getPlayers().add(player);
+        try {
+            game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
+        } catch (InvalidSelectionException invalidSelectionException) {
+            invalidSelectionException.printStackTrace();
+        }
         second = new Player("Pollo" , null);
         second.setCurrentGame(game);
         game.getPlayers().add(second);
+
+        try {
+            game.assignSelectedGodPowerToPlayer("Artemis" , second.getNickname());
+        } catch (InvalidSelectionException invalidSelectionException) {
+            invalidSelectionException.printStackTrace();
+        }
         worker = new GameWorker(game, player);
         workers = new ArrayList<>();
         workers.add(worker);
@@ -41,9 +53,7 @@ class ChooseBlockPhaseTest {
         third.setCurrentGame(game);
         game.getPlayers().add(third);
         try {
-            game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
-            game.assignSelectedGodPowerToPlayer("Artemis" , second.getNickname());
-            game.assignSelectedGodPowerToPlayer("Athena" , third.getNickname());
+            game.assignSelectedGodPowerToPlayer("Artemis" , third.getNickname());
         } catch (InvalidSelectionException invalidSelectionException) {
             invalidSelectionException.printStackTrace();
         }

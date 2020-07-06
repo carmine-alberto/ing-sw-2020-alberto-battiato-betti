@@ -1,0 +1,232 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: FieldCell</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: FieldCell (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FieldCell</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,3%
+  </span>
+  <span class="absValue">
+    (14/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,1%
+  </span>
+  <span class="absValue">
+    (41/ 45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.events.BoardUpdate;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.exceptions.MaxHeightReachedException;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.io.Serializable;
+<i>7</i>&nbsp;import java.util.ArrayList;
+<i>8</i>&nbsp;import java.util.List;
+<i>9</i>&nbsp;import java.util.Objects;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import static it.polimi.ingsw.utility.GameSettings.*;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;public class FieldCell implements Serializable {
+<i>14</i>&nbsp;    private transient Game currentGame;
+<i>15</i>&nbsp;    private GameWorker occupyingWorker;
+<i>16</i>&nbsp;    private Integer posX, posY, height;
+<i>17</i>&nbsp;    private Boolean hasDome;
+<i>18</i>&nbsp;
+<b class="fc"><i>19</i>&nbsp;    public FieldCell(Game currentGame, Integer posX, Integer posY) {</b>
+<b class="fc"><i>20</i>&nbsp;        this.occupyingWorker = null;</b>
+<b class="fc"><i>21</i>&nbsp;        this.posX = posX;</b>
+<b class="fc"><i>22</i>&nbsp;        this.posY = posY;</b>
+<b class="fc"><i>23</i>&nbsp;        this.height = 0;</b>
+<b class="fc"><i>24</i>&nbsp;        this.hasDome = false;</b>
+<b class="fc"><i>25</i>&nbsp;        this.currentGame = currentGame;</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    public Integer getPosX(){
+<b class="fc"><i>29</i>&nbsp;        return this.posX;</b>
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    public Integer getPosY(){
+<b class="fc"><i>33</i>&nbsp;        return this.posY;</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    public void setOccupyingWorker(GameWorker worker){
+<b class="fc"><i>37</i>&nbsp;        this.occupyingWorker = worker;</b>
+<b class="fc"><i>38</i>&nbsp;        if (worker != null &amp;&amp; !worker.getCell().equals(this))</b>
+<b class="nc"><i>39</i>&nbsp;            worker.setPosition(this);</b>
+<b class="fc"><i>40</i>&nbsp;        currentGame.notifyObservers(new BoardUpdate(currentGame.getField()));</b>
+<b class="fc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    public Integer getHeight() {
+<b class="fc"><i>44</i>&nbsp;        return height;</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    /**
+<i>48</i>&nbsp;     * Increments the fieldCell height if possible (eg. it has reached its MAX_HEIGHT) and notifies the observers
+<i>49</i>&nbsp;     */
+<i>50</i>&nbsp;    public void incrementHeight() {
+<i>51</i>&nbsp;        try {
+<b class="fc"><i>52</i>&nbsp;            if (height &gt;= MAX_HEIGHT_WITHOUT_DOME)</b>
+<b class="nc"><i>53</i>&nbsp;                throw new MaxHeightReachedException(&quot;Invalid move: max height reached&quot;);</b>
+<b class="fc"><i>54</i>&nbsp;            height++;</b>
+<b class="fc"><i>55</i>&nbsp;            currentGame.notifyObservers(new BoardUpdate(currentGame.getField()));</b>
+<b class="nc"><i>56</i>&nbsp;        } catch (MaxHeightReachedException e) {</b>
+<b class="fc"><i>57</i>&nbsp;        }</b>
+<b class="fc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Places a dome in the selected fieldCell and notifies the observers.
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    public void placeDome() {
+<b class="fc"><i>64</i>&nbsp;        hasDome = true;</b>
+<b class="fc"><i>65</i>&nbsp;        currentGame.notifyObservers(new BoardUpdate(currentGame.getField()));</b>
+<b class="fc"><i>66</i>&nbsp;    }</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /**
+<i>69</i>&nbsp;     * Checks whether the fieldCell is on the perimeter of the board or not
+<i>70</i>&nbsp;     *
+<i>71</i>&nbsp;     * @return true if it&#39;s on the board perimeter
+<i>72</i>&nbsp;     */
+<i>73</i>&nbsp;    public Boolean isOnPerimeter() {
+<b class="fc"><i>74</i>&nbsp;        return posX.equals(LOWER_BOUND) || posX.equals(FIELD_SIZE - OFFSET) || posY.equals(LOWER_BOUND) || posY.equals(FIELD_SIZE - OFFSET);</b>
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /**
+<i>78</i>&nbsp;     * Checks wheter a cell is free.
+<i>79</i>&nbsp;     * A cell is considered to be free if it has no workers and dome on it
+<i>80</i>&nbsp;     *
+<i>81</i>&nbsp;     * @return true if the cell is free, false otherwise
+<i>82</i>&nbsp;     */
+<b class="fc"><i>83</i>&nbsp;    public Boolean isFree() { return this.occupyingWorker == null &amp;&amp; !this.hasDome; }</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    /**
+<i>86</i>&nbsp;     * Checks wheter a cell is complete.
+<i>87</i>&nbsp;     * A cell is considered to be complete if it has reached its maximum height and it has got a dome
+<i>88</i>&nbsp;     *
+<i>89</i>&nbsp;     * @return true if the cell is complete, false otherwise
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;    public Boolean isComplete() {
+<b class="fc"><i>92</i>&nbsp;        return this.hasDome &amp;&amp; this.getHeight() == MAX_HEIGHT_WITHOUT_DOME;</b>
+<i>93</i>&nbsp;    }
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;    public Boolean getHasDome() {
+<b class="fc"><i>96</i>&nbsp;        return this.hasDome;</b>
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    public GameWorker getWorker() {
+<b class="fc"><i>100</i>&nbsp;        return this.occupyingWorker;</b>
+<i>101</i>&nbsp;    }
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    /**
+<i>104</i>&nbsp;     * Returns a list of adjacentCells.
+<i>105</i>&nbsp;     * The adjacentCells are the cells surrounding the selected one
+<i>106</i>&nbsp;     *
+<i>107</i>&nbsp;     * @return the list of the cell&#39;s adjacent cells
+<i>108</i>&nbsp;     */
+<i>109</i>&nbsp;    public List&lt;FieldCell&gt; getAdjacentCells() {
+<b class="fc"><i>110</i>&nbsp;        List&lt;FieldCell&gt; adjacentCells = new ArrayList&lt;&gt;();</b>
+<i>111</i>&nbsp;
+<b class="fc"><i>112</i>&nbsp;        Integer i = Math.max(this.getPosX() - 1, 0);</b>
+<b class="fc"><i>113</i>&nbsp;        Integer k = Math.max(this.getPosY() - 1, 0);</b>
+<i>114</i>&nbsp;
+<b class="fc"><i>115</i>&nbsp;        for (;  i &lt;= this.getPosX() + 1 &amp;&amp;  i &lt; FIELD_SIZE ; i++)</b>
+<b class="fc"><i>116</i>&nbsp;            for (Integer j = k; j &lt;= this.getPosY() + 1 &amp;&amp; j &lt; FIELD_SIZE; j++)</b>
+<b class="fc"><i>117</i>&nbsp;                adjacentCells.add(this.currentGame.getCell(i, j));</b>
+<i>118</i>&nbsp;
+<b class="fc"><i>119</i>&nbsp;        adjacentCells.remove(this);</b>
+<i>120</i>&nbsp;
+<b class="fc"><i>121</i>&nbsp;        return adjacentCells;</b>
+<i>122</i>&nbsp;    }
+<i>123</i>&nbsp;
+<i>124</i>&nbsp;    /**
+<i>125</i>&nbsp;     * Checks the equality between two cells.
+<i>126</i>&nbsp;     * Two cells are equal if they have the same x_coordinate and y_coordinate
+<i>127</i>&nbsp;     */
+<i>128</i>&nbsp;    @Override
+<i>129</i>&nbsp;    public boolean equals(Object o) {
+<b class="fc"><i>130</i>&nbsp;        if (this == o) return true;</b>
+<i>131</i>&nbsp;
+<b class="fc"><i>132</i>&nbsp;        if (o == null || getClass() != o.getClass()) return false;</b>
+<i>133</i>&nbsp;
+<b class="fc"><i>134</i>&nbsp;        FieldCell fieldCell = (FieldCell) o;</b>
+<b class="fc"><i>135</i>&nbsp;        return posX.equals(fieldCell.posX) &amp;&amp;</b>
+<b class="fc"><i>136</i>&nbsp;                posY.equals(fieldCell.posY);</b>
+<i>137</i>&nbsp;    }
+<i>138</i>&nbsp;
+<i>139</i>&nbsp;    /**
+<i>140</i>&nbsp;     * Generated by IntelliJ for free, we&#39;ll take it
+<i>141</i>&nbsp;     * @return the cell hash
+<i>142</i>&nbsp;     */
+<i>143</i>&nbsp;    @Override
+<i>144</i>&nbsp;    public int hashCode() {
+<b class="nc"><i>145</i>&nbsp;        return Objects.hash(posX, posY);</b>
+<i>146</i>&nbsp;    }
+<i>147</i>&nbsp;
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-06 11:54</div>
+</div>
+</body>
+</html>

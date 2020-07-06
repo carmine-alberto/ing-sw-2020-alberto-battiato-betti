@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Player;
 
 import java.util.function.BiPredicate;
 
-import static it.polimi.ingsw.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
+import static it.polimi.ingsw.utility.GameSettings.MAX_HEIGHT_WITHOUT_DOME;
 
 public class BlockPredicate implements BiPredicate<Player, Constructible> {
     private Integer minimumHeight;

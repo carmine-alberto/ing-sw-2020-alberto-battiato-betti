@@ -34,6 +34,7 @@ class DisplacePhaseTest {
         third = new Player("secondo" , null);
         third.setCurrentGame(game);
         game.getPlayers().add(third);
+        game.initGods();
         try {
             game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
             game.assignSelectedGodPowerToPlayer("Artemis" , second.getNickname());

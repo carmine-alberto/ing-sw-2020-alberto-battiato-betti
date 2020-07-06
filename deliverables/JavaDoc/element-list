@@ -2,11 +2,6 @@ module:org.example
 it.polimi.ingsw
 it.polimi.ingsw.controller
 it.polimi.ingsw.controller.events
-it.polimi.ingsw.cview
-it.polimi.ingsw.cview.clientView
-it.polimi.ingsw.cview.clientViewCLI
-it.polimi.ingsw.cview.serverView
-it.polimi.ingsw.cview.utility
 it.polimi.ingsw.model
 it.polimi.ingsw.model.actions
 it.polimi.ingsw.model.actions.moveStrategies
@@ -17,3 +12,9 @@ it.polimi.ingsw.model.predicates.actionPredicate
 it.polimi.ingsw.model.predicates.buildAndMovePredicates
 it.polimi.ingsw.model.predicates.constructiblePredicates
 it.polimi.ingsw.model.predicates.winConditionsPredicates
+it.polimi.ingsw.utility
+it.polimi.ingsw.view
+it.polimi.ingsw.view.clientView
+it.polimi.ingsw.view.clientViewCLI
+it.polimi.ingsw.view.serverView
+it.polimi.ingsw.view.viewUtility

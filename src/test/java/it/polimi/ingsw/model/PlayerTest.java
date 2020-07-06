@@ -20,22 +20,18 @@ class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        try {
-            game.addPlayer(first.getNickname(), null);
-            first.setCurrentGame(game);
+        game.getPlayers().add(first);
+        game.getPlayers().add(second);
+        game.getPlayers().add(third);
 
-            game.addPlayer(second.getNickname(), null);
-            second.setCurrentGame(game);
+        first.setCurrentGame(game);
+        second.setCurrentGame(game);
+        third.setCurrentGame(game);
 
-            game.addPlayer(third.getNickname(), null);
-            third.setCurrentGame(game);
-            firstOpponents.add(second);
-            firstOpponents.add(third);
-            secondOpponents.add(first);
-            secondOpponents.add(third);
-        } catch (InvalidSelectionException e) {
-            e.printStackTrace();
-        }
+        firstOpponents.add(second);
+        firstOpponents.add(third);
+        secondOpponents.add(first);
+        secondOpponents.add(third);
     }
 
     @Test

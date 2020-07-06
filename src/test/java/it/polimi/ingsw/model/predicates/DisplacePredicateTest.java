@@ -28,6 +28,8 @@ class DisplacePredicateTest {
         board = new FieldCell[FIELD_SIZE][FIELD_SIZE];
         player = new Player("Zio" , null);
         player.setCurrentGame(game);
+        game.getPlayers().add(player);
+        game.initGods();
         try {
             game.assignSelectedGodPowerToPlayer("Charon" , player.getNickname());
         } catch (InvalidSelectionException e) {
@@ -42,6 +44,8 @@ class DisplacePredicateTest {
         board[0][0].setOccupyingWorker(worker);
         secondPlayer = new Player("lol" , null);
         secondPlayer.setCurrentGame(game);
+        game.getPlayers().add(secondPlayer);
+        game.initGods();
         try {
             game.assignSelectedGodPowerToPlayer("Artemis", secondPlayer.getNickname());
         } catch (InvalidSelectionException e) {

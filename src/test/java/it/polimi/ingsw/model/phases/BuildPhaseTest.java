@@ -28,6 +28,7 @@ class BuildPhaseTest {
         player = new Player("Gianpiero", null);
         player.setCurrentGame(game);
         game.getPlayers().add(player);
+        game.initGods();
         try {
             game.assignSelectedGodPowerToPlayer("Apollo" , player.getNickname());
         } catch (InvalidSelectionException invalidSelectionException) {

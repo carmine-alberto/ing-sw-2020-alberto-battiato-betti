@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.GameSettings.FIRST_ELEMENT_INDEX;
-import static it.polimi.ingsw.GameSettings.X_STARTING_POSITION;
+import static it.polimi.ingsw.utility.GameSettings.FIRST_ELEMENT_INDEX;
+import static it.polimi.ingsw.utility.GameSettings.X_STARTING_POSITION;
 
 public class ChooseActionPhase extends TurnPhase {
     private List<ActionEnum> availableActions;
