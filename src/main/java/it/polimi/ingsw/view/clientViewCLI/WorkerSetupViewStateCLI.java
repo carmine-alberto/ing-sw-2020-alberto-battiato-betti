@@ -37,7 +37,7 @@ public class WorkerSetupViewStateCLI extends CLIViewState {
     }
 
     @Override
-    public void render() {
+    public synchronized void render() {
         FieldCell[][] boardRep = view.getBoard();
 
         if (boardRep != null)
@@ -57,6 +57,21 @@ public class WorkerSetupViewStateCLI extends CLIViewState {
             case COLOR_SELECTION -> handleColorSelection(input);
             case WORKER_SELECTION -> handleWorkerSelection(input);
         }
+    }
+
+    @Override
+    public synchronized void showWarning(String message) {
+        super.showWarning(message);
+    }
+
+    @Override
+    public synchronized void showMessage(String message) {
+        super.showMessage(message);
+    }
+
+    @Override
+    public synchronized void showChoices(List<String> availableChoices) {
+        super.showChoices(availableChoices);
     }
 
     private String getSelectWorkerMessage() {

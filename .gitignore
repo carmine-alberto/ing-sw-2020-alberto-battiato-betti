@@ -31,3 +31,6 @@ hs_err_pid*
 /target
 #Target folder
 /target
+
+#Executables
+*.exe

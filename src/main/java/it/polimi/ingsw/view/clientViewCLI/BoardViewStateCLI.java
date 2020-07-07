@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoardViewStateCLI extends CLIViewState {
 
@@ -37,5 +38,10 @@ public class BoardViewStateCLI extends CLIViewState {
     @Override
     public synchronized void showMessage(String message) {
         super.showMessage(message);
+    }
+
+    @Override
+    public synchronized void showChoices(List<String> availableChoices) {
+        super.showChoices(availableChoices);
     }
 }

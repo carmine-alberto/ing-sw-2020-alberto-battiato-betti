@@ -419,6 +419,8 @@ public class Game extends Observable<Event> {
 
     private Integer getNextPlayerIndex() {
         currentPlayerIndex++;
+        if (players.get(currentPlayerIndex % players.size()).equals(turnPlayer))
+            currentPlayerIndex++;
         return currentPlayerIndex % players.size();
     }
 }

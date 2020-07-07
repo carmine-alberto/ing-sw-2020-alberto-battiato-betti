@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.actions.Action;
+import javafx.scene.control.Cell;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,10 +25,11 @@ public class GameWorker implements Serializable  {
     }
 
     public void setPosition(FieldCell cell) {
+        FieldCell oldPosition = this.position;
         this.position = cell;
         if (!this.equals(cell.getWorker())) {
             cell.setOccupyingWorker(this);
-            this.oldMovePositions.add(cell);
+            this.oldMovePositions.add(oldPosition);
         }
     }
 

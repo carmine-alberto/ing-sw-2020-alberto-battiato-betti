@@ -120,4 +120,5 @@ public class BoardViewState extends GUIViewState {
             clickedCell.setBorder(new Border(new BorderStroke(NEUTRAL_STATE_COLOR, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         }
     }
+
 }
