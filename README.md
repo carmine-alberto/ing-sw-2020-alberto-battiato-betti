@@ -20,15 +20,15 @@ The project is also provided with a Java documentation that covers almost every 
 ## Implemented functionality
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
-| Basic rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Complete rules |[![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Socket |[![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| GUI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| CLI |[![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Multiple games | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
-| Persistence | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
-| Advanced Gods | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Undo | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
+| Basic rules | [![GREEN](https://via.placeholder.com/15/44bb44/000000?text=+)](#) |
+| Complete rules |[![GREEN](https://via.placeholder.com/15/44bb44/000000?text=+)](#) |
+| Socket |[![GREEN](https://via.placeholder.com/15/44bb44/000000?text=+)](#) |
+| GUI | [![GREEN](https://via.placeholder.com/15/44bb44/000000?text=+)](#) |
+| CLI |[![GREEN](https://via.placeholder.com/15/44bb44/000000?text=+)](#) |
+| Multiple games | [![RED](https://via.placeholder.com/15/f03c15/000000?text=+)](#) |
+| Persistence | [![RED](https://via.placeholder.com/15/f03c15/000000?text=+)](#) |
+| Advanced Gods | [![GREEN](https://via.placeholder.com/15/44bb44/000000?text=+)](#) |
+| Undo | [![RED](https://via.placeholder.com/15/f03c15/000000?text=+)](#) |
 
 ## JAR Execution
 For both client and server jars is required [Java 14.0.1 JDK](https://jdk.java.net/14/) version.
